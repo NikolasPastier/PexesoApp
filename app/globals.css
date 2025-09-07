@@ -123,6 +123,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Updated to use new background image URL */
+    background-image: url("/images/pexeso-background.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
   }
 }
 

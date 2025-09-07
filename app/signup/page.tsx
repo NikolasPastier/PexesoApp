@@ -1,14 +1,14 @@
-import { Navbar } from "@/components/navbar"
-import { AuthForm } from "@/components/auth-form"
+"use client"
+
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 export default function SignupPage() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+  const router = useRouter()
 
-      <div className="container mx-auto px-4 py-16">
-        <AuthForm />
-      </div>
-    </div>
-  )
+  useEffect(() => {
+    router.replace("/auth")
+  }, [router])
+
+  return null
 }
