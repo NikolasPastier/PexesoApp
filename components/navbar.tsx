@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Brain, User, LogOut } from "lucide-react"
+import { User, LogOut } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,8 +71,8 @@ export function Navbar() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <Brain className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-foreground">Pexeso</span>
+            <Image src="/images/pexeso-logo.png" alt="Pexeso Logo" width={32} height={32} className="h-8 w-8" />
+            <span className="text-xl font-bold text-foreground">PexesoAI</span>
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">

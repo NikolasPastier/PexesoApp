@@ -1,3 +1,4 @@
+"use client"
 import { Navbar } from "@/components/navbar"
 import { GalleryGrid } from "@/components/gallery-grid"
 import { Input } from "@/components/ui/input"

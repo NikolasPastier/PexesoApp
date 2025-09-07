@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/navbar"
-import { Brain, Zap, Users, Trophy } from "lucide-react"
+import { DeckGenerator } from "@/components/deck-generator"
+import { Zap, Users, Trophy } from "lucide-react"
 
 export default function HomePage() {
   return (
@@ -12,9 +13,8 @@ export default function HomePage() {
       <section className="container mx-auto px-4 py-16 sm:py-24">
         <div className="text-center space-y-8">
           <div className="space-y-4">
-            <Brain className="w-20 h-20 mx-auto text-primary" />
             <h1 className="text-4xl sm:text-6xl font-bold text-foreground text-balance">
-              Train Your Memory by Playing
+              {"Play Pexeso Online"}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
               Challenge yourself with our modern memory game. Improve your cognitive skills while having fun with
@@ -31,6 +31,11 @@ export default function HomePage() {
             </Button>
           </div>
         </div>
+      </section>
+
+      {/* Create Custom Deck Section */}
+      <section className="container mx-auto px-4 py-16">
+        <DeckGenerator />
       </section>
 
       {/* Features Section */}
