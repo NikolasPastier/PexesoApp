@@ -72,23 +72,23 @@ export function Navbar() {
 
             <div className="flex items-center space-x-2">
               {!loading && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-white hover:bg-green-800/50 rounded-full h-10 w-10"
-                    >
-                      <User className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="end"
-                    className="w-48 bg-green-900/95 backdrop-blur-md border-green-700/30 text-white"
-                  >
-                    {supabaseConfigured ? (
-                      user ? (
-                        <>
+                <>
+                  {supabaseConfigured ? (
+                    user ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-white hover:bg-green-800/50 rounded-full h-10 w-10"
+                          >
+                            <User className="h-5 w-5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="w-48 bg-green-900/95 backdrop-blur-md border-green-700/30 text-white"
+                        >
                           <DropdownMenuItem
                             onClick={handleSignOut}
                             className="cursor-pointer text-red-400 hover:bg-green-800/50 focus:bg-green-800/50"
@@ -96,28 +96,40 @@ export function Navbar() {
                             <LogOut className="mr-2 h-4 w-4" />
                             Sign Out
                           </DropdownMenuItem>
-                        </>
-                      ) : (
-                        <>
-                          <DropdownMenuItem asChild>
-                            <Link href="/auth" className="cursor-pointer hover:bg-green-800/50 focus:bg-green-800/50">
-                              Login
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link href="/auth" className="cursor-pointer hover:bg-green-800/50 focus:bg-green-800/50">
-                              Sign Up
-                            </Link>
-                          </DropdownMenuItem>
-                        </>
-                      )
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     ) : (
-                      <DropdownMenuItem disabled className="text-green-400">
-                        Auth not configured
-                      </DropdownMenuItem>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                      <div className="flex items-center space-x-3">
+                        <Link href="/auth">
+                          <Button
+                            variant="ghost"
+                            className="text-white hover:bg-green-800/50 border border-green-700/50 rounded-lg px-4 py-2 h-10 transition-all duration-200"
+                          >
+                            Log in
+                          </Button>
+                        </Link>
+                        <Link href="/auth">
+                          <Button className="bg-white text-green-900 hover:bg-green-50 rounded-lg px-4 py-2 h-10 font-medium transition-all duration-200">
+                            Get started
+                          </Button>
+                        </Link>
+                      </div>
+                    )
+                  ) : (
+                    <div className="flex items-center space-x-3">
+                      <Button
+                        disabled
+                        variant="ghost"
+                        className="text-green-400 border border-green-700/50 rounded-lg px-4 py-2 h-10"
+                      >
+                        Log in
+                      </Button>
+                      <Button disabled className="bg-green-700 text-green-300 rounded-lg px-4 py-2 h-10 font-medium">
+                        Get started
+                      </Button>
+                    </div>
+                  )}
+                </>
               )}
 
               <Button variant="ghost" size="icon" className="text-white hover:bg-green-800/50 rounded-full h-10 w-10">
