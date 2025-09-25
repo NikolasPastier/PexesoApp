@@ -79,9 +79,6 @@ export function Navbar() {
             <Link href="/play-options" className="text-foreground hover:text-primary transition-colors duration-300">
               Play
             </Link>
-            <Link href="/gallery" className="text-foreground hover:text-primary transition-colors duration-300">
-              Gallery
-            </Link>
             <Link href="/profile" className="text-foreground hover:text-primary transition-colors duration-300">
               Profile
             </Link>

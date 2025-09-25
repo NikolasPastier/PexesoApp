@@ -136,9 +136,6 @@ export function HeroGame() {
             Start Playing
           </Link>
         </Button>
-        <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6 bg-transparent">
-          <Link href="/gallery">Browse Card Decks</Link>
-        </Button>
       </div>
     </div>
   )
