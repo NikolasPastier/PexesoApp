@@ -19,7 +19,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+      <body
+        className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}
+        style={
+          {
+            "--font-geist-sans": GeistSans.style.fontFamily,
+            "--font-geist-mono": GeistMono.style.fontFamily,
+          } as React.CSSProperties
+        }
+      >
         <Suspense fallback={null}>{children}</Suspense>
         <Analytics />
       </body>
