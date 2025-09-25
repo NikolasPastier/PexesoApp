@@ -8,7 +8,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 sm:py-24">
+      <section className="container mx-auto px-4 pt-24 pb-16 sm:pt-32 sm:pb-24">
         <MainGame />
       </section>
 
