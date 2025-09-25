@@ -5,7 +5,7 @@
 
 :root {
   /* Updated color tokens to match green memory game theme */
-  --background: oklch(1 0 0); /* White background */
+  --background: transparent; /* White background */
   --foreground: oklch(0.35 0 0); /* Dark gray text */
   --card: oklch(0.98 0.02 142); /* Honeydew for cards */
   --card-foreground: oklch(0.55 0.15 142); /* Emerald text on cards */
