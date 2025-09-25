@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/navbar"
 import { DeckGenerator } from "@/components/deck-generator"
-import { HeroGame } from "@/components/hero-game"
+import { MainGame } from "@/components/main-game"
 
 export default function HomePage() {
   return (
@@ -9,7 +9,7 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 sm:py-24">
-        <HeroGame />
+        <MainGame />
       </section>
 
       {/* Create Custom Deck Section */}

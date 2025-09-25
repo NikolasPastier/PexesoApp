@@ -40,7 +40,7 @@ export function AuthForm() {
         setMessage({ type: "error", text: error.message })
       } else {
         setMessage({ type: "success", text: "Login successful! Redirecting..." })
-        router.push("/profile")
+        router.push("/")
       }
     } catch (error) {
       setMessage({ type: "error", text: "An unexpected error occurred" })
@@ -74,7 +74,7 @@ export function AuthForm() {
           data: {
             username: signupData.username,
           },
-          emailRedirectTo: `${window.location.origin}/profile`,
+          emailRedirectTo: `${window.location.origin}/`,
         },
       })
 

@@ -4,13 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { User, LogOut } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -72,17 +66,8 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
             <Image src="/images/pexeso-logo.png" alt="Pexeso Logo" width={32} height={32} className="h-8 w-8" />
-            <span className="text-xl font-bold text-foreground">PexesoAI</span>
+            <span className="text-xl font-bold text-black">PexesoAI</span>
           </Link>
-
-          <div className="hidden md:flex items-center space-x-8">
-            <Link href="/play-options" className="text-foreground hover:text-primary transition-colors duration-300">
-              Play
-            </Link>
-            <Link href="/profile" className="text-foreground hover:text-primary transition-colors duration-300">
-              Profile
-            </Link>
-          </div>
 
           <div className="flex items-center">
             {!loading && (
@@ -96,12 +81,6 @@ export function Navbar() {
                   {supabaseConfigured ? (
                     user ? (
                       <>
-                        <DropdownMenuItem asChild>
-                          <Link href="/profile" className="cursor-pointer">
-                            Profile
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600">
                           <LogOut className="mr-2 h-4 w-4" />
                           Sign Out
