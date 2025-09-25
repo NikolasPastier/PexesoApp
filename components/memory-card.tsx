@@ -14,7 +14,7 @@ interface MemoryCardProps {
 export function MemoryCard({
   id,
   frontImage,
-  backImage = "/card-back.jpg",
+  backImage = "/card-back-logo.jpeg",
   isFlipped,
   isMatched,
   onClick,
@@ -38,12 +38,8 @@ export function MemoryCard({
       >
         {/* Back of card */}
         <div className="absolute inset-0 w-full h-full backface-hidden">
-          <div className="w-full h-full bg-card border-2 border-border rounded-2xl shadow-md flex items-center justify-center">
-            <img
-              src={backImage || "/placeholder.svg"}
-              alt="Card back"
-              className="w-16 h-16 object-cover rounded-lg opacity-60"
-            />
+          <div className="w-full h-full bg-card border-2 border-border rounded-2xl shadow-md overflow-hidden">
+            <img src={backImage || "/placeholder.svg"} alt="Card back" className="w-full h-full object-cover" />
           </div>
         </div>
 

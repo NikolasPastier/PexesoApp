@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/navbar"
 import { DeckGenerator } from "@/components/deck-generator"
 import { MainGame } from "@/components/main-game"
+import { Footer } from "@/components/footer"
 
 export default function HomePage() {
   return (
@@ -20,6 +21,8 @@ export default function HomePage() {
       {/* Features Section */}
 
       {/* CTA Section */}
+
+      <Footer />
     </div>
   )
 }
