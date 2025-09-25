@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { MemoryCard } from "./memory-card"
 import { Button } from "@/components/ui/button"
-import { RotateCcw, Home, Heart, Clock } from "lucide-react"
+import { RotateCcw, Home, Heart, Clock, Settings } from "lucide-react"
 
 interface GameCard {
   id: string
@@ -34,6 +34,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   const [timeLeft, setTimeLeft] = useState(gameConfig?.timer || 0)
   const [livesLeft, setLivesLeft] = useState(gameConfig?.lives || 0)
   const [gameOver, setGameOver] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
     if (gameConfig?.timer && timeLeft > 0 && !gameComplete && !gameOver) {
@@ -131,6 +132,10 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
         </div>
 
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowSettings(!showSettings)}>
+            <Settings className="w-4 h-4 mr-2" />
+            Settings
+          </Button>
           <Button variant="outline" size="sm" onClick={onRestart}>
             <RotateCcw className="w-4 h-4 mr-2" />
             Restart
@@ -141,6 +146,75 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
           </Button>
         </div>
       </div>
+
+      {showSettings && (
+        <div className="mb-6 p-6 bg-card rounded-2xl shadow-md border">
+          <h3 className="text-xl font-semibold text-card-foreground mb-4">Game Settings</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Grid Size Settings */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-card-foreground">Grid Size</label>
+              <div className="space-y-2">
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  4x4 (8 pairs)
+                </Button>
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  4x6 (12 pairs)
+                </Button>
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  6x6 (18 pairs)
+                </Button>
+              </div>
+            </div>
+
+            {/* Timer Settings */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-card-foreground">Timer</label>
+              <div className="space-y-2">
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  No Timer
+                </Button>
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  2 Minutes
+                </Button>
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  5 Minutes
+                </Button>
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  10 Minutes
+                </Button>
+              </div>
+            </div>
+
+            {/* Lives Settings */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-card-foreground">Lives</label>
+              <div className="space-y-2">
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  Unlimited
+                </Button>
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  3 Lives
+                </Button>
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  5 Lives
+                </Button>
+                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                  10 Lives
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 mt-6">
+            <Button variant="outline" onClick={() => setShowSettings(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setShowSettings(false)}>Apply Settings</Button>
+          </div>
+        </div>
+      )}
 
       {/* Game Complete Message */}
       {gameComplete && (
