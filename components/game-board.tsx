@@ -3,7 +3,16 @@
 import { useState, useEffect } from "react"
 import { MemoryCard } from "./memory-card"
 import { Button } from "@/components/ui/button"
-import { RotateCcw, Home, Heart, Clock, Settings, Play, Square } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { RotateCcw, Home, Heart, Clock, Settings, Play, Square, ChevronDown, Users, Timer, Grid3X3 } from "lucide-react"
 
 interface GameCard {
   id: string
@@ -34,8 +43,14 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   const [timeLeft, setTimeLeft] = useState(gameConfig?.timer || 0)
   const [livesLeft, setLivesLeft] = useState(gameConfig?.lives || 0)
   const [gameOver, setGameOver] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
   const [gameStarted, setGameStarted] = useState(false)
+
+  const [gameSettings, setGameSettings] = useState({
+    players: "1",
+    timer: "unlimited",
+    lives: "unlimited",
+    cards: "16",
+  })
 
   useEffect(() => {
     if (gameConfig?.timer && timeLeft > 0 && !gameComplete && !gameOver) {
@@ -130,6 +145,81 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
       {/* Game Stats */}
       <div className="flex items-center justify-between mb-6 p-4 bg-card rounded-2xl shadow-md">
         <div className="flex items-center gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                <Settings className="w-4 h-4" />
+                Game Settings
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="start">
+              <DropdownMenuLabel className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Players
+              </DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={gameSettings.players}
+                onValueChange={(value) => setGameSettings((prev) => ({ ...prev, players: value }))}
+              >
+                <DropdownMenuRadioItem value="1">1 Player</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="2">2 Players</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="3">3 Players</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="4">4 Players (vs Bot)</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuLabel className="flex items-center gap-2">
+                <Timer className="w-4 h-4" />
+                Timer
+              </DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={gameSettings.timer}
+                onValueChange={(value) => setGameSettings((prev) => ({ ...prev, timer: value }))}
+              >
+                <DropdownMenuRadioItem value="unlimited">Unlimited</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="2">2 Minutes</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="5">5 Minutes</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="10">10 Minutes</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="custom">Custom</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuLabel className="flex items-center gap-2">
+                <Heart className="w-4 h-4" />
+                Lives
+              </DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={gameSettings.lives}
+                onValueChange={(value) => setGameSettings((prev) => ({ ...prev, lives: value }))}
+              >
+                <DropdownMenuRadioItem value="unlimited">Unlimited</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="10">10 Lives</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="15">15 Lives</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="20">20 Lives</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="custom">Custom</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuLabel className="flex items-center gap-2">
+                <Grid3X3 className="w-4 h-4" />
+                Cards
+              </DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={gameSettings.cards}
+                onValueChange={(value) => setGameSettings((prev) => ({ ...prev, cards: value }))}
+              >
+                <DropdownMenuRadioItem value="8">8 Cards (4 pairs)</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="16">16 Cards (8 pairs)</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="24">24 Cards (12 pairs)</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="32">32 Cards (16 pairs)</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <div className="text-lg font-semibold text-card-foreground">Moves: {moves}</div>
           <div className="text-lg font-semibold text-card-foreground">
             Matches: {matchedCards.length / 2} / {cards.length / 2}
@@ -156,10 +246,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => setShowSettings(!showSettings)}>
-            <Settings className="w-4 h-4 mr-2" />
-            Settings
-          </Button>
           <Button variant="outline" size="sm" onClick={onRestart}>
             <RotateCcw className="w-4 h-4 mr-2" />
             Restart
@@ -170,75 +256,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
           </Button>
         </div>
       </div>
-
-      {showSettings && (
-        <div className="mb-6 p-6 bg-card rounded-2xl shadow-md border">
-          <h3 className="text-xl font-semibold text-card-foreground mb-4">Game Settings</h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Grid Size Settings */}
-            <div className="space-y-3">
-              <label className="text-sm font-medium text-card-foreground">Grid Size</label>
-              <div className="space-y-2">
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  4x4 (8 pairs)
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  4x6 (12 pairs)
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  6x6 (18 pairs)
-                </Button>
-              </div>
-            </div>
-
-            {/* Timer Settings */}
-            <div className="space-y-3">
-              <label className="text-sm font-medium text-card-foreground">Timer</label>
-              <div className="space-y-2">
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  No Timer
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  2 Minutes
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  5 Minutes
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  10 Minutes
-                </Button>
-              </div>
-            </div>
-
-            {/* Lives Settings */}
-            <div className="space-y-3">
-              <label className="text-sm font-medium text-card-foreground">Lives</label>
-              <div className="space-y-2">
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  Unlimited
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  3 Lives
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  5 Lives
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-                  10 Lives
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 mt-6">
-            <Button variant="outline" onClick={() => setShowSettings(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setShowSettings(false)}>Apply Settings</Button>
-          </div>
-        </div>
-      )}
 
       {/* Game Complete Message */}
       {gameComplete && (

@@ -2,6 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { DeckGenerator } from "@/components/deck-generator"
 import { MainGame } from "@/components/main-game"
 import { Footer } from "@/components/footer"
+import { DeckGallery } from "@/components/deck-gallery"
 
 export default function HomePage() {
   return (
@@ -16,6 +17,11 @@ export default function HomePage() {
       {/* Create Custom Deck Section */}
       <section className="container mx-auto px-4 py-16">
         <DeckGenerator />
+      </section>
+
+      {/* Deck Gallery Section */}
+      <section className="container mx-auto px-4 py-16 border-t border-border/50">
+        <DeckGallery />
       </section>
 
       {/* Features Section */}

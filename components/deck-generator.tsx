@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import { Loader2, Sparkles, Save } from "lucide-react"
+import { Loader2, Sparkles, Save, Plus, Globe, Mic, ArrowUp } from "lucide-react"
 import Image from "next/image"
 
 interface GeneratedImage {
@@ -77,45 +77,72 @@ export function DeckGenerator() {
   }
 
   return (
-    <Card className="p-6 sm:p-8 bg-card/50 backdrop-blur-sm border-primary/20">
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <h3 className="text-2xl font-bold text-foreground flex items-center justify-center gap-2">
-            <Sparkles className="w-6 h-6 text-primary" />
-            Create Your Own Deck
-          </h3>
-          <p className="text-muted-foreground">
-            Describe it in words, let AI create the images, and play with them instantly.
-          </p>
+    <div className="w-full max-w-4xl mx-auto space-y-8">
+      <div className="relative">
+        {/* Main Prompt Container - Dark rounded design similar to the image */}
+        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900/20 rounded-3xl p-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
+          <div className="flex items-center gap-4">
+            {/* Plus button on the left */}
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-10 w-10 rounded-full bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border border-gray-600/30"
+            >
+              <Plus className="w-5 h-5" />
+            </Button>
+
+            {/* Main input area */}
+            <div className="flex-1 relative">
+              <Input
+                placeholder="Ask PexesoAI to create a deck about..."
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && !isGenerating && handleGenerate()}
+                className="bg-transparent border-none text-gray-200 placeholder:text-gray-400 text-lg h-12 focus:ring-0 focus:outline-none px-0"
+              />
+            </div>
+
+            {/* Public indicator */}
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-10 px-4 rounded-full bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border border-gray-600/30 gap-2"
+            >
+              <Globe className="w-4 h-4" />
+              <span className="text-sm">Public</span>
+            </Button>
+
+            {/* Right side controls */}
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-10 w-10 rounded-full bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border border-gray-600/30"
+              >
+                <Mic className="w-4 h-4" />
+              </Button>
+
+              <Button
+                onClick={handleGenerate}
+                disabled={!prompt.trim() || isGenerating}
+                size="sm"
+                className="h-10 w-10 rounded-full bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
+              >
+                {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
+              </Button>
+            </div>
+          </div>
         </div>
 
-        {/* Prompt Input */}
-        <div className="flex gap-3">
-          <Input
-            placeholder="Type your deck idea... (e.g., 'Cute animals in watercolor style')"
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !isGenerating && handleGenerate()}
-            className="flex-1 h-12 text-base bg-background/80 border-primary/30 focus:border-primary"
-          />
-          <Button onClick={handleGenerate} disabled={!prompt.trim() || isGenerating} size="lg" className="px-6">
-            {isGenerating ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                Generate Images
-              </>
-            )}
-          </Button>
-        </div>
+        {/* Subtitle */}
+        <p className="text-center mt-4 text-black text-lg font-semibold">
+          Describe your deck idea and let AI create the perfect memory game cards
+        </p>
+      </div>
 
-        {/* Generated Images Grid */}
-        {generatedImages.length > 0 && (
+      {/* Generated Images Grid */}
+      {generatedImages.length > 0 && (
+        <Card className="p-6 bg-card/50 backdrop-blur-sm border-primary/20">
           <div className="space-y-4 animate-in fade-in-50 duration-500">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {generatedImages.map((image, index) => (
@@ -155,8 +182,8 @@ export function DeckGenerator() {
               </Button>
             </div>
           </div>
-        )}
-      </div>
-    </Card>
+        </Card>
+      )}
+    </div>
   )
 }
