@@ -135,9 +135,7 @@ export function DeckGenerator() {
         </div>
 
         {/* Subtitle */}
-        <p className="text-center mt-4 text-black text-lg font-semibold">
-          Describe your deck idea and let AI create the perfect memory game cards
-        </p>
+        
       </div>
 
       {/* Generated Images Grid */}
