@@ -14,10 +14,10 @@ export function Navbar() {
     <nav className="fixed top-4 left-4 right-4 z-50">
       <div className="mx-auto max-w-7xl">
         <div className="bg-green-900/80 backdrop-blur-md rounded-2xl border border-green-700/30 shadow-lg">
-          <div className="flex h-16 items-center justify-between px-6">
+          <div className="flex h-16 items-center justify-between px-2.5">
             <Link href="/" className="flex items-center space-x-3">
-              <Image src="/images/pexeso-logo.png" alt="Pexeso Logo" width={32} height={32} className="h-8 w-8" />
-              <span className="text-xl font-bold text-white">PexesoAI</span>
+              <Image src="/images/pexeso-logo.png" alt="Pexeso Logo" width={32} height={32} className="w-16 h-16" />
+              <span className="text-xl font-bold text-white">Pexeso.app</span>
             </Link>
 
             <div className="flex items-center space-x-2">
@@ -65,7 +65,7 @@ export function Navbar() {
               )}
 
               <Button variant="ghost" size="icon" className="text-white hover:bg-green-800/50 rounded-full h-10 w-10">
-                <Menu className="h-5 w-5" />
+                
               </Button>
             </div>
           </div>

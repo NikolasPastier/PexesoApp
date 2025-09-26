@@ -62,15 +62,7 @@ export function MainGame() {
 
   return (
     <div className="space-y-8">
-      <div className="text-center">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-balance mb-4 text-white">
-          Master Your Memory with <span className="text-sidebar-accent-foreground">Pexeso</span>
-        </h1>
-        <p className="text-xl max-w-2xl mx-auto text-pretty mb-2 text-black">
-          Find all matching pairs to complete the game
-        </p>
-        
-      </div>
+      
 
       <GameBoard cards={cards} onRestart={handleRestart} onExit={handleExit} gameConfig={gameConfig} />
     </div>

@@ -126,7 +126,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="w-full max-w-4xl mx-auto p-4 px-4">
       {/* Game Stats */}
       <div className="flex items-center justify-between mb-6 p-4 bg-card rounded-2xl shadow-md">
         <div className="flex items-center gap-4">
@@ -260,7 +260,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
       )}
 
       {/* Game Grid */}
-      <div className={`grid ${gridCols} gap-4 justify-items-center`}>
+      <div className={`grid mx-0 px-0 ${gridCols} justify-items-center gap-4`}>
         {cards.map((card) => (
           <MemoryCard
             key={card.id}
