@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { MemoryCard } from "./memory-card"
 import { Button } from "@/components/ui/button"
-import { RotateCcw, Home, Heart, Clock, Settings } from "lucide-react"
+import { RotateCcw, Home, Heart, Clock, Settings, Play, Square } from "lucide-react"
 
 interface GameCard {
   id: string
@@ -35,6 +35,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   const [livesLeft, setLivesLeft] = useState(gameConfig?.lives || 0)
   const [gameOver, setGameOver] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [gameStarted, setGameStarted] = useState(false)
 
   useEffect(() => {
     if (gameConfig?.timer && timeLeft > 0 && !gameComplete && !gameOver) {
@@ -48,7 +49,13 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   }, [timeLeft, gameComplete, gameOver, gameConfig?.timer])
 
   const handleCardClick = (cardId: string) => {
-    if (flippedCards.length === 2 || flippedCards.includes(cardId) || matchedCards.includes(cardId) || gameOver) {
+    if (
+      !gameStarted ||
+      flippedCards.length === 2 ||
+      flippedCards.includes(cardId) ||
+      matchedCards.includes(cardId) ||
+      gameOver
+    ) {
       return
     }
 
@@ -99,6 +106,23 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins}:${secs.toString().padStart(2, "0")}`
+  }
+
+  const handleStartGame = () => {
+    setGameStarted(true)
+    setMoves(0)
+    setFlippedCards([])
+    setMatchedCards([])
+    setGameComplete(false)
+    setGameOver(false)
+    setTimeLeft(gameConfig?.timer || 0)
+    setLivesLeft(gameConfig?.lives || 0)
+  }
+
+  const handleEndGame = () => {
+    setGameStarted(false)
+    setGameOver(true)
+    setFlippedCards([])
   }
 
   return (
@@ -247,6 +271,29 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
             onClick={() => handleCardClick(card.id)}
           />
         ))}
+      </div>
+
+      <div className="flex justify-center gap-4 mt-8">
+        <Button
+          onClick={handleStartGame}
+          disabled={gameStarted && !gameComplete && !gameOver}
+          size="lg"
+          className="px-8 py-3 text-lg font-semibold"
+        >
+          <Play className="w-5 h-5 mr-2" />
+          {gameStarted && !gameComplete && !gameOver ? "Game Running" : "Start Game"}
+        </Button>
+
+        <Button
+          onClick={handleEndGame}
+          disabled={!gameStarted || gameComplete || gameOver}
+          variant="destructive"
+          size="lg"
+          className="px-8 py-3 text-lg font-semibold"
+        >
+          <Square className="w-5 h-5 mr-2" />
+          End Game
+        </Button>
       </div>
     </div>
   )
