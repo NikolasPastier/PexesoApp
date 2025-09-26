@@ -153,14 +153,17 @@ export function DeckGallery() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-7xl mx-auto p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-muted rounded w-48 mb-2"></div>
-          <div className="h-4 bg-muted rounded w-96 mb-8"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-64 bg-muted rounded-xl"></div>
-            ))}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-3xl backdrop-blur-sm"></div>
+        <div className="relative w-full max-w-7xl mx-auto p-6">
+          <div className="animate-pulse">
+            <div className="h-8 bg-muted/20 rounded w-48 mb-2"></div>
+            <div className="h-4 bg-muted/20 rounded w-96 mb-8"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="h-64 bg-muted/20 rounded-xl"></div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -168,135 +171,149 @@ export function DeckGallery() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h2 className="text-3xl font-bold text-foreground mb-2">Deck Gallery</h2>
-          <p className="text-muted-foreground">
-            Explore decks created by the community and choose your favorite to play with.
-          </p>
-        </div>
-        <Button variant="ghost" className="text-primary hover:text-primary/80">
-          Browse All <ChevronRightIcon />
-        </Button>
-      </div>
+    <div className="relative">
+      {/* Background with gradient and blur effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-3xl backdrop-blur-sm border border-gray-700/30 shadow-2xl"></div>
 
-      {/* Deck Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {decks.map((deck) => (
-          <Card
-            key={deck.id}
-            className="group hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
+      {/* Content */}
+      <div className="relative w-full max-w-7xl mx-auto p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-3xl font-bold text-white mb-2">Deck Gallery</h2>
+            <p className="text-gray-300">
+              Explore decks created by the community and choose your favorite to play with.
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            className="text-primary hover:text-primary/80 hover:bg-gray-700/50 border border-gray-600/30"
           >
-            <div className="relative">
-              {/* Deck Preview Image */}
-              <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 p-4">
-                <div className="grid grid-cols-4 gap-2 h-full">
-                  {deck.images.slice(0, 8).map((image, index) => (
-                    <div key={index} className="relative bg-white rounded-lg shadow-sm overflow-hidden">
-                      <Image
-                        src={image || "/placeholder.svg?height=60&width=60"}
-                        alt={`${deck.title} card ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
+            Browse All <ChevronRightIcon />
+          </Button>
+        </div>
 
-              {/* Overlay with actions */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size="sm" variant="secondary" onClick={() => setSelectedDeck(deck)}>
-                        <EyeIcon />
-                        <span className="ml-1">Preview</span>
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl">
-                      <DialogHeader>
-                        <DialogTitle>{selectedDeck?.title}</DialogTitle>
-                      </DialogHeader>
-                      <div className="grid grid-cols-4 gap-3 p-4">
-                        {selectedDeck?.images.map((image, index) => (
-                          <div
-                            key={index}
-                            className="aspect-square relative bg-white rounded-lg shadow-sm overflow-hidden"
-                          >
-                            <Image
-                              src={image || "/placeholder.svg?height=100&width=100"}
-                              alt={`${selectedDeck.title} card ${index + 1}`}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex justify-end gap-2 p-4 border-t">
-                        <Button
-                          onClick={() => handleSelectDeck(selectedDeck!)}
-                          className="bg-primary hover:bg-primary/90"
-                        >
-                          Play with this Deck
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-
-                  <Button size="sm" onClick={() => handleSelectDeck(deck)} className="bg-primary hover:bg-primary/90">
-                    Play Now
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <CardContent className="p-4">
-              {/* Deck Info */}
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg text-foreground mb-1 line-clamp-1">{deck.title}</h3>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      {deck.user?.avatar_url && (
+        {/* Deck Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {decks.map((deck) => (
+            <Card
+              key={deck.id}
+              className="group hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden bg-gray-800/50 border-gray-600/30 backdrop-blur-sm hover:bg-gray-700/50"
+            >
+              <div className="relative">
+                {/* Deck Preview Image */}
+                <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/10 p-4">
+                  <div className="grid grid-cols-4 gap-2 h-full">
+                    {deck.images.slice(0, 8).map((image, index) => (
+                      <div key={index} className="relative bg-white rounded-lg shadow-sm overflow-hidden">
                         <Image
-                          src={deck.user.avatar_url || "/placeholder.svg?height=16&width=16"}
-                          alt={deck.user.username || "User"}
-                          width={16}
-                          height={16}
-                          className="rounded-full"
+                          src={image || "/placeholder.svg?height=60&width=60"}
+                          alt={`${deck.title} card ${index + 1}`}
+                          fill
+                          className="object-cover"
                         />
-                      )}
-                      <span>{deck.user?.username || "Anonymous"}</span>
-                    </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                {deck.user_id === "system" && (
-                  <Badge variant="secondary" className="text-xs">
-                    Official
-                  </Badge>
-                )}
+
+                {/* Overlay with actions */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setSelectedDeck(deck)}
+                          className="bg-gray-700/80 hover:bg-gray-600/80 text-white border-gray-500/50"
+                        >
+                          <EyeIcon />
+                          <span className="ml-1">Preview</span>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                          <DialogTitle>{selectedDeck?.title}</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid grid-cols-4 gap-3 p-4">
+                          {selectedDeck?.images.map((image, index) => (
+                            <div
+                              key={index}
+                              className="aspect-square relative bg-white rounded-lg shadow-sm overflow-hidden"
+                            >
+                              <Image
+                                src={image || "/placeholder.svg?height=100&width=100"}
+                                alt={`${selectedDeck.title} card ${index + 1}`}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex justify-end gap-2 p-4 border-t">
+                          <Button
+                            onClick={() => handleSelectDeck(selectedDeck!)}
+                            className="bg-primary hover:bg-primary/90"
+                          >
+                            Play with this Deck
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+
+                    <Button size="sm" onClick={() => handleSelectDeck(deck)} className="bg-primary hover:bg-primary/90">
+                      Play Now
+                    </Button>
+                  </div>
+                </div>
               </div>
 
-              {/* Stats */}
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1">
-                    <HeartIcon />
-                    <span>{deck.likes}</span>
+              <CardContent className="p-4">
+                {/* Deck Info */}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg text-white mb-1 line-clamp-1">{deck.title}</h3>
+                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                      <div className="flex items-center gap-1">
+                        {deck.user?.avatar_url && (
+                          <Image
+                            src={deck.user.avatar_url || "/placeholder.svg?height=16&width=16"}
+                            alt={deck.user.username || "User"}
+                            width={16}
+                            height={16}
+                            className="rounded-full"
+                          />
+                        )}
+                        <span>{deck.user?.username || "Anonymous"}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <UsersIcon />
-                    <span>{deck.plays}</span>
-                  </div>
+                  {deck.user_id === "system" && (
+                    <Badge variant="secondary" className="text-xs bg-primary/20 text-primary border-primary/30">
+                      Official
+                    </Badge>
+                  )}
                 </div>
-                <span className="text-xs">{new Date(deck.created_at).toLocaleDateString()}</span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+
+                {/* Stats */}
+                <div className="flex items-center justify-between text-sm text-gray-300">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1">
+                      <HeartIcon />
+                      <span>{deck.likes}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <UsersIcon />
+                      <span>{deck.plays}</span>
+                    </div>
+                  </div>
+                  <span className="text-xs">{new Date(deck.created_at).toLocaleDateString()}</span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   )

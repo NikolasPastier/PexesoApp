@@ -15,12 +15,12 @@ export default function HomePage() {
       </section>
 
       {/* Create Custom Deck Section */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-3.5">
         <DeckGenerator />
       </section>
 
       {/* Deck Gallery Section */}
-      <section className="container mx-auto px-4 py-16 border-t border-border/50">
+      <section className="container mx-auto px-4 border-t-0 py-2.5">
         <DeckGallery />
       </section>
 
