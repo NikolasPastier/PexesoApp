@@ -3,16 +3,11 @@
 import { useState, useEffect } from "react"
 import { MemoryCard } from "./memory-card"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Heart, Settings, ChevronDown, Users, Timer, Grid3X3, Palette } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Users, Timer, Target, Grid3X3, Trophy, Clock, Zap, ChevronDown } from "lucide-react"
 
 interface GameCard {
   id: string
@@ -28,6 +23,16 @@ interface GameConfig {
   special?: string
 }
 
+interface PlayerStats {
+  name: string
+  matchesCompleted: number
+  matchesRemaining: number
+  movesUsed: number
+  movesRemaining?: number
+  timeUsed?: number
+  timeRemaining?: number
+}
+
 interface GameBoardProps {
   cards: GameCard[]
   onRestart?: () => void
@@ -36,33 +41,56 @@ interface GameBoardProps {
 }
 
 export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardProps) {
+  const [gameStatus, setGameStatus] = useState<"idle" | "running">("idle")
+  const [players, setPlayers] = useState<"solo" | "two" | "bot">("solo")
+  const [timer, setTimer] = useState<number | "unlimited">("unlimited")
+  const [matches, setMatches] = useState<number | "unlimited">("unlimited")
+  const [cardCount, setCardCount] = useState<number>(24)
+  const [customTimerValue, setCustomTimerValue] = useState<number>(15)
+  const [customMatchesValue, setCustomMatchesValue] = useState<number>(10)
+  const [stats, setStats] = useState<PlayerStats[]>([])
+  const [showEndModal, setShowEndModal] = useState(false)
+  const [currentPlayer, setCurrentPlayer] = useState(0)
+
   const [flippedCards, setFlippedCards] = useState<string[]>([])
   const [matchedCards, setMatchedCards] = useState<string[]>([])
   const [moves, setMoves] = useState(0)
   const [gameComplete, setGameComplete] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(gameConfig?.timer || 0)
-  const [livesLeft, setLivesLeft] = useState(gameConfig?.lives || 0)
+  const [timeLeft, setTimeLeft] = useState(0)
   const [gameOver, setGameOver] = useState(false)
-  const [gameStatus, setGameStatus] = useState<"idle" | "running">("idle")
-
-  const [gameSettings, setGameSettings] = useState({
-    players: "1",
-    timer: "unlimited",
-    lives: "unlimited",
-    cards: "16",
-    deckStyle: "classic", // Added deck style option
-  })
+  const [gameStartTime, setGameStartTime] = useState<number>(0)
 
   useEffect(() => {
-    if (gameConfig?.timer && timeLeft > 0 && !gameComplete && !gameOver) {
-      const timer = setTimeout(() => {
+    if (gameStatus === "running" && typeof timer === "number" && timeLeft > 0 && !gameComplete && !gameOver) {
+      const timerInterval = setTimeout(() => {
         setTimeLeft((prev) => prev - 1)
       }, 1000)
-      return () => clearTimeout(timer)
-    } else if (gameConfig?.timer && timeLeft === 0 && !gameComplete) {
-      setGameOver(true)
+      return () => clearTimeout(timerInterval)
+    } else if (gameStatus === "running" && typeof timer === "number" && timeLeft === 0 && !gameComplete) {
+      handleGameEnd()
     }
-  }, [timeLeft, gameComplete, gameOver, gameConfig?.timer])
+  }, [timeLeft, gameComplete, gameOver, gameStatus, timer])
+
+  useEffect(() => {
+    if (gameStatus === "running" && players === "bot" && currentPlayer === 1 && !gameComplete && !gameOver) {
+      const botDelay = setTimeout(
+        () => {
+          // Simple bot logic - pick random unmatched, unflipped cards
+          const availableCards = cards.filter(
+            (card) => !matchedCards.includes(card.id) && !flippedCards.includes(card.id),
+          )
+
+          if (availableCards.length > 0 && flippedCards.length < 2) {
+            const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)]
+            handleCardClick(randomCard.id)
+          }
+        },
+        1000 + Math.random() * 1000,
+      ) // Random delay between 1-2 seconds
+
+      return () => clearTimeout(botDelay)
+    }
+  }, [currentPlayer, gameStatus, players, flippedCards, matchedCards, gameComplete, gameOver])
 
   const handleCardClick = (cardId: string) => {
     if (
@@ -90,33 +118,65 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
         setTimeout(() => {
           setMatchedCards((prev) => [...prev, firstCard, secondCard])
           setFlippedCards([])
+
+          updatePlayerStats(true)
+
+          // Check if matches limit reached
+          if (typeof matches === "number" && matchedCards.length / 2 + 1 >= matches) {
+            handleGameEnd()
+          }
         }, 1000)
       } else {
-        // No match - deduct life if lives are enabled
-        if (gameConfig?.lives && livesLeft > 0) {
-          setLivesLeft((prev) => {
-            const newLives = prev - 1
-            if (newLives === 0) {
-              setGameOver(true)
-            }
-            return newLives
-          })
-        }
-
+        // No match
         setTimeout(() => {
           setFlippedCards([])
+          updatePlayerStats(false)
+
+          if (players === "two") {
+            setCurrentPlayer((prev) => (prev === 0 ? 1 : 0))
+          } else if (players === "bot") {
+            setCurrentPlayer((prev) => (prev === 0 ? 1 : 0))
+          }
         }, 1500)
       }
     }
   }
 
+  const updatePlayerStats = (foundMatch: boolean) => {
+    setStats((prevStats) => {
+      const newStats = [...prevStats]
+      const playerIndex = currentPlayer
+
+      if (newStats[playerIndex]) {
+        newStats[playerIndex] = {
+          ...newStats[playerIndex],
+          movesUsed: newStats[playerIndex].movesUsed + 1,
+          matchesCompleted: foundMatch
+            ? newStats[playerIndex].matchesCompleted + 1
+            : newStats[playerIndex].matchesCompleted,
+          matchesRemaining: foundMatch
+            ? newStats[playerIndex].matchesRemaining - 1
+            : newStats[playerIndex].matchesRemaining,
+          timeUsed: typeof timer === "number" ? (typeof timer === "number" ? timer * 60 - timeLeft : 0) : undefined,
+          timeRemaining: typeof timer === "number" ? timeLeft : undefined,
+        }
+      }
+
+      return newStats
+    })
+  }
+
   useEffect(() => {
     if (matchedCards.length === cards.length && cards.length > 0) {
-      setGameComplete(true)
+      handleGameEnd()
     }
   }, [matchedCards.length, cards.length])
 
-  const gridCols = cards.length <= 12 ? "grid-cols-3 sm:grid-cols-4" : "grid-cols-4 sm:grid-cols-6"
+  const handleGameEnd = () => {
+    setGameComplete(true)
+    setGameStatus("idle")
+    setShowEndModal(true)
+  }
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -131,178 +191,377 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     setMatchedCards([])
     setGameComplete(false)
     setGameOver(false)
-    setTimeLeft(gameConfig?.timer || 0)
-    setLivesLeft(gameConfig?.lives || 0)
+    setCurrentPlayer(0)
+    setGameStartTime(Date.now())
+
+    // Initialize timer
+    if (typeof timer === "number") {
+      setTimeLeft(timer * 60) // Convert minutes to seconds
+    }
+
+    // Initialize player stats
+    const playerNames =
+      players === "solo" ? ["Player"] : players === "two" ? ["Player 1", "Player 2"] : ["Player", "Bot"]
+
+    const initialStats: PlayerStats[] = playerNames.map((name) => ({
+      name,
+      matchesCompleted: 0,
+      matchesRemaining: cardCount / 2,
+      movesUsed: 0,
+      movesRemaining: typeof matches === "number" ? matches : undefined,
+      timeUsed: 0,
+      timeRemaining: typeof timer === "number" ? timer * 60 : undefined,
+    }))
+
+    setStats(initialStats)
   }
 
   const handleEndGame = () => {
-    setGameStatus("idle")
-    setGameOver(true)
-    setFlippedCards([])
+    handleGameEnd()
   }
 
+  const resetToDefault = () => {
+    setGameStatus("idle")
+    setPlayers("solo")
+    setTimer("unlimited")
+    setMatches("unlimited")
+    setCardCount(24)
+    setStats([])
+    setShowEndModal(false)
+    setFlippedCards([])
+    setMatchedCards([])
+    setMoves(0)
+    setGameComplete(false)
+    setGameOver(false)
+    setTimeLeft(0)
+    setCurrentPlayer(0)
+  }
+
+  const getWinnerAnnouncement = () => {
+    if (players === "solo") {
+      return gameComplete ? "Congratulations! You Won!" : "Game Over!"
+    }
+
+    const player1Matches = stats[0]?.matchesCompleted || 0
+    const player2Matches = stats[1]?.matchesCompleted || 0
+
+    if (player1Matches > player2Matches) {
+      return `${stats[0]?.name} Wins!`
+    } else if (player2Matches > player1Matches) {
+      return `${stats[1]?.name} Wins!`
+    } else {
+      // Tie on matches, check moves
+      const player1Moves = stats[0]?.movesUsed || 0
+      const player2Moves = stats[1]?.movesUsed || 0
+
+      if (player1Moves < player2Moves) {
+        return `${stats[0]?.name} Wins!`
+      } else if (player2Moves < player1Moves) {
+        return `${stats[1]?.name} Wins!`
+      } else {
+        return "It's a Draw!"
+      }
+    }
+  }
+
+  const gridCols = cardCount <= 16 ? "grid-cols-4" : cardCount <= 24 ? "grid-cols-6" : "grid-cols-8"
+
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 px-4">
-      {/* Game Stats */}
-      <div className="relative mb-6">
-        {/* Background with gradient and blur effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-2xl backdrop-blur-sm border border-gray-700/30 shadow-2xl"></div>
+    <div className="w-full max-w-6xl mx-auto p-4">
+      <div className="mb-6">
+        <div className="relative p-6 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-2xl backdrop-blur-sm border border-gray-700/30 shadow-2xl py-7">
+          <div className="flex justify-between items-center">
+            {/* Left side - Settings or Stats */}
+            <div className="flex-1">
+              {gameStatus === "idle" ? (
+                /* Settings Row */
+                <div className="flex items-center gap-4 flex-wrap">
+                  {/* Players Setting */}
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-white" />
+                    <span className="text-white text-sm">Players:</span>
+                    <Select value={players} onValueChange={(value: "solo" | "two" | "bot") => setPlayers(value)}>
+                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px]">
+                        <SelectValue />
+                        <ChevronDown className="w-4 h-4" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600/30">
+                        <SelectItem value="solo" className="text-white hover:bg-gray-700">
+                          Solo
+                        </SelectItem>
+                        <SelectItem value="two" className="text-white hover:bg-gray-700">
+                          2 Players
+                        </SelectItem>
+                        <SelectItem value="bot" className="text-white hover:bg-gray-700">
+                          Bot
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-        {/* Content */}
-        <div className="relative flex items-center justify-between p-6">
-          <div className="flex items-center gap-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+                  {/* Timer Setting */}
+                  <div className="flex items-center gap-2">
+                    <Timer className="w-4 h-4 text-white" />
+                    <span className="text-white text-sm">Timer:</span>
+                    <Select
+                      value={timer === "unlimited" ? "unlimited" : "custom"}
+                      onValueChange={(value) => {
+                        if (value === "unlimited") {
+                          setTimer("unlimited")
+                        } else if (value === "custom") {
+                          setTimer(customTimerValue)
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px]">
+                        <SelectValue>{timer === "unlimited" ? "Unlimited" : `Custom (${timer} min)`}</SelectValue>
+                        <ChevronDown className="w-4 h-4" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600/30">
+                        <SelectItem value="unlimited" className="text-white hover:bg-gray-700">
+                          Unlimited
+                        </SelectItem>
+                        <SelectItem value="custom" className="text-white hover:bg-gray-700">
+                          <div className="flex items-center gap-2 w-full">
+                            <span>Custom</span>
+                            {timer !== "unlimited" && (
+                              <div className="flex items-center gap-2 ml-2">
+                                <Slider
+                                  value={[typeof timer === "number" ? timer : customTimerValue]}
+                                  onValueChange={(value) => {
+                                    setCustomTimerValue(value[0])
+                                    setTimer(value[0])
+                                  }}
+                                  max={60}
+                                  min={1}
+                                  step={1}
+                                  className="w-32 h-1 accent-green-500"
+                                />
+                                <span className="text-xs">
+                                  {typeof timer === "number" ? timer : customTimerValue}min
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Matches Setting */}
+                  <div className="flex items-center gap-2">
+                    <Target className="w-4 h-4 text-white" />
+                    <span className="text-white text-sm">Matches:</span>
+                    <Select
+                      value={matches === "unlimited" ? "unlimited" : "custom"}
+                      onValueChange={(value) => {
+                        if (value === "unlimited") {
+                          setMatches("unlimited")
+                        } else if (value === "custom") {
+                          setMatches(customMatchesValue)
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px]">
+                        <SelectValue>{matches === "unlimited" ? "Unlimited" : `Custom (${matches})`}</SelectValue>
+                        <ChevronDown className="w-4 h-4" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600/30">
+                        <SelectItem value="unlimited" className="text-white hover:bg-gray-700">
+                          Unlimited
+                        </SelectItem>
+                        <SelectItem value="custom" className="text-white hover:bg-gray-700">
+                          <div className="flex items-center gap-2 w-full">
+                            <span>Custom</span>
+                            {matches !== "unlimited" && (
+                              <div className="flex items-center gap-2 ml-2">
+                                <Slider
+                                  value={[typeof matches === "number" ? matches : customMatchesValue]}
+                                  onValueChange={(value) => {
+                                    setCustomMatchesValue(value[0])
+                                    setMatches(value[0])
+                                  }}
+                                  max={100}
+                                  min={1}
+                                  step={1}
+                                  className="w-32 h-1 accent-green-500"
+                                />
+                                <span className="text-xs">
+                                  {typeof matches === "number" ? matches : customMatchesValue}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Cards Setting */}
+                  <div className="flex items-center gap-2">
+                    <Grid3X3 className="w-4 h-4 text-white" />
+                    <span className="text-white text-sm">Cards:</span>
+                    <Select
+                      value={cardCount.toString()}
+                      onValueChange={(value) => setCardCount(Number.parseInt(value))}
+                    >
+                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px]">
+                        <SelectValue />
+                        <ChevronDown className="w-4 h-4" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600/30">
+                        <SelectItem value="16" className="text-white hover:bg-gray-700">
+                          16 cards
+                        </SelectItem>
+                        <SelectItem value="24" className="text-white hover:bg-gray-700">
+                          24 cards
+                        </SelectItem>
+                        <SelectItem value="32" className="text-white hover:bg-gray-700">
+                          32 cards
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              ) : (
+                /* Stats Row */
+                <div>
+                  <div className={`grid ${players === "solo" ? "grid-cols-1" : "grid-cols-2"} gap-4`}>
+                    {stats.map((playerStat, index) => (
+                      <Card
+                        key={index}
+                        className={`bg-gray-800/50 border-gray-600/30 ${currentPlayer === index ? "ring-2 ring-blue-400" : ""}`}
+                      >
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-white flex items-center gap-2">
+                            {playerStat.name}
+                            {currentPlayer === index && <Zap className="w-4 h-4 text-yellow-400" />}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          <div className="text-gray-300">
+                            <div>
+                              Matches: {playerStat.matchesCompleted}/{cardCount / 2}
+                            </div>
+                            <div>
+                              Moves: {playerStat.movesUsed}
+                              {playerStat.movesRemaining && `/${playerStat.movesRemaining}`}
+                            </div>
+                            {typeof timer === "number" && (
+                              <div className="flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                Time: {formatTime(timeLeft)}
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right side - Start/End Button */}
+            <div className="ml-6">
+              {gameStatus === "idle" ? (
                 <Button
-                  variant="ghost"
-                  size="sm"
-                  className="gap-2 bg-gray-700/50 hover:bg-gray-600/50 text-white border border-gray-600/30"
+                  onClick={handleStartGame}
+                  className="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-lg"
                 >
-                  <Settings className="w-4 h-4" />
-                  Game Settings
-                  <ChevronDown className="w-4 h-4" />
+                  Start Game
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuLabel className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  Players
-                </DropdownMenuLabel>
-                <DropdownMenuRadioGroup
-                  value={gameSettings.players}
-                  onValueChange={(value) => setGameSettings((prev) => ({ ...prev, players: value }))}
-                >
-                  <DropdownMenuRadioItem value="1">1 Player</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="2">2 Players</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="3">3 Players</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="4">4 Players (vs Bot)</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuLabel className="flex items-center gap-2">
-                  <Timer className="w-4 h-4" />
-                  Timer
-                </DropdownMenuLabel>
-                <DropdownMenuRadioGroup
-                  value={gameSettings.timer}
-                  onValueChange={(value) => setGameSettings((prev) => ({ ...prev, timer: value }))}
-                >
-                  <DropdownMenuRadioItem value="unlimited">Unlimited</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="2">2 Minutes</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="5">5 Minutes</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="10">10 Minutes</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="custom">Custom</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuLabel className="flex items-center gap-2">
-                  <Heart className="w-4 h-4" />
-                  Lives
-                </DropdownMenuLabel>
-                <DropdownMenuRadioGroup
-                  value={gameSettings.lives}
-                  onValueChange={(value) => setGameSettings((prev) => ({ ...prev, lives: value }))}
-                >
-                  <DropdownMenuRadioItem value="unlimited">Unlimited</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="10">10 Lives</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="15">15 Lives</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="20">20 Lives</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="custom">Custom</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuLabel className="flex items-center gap-2">
-                  <Grid3X3 className="w-4 h-4" />
-                  Cards
-                </DropdownMenuLabel>
-                <DropdownMenuRadioGroup
-                  value={gameSettings.cards}
-                  onValueChange={(value) => setGameSettings((prev) => ({ ...prev, cards: value }))}
-                >
-                  <DropdownMenuRadioItem value="8">8 Cards (4 pairs)</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="16">16 Cards (8 pairs)</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="24">24 Cards (12 pairs)</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="32">32 Cards (16 pairs)</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuLabel className="flex items-center gap-2">
-                  <Palette className="w-4 h-4" />
-                  Deck Style
-                </DropdownMenuLabel>
-                <DropdownMenuRadioGroup
-                  value={gameSettings.deckStyle}
-                  onValueChange={(value) => setGameSettings((prev) => ({ ...prev, deckStyle: value }))}
-                >
-                  <DropdownMenuRadioItem value="classic">Classic Animals</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="space">Space Adventure</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="ocean">Ocean Life</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="custom">Custom Deck</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          <div className="flex justify-end">
-            {gameStatus === "idle" && (
-              <button
-                onClick={handleStartGame}
-                className="px-4 py-2 rounded-lg shadow-md bg-green-500 text-white hover:bg-green-600 transition"
-              >
-                Start Game
-              </button>
-            )}
-            {gameStatus === "running" && (
-              <button
-                onClick={() => {
-                  handleEndGame()
-                  setGameStatus("idle")
-                }}
-                className="px-4 py-2 rounded-lg shadow-md bg-red-500 text-white hover:bg-red-600 transition"
-              >
-                End Game
-              </button>
-            )}
+              ) : (
+                <Button onClick={handleEndGame} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg">
+                  End Game
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Game Complete Message */}
-      {gameComplete && (
-        <div className="text-center mb-6 p-6 bg-primary/10 border border-primary rounded-2xl">
-          <h2 className="text-2xl font-bold text-primary mb-2">Congratulations! 🎉</h2>
-          <p className="text-foreground">You completed the game in {moves} moves!</p>
-          {gameConfig?.timer && <p className="text-muted-foreground">Time remaining: {formatTime(timeLeft)}</p>}
-        </div>
-      )}
-
-      {gameOver && (
-        <div className="text-center mb-6 p-6 bg-destructive/10 border border-destructive rounded-2xl">
-          <h2 className="text-2xl font-bold text-destructive mb-2">Game Over!</h2>
-          <p className="text-foreground">{timeLeft === 0 ? "Time's up!" : "No lives remaining!"}</p>
-          <p className="text-muted-foreground">
-            You matched {matchedCards.length / 2} out of {cards.length / 2} pairs
-          </p>
-        </div>
-      )}
-
-      {/* Game Grid */}
-      <div className={`grid mx-0 px-0 ${gridCols} justify-items-center gap-4`}>
-        {cards.map((card) => (
-          <MemoryCard
-            key={card.id}
-            id={card.id}
-            frontImage={card.image}
-            isFlipped={flippedCards.includes(card.id) || matchedCards.includes(card.id)}
-            isMatched={matchedCards.includes(card.id)}
-            onClick={() => handleCardClick(card.id)}
-          />
-        ))}
+      <div className={`grid ${gridCols} gap-4 justify-items-center`}>
+        {gameStatus === "idle"
+          ? /* Preview Grid */
+            Array.from({ length: cardCount }).map((_, index) => (
+              <MemoryCard
+                key={`preview-${index}`}
+                id={`preview-${index}`}
+                frontImage="/placeholder.svg?height=100&width=100&text=Card"
+                isFlipped={false}
+                isMatched={false}
+                onClick={() => {}} // No-op in preview mode
+              />
+            ))
+          : /* Active Game Grid */
+            cards
+              .slice(0, cardCount)
+              .map((card) => (
+                <MemoryCard
+                  key={card.id}
+                  id={card.id}
+                  frontImage={card.image}
+                  isFlipped={flippedCards.includes(card.id) || matchedCards.includes(card.id)}
+                  isMatched={matchedCards.includes(card.id)}
+                  onClick={() => handleCardClick(card.id)}
+                />
+              ))}
       </div>
+
+      <Dialog open={showEndModal} onOpenChange={setShowEndModal}>
+        <DialogContent className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 border-gray-700/30 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center">{getWinnerAnnouncement()}</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="text-center">
+              <Trophy className="w-16 h-16 mx-auto text-yellow-400 mb-4" />
+            </div>
+
+            <div className={`${players !== "solo" ? "grid grid-cols-2 gap-4" : ""}`}>
+              <div className="space-y-2">
+                <h3 className="font-semibold">Final Stats:</h3>
+                <div className="rounded-lg p-4 space-y-2 bg-transparent">
+                  <div>Cards: {cardCount}</div>
+                  <div>
+                    Total Matches: {matchedCards.length / 2}/{cardCount / 2}
+                  </div>
+                  <div>Total Moves: {moves}</div>
+                  {typeof timer === "number" && <div>Time Used: {formatTime(timer * 60 - timeLeft)}</div>}
+                </div>
+              </div>
+
+              {players !== "solo" && (
+                <div className="space-y-2">
+                  <h3 className="font-semibold">Player Stats:</h3>
+                  <div className="space-y-2">
+                    {stats.map((playerStat, index) => (
+                      <div key={index} className="rounded-lg p-3 bg-transparent">
+                        <div className="font-medium">{playerStat.name}</div>
+                        <div className="text-sm text-gray-300">
+                          Matches: {playerStat.matchesCompleted} | Moves: {playerStat.movesUsed}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <Button
+              onClick={() => {
+                setShowEndModal(false)
+                resetToDefault()
+              }}
+              className="w-full bg-blue-500 hover:bg-blue-600"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

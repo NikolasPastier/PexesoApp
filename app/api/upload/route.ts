@@ -17,10 +17,27 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const title = formData.get("title") as string
     const description = formData.get("description") as string
+    const cardsCount = formData.get("cards_count") as string
     const images = formData.getAll("images") as File[]
 
     if (!title || images.length === 0) {
       return NextResponse.json({ error: "Title and at least one image are required" }, { status: 400 })
+    }
+
+    if (!cardsCount || !["16", "24", "32"].includes(cardsCount)) {
+      return NextResponse.json({ error: "Valid card count (16, 24, or 32) is required" }, { status: 400 })
+    }
+
+    const cardCountNum = Number.parseInt(cardsCount)
+    const requiredImages = cardCountNum / 2
+
+    if (images.length !== requiredImages) {
+      return NextResponse.json(
+        {
+          error: `You must upload exactly ${requiredImages} images for ${cardCountNum} cards`,
+        },
+        { status: 400 },
+      )
     }
 
     // Validate image files
@@ -53,7 +70,6 @@ export async function POST(request: NextRequest) {
       imageUrls.push(publicUrl)
     }
 
-    // Save deck metadata to database
     const { data: deck, error: dbError } = await supabase
       .from("decks")
       .insert({
@@ -61,6 +77,7 @@ export async function POST(request: NextRequest) {
         title: title.trim(),
         description: description?.trim() || null,
         images: imageUrls,
+        cards_count: cardCountNum,
         is_public: true,
       })
       .select()

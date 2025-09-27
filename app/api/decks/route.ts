@@ -45,11 +45,14 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { title, images, prompt } = await request.json()
+    const { title, images, prompt, cards_count } = await request.json()
 
     if (!title || !images || images.length === 0) {
       return NextResponse.json({ error: "Title and images are required" }, { status: 400 })
     }
+
+    const validCardsCounts = [16, 24, 32]
+    const finalCardsCount = validCardsCounts.includes(cards_count) ? cards_count : 24
 
     const supabase = await createClient()
 
@@ -62,7 +65,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Authentication required" }, { status: 401 })
     }
 
-    // Save deck to database
     const { data: deck, error: dbError } = await supabase
       .from("decks")
       .insert({
@@ -70,6 +72,7 @@ export async function POST(request: NextRequest) {
         title,
         description: prompt || null,
         images,
+        cards_count: finalCardsCount,
         is_public: true,
       })
       .select()

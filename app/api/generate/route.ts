@@ -7,17 +7,20 @@ fal.config({
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt } = await request.json()
+    const { prompt, cardCount = 8 } = await request.json()
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 })
     }
 
-    const imagePromises = Array.from({ length: 8 }, async (_, i) => {
+    const validCounts = [8, 12, 16]
+    const imageCount = validCounts.includes(cardCount) ? cardCount : 8
+
+    const imagePromises = Array.from({ length: imageCount }, async (_, i) => {
       try {
         const result = await fal.subscribe("fal-ai/flux/schnell", {
           input: {
-            prompt: `${prompt}, memory card game style, clean background, high quality`,
+            prompt: `${prompt}, memory card game style, clean background, high quality, unique variation ${i + 1}`,
             image_size: "square_hd",
             num_inference_steps: 4,
             num_images: 1,

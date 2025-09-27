@@ -43,6 +43,7 @@ interface Deck {
   user_id: string
   is_public: boolean
   created_at: string
+  cards_count?: number
   user?: {
     username: string
     avatar_url: string
@@ -68,6 +69,7 @@ const defaultDecks: Deck[] = [
     user_id: "system",
     is_public: true,
     created_at: new Date().toISOString(),
+    cards_count: 16,
     user: { username: "PexesoAI", avatar_url: "/images/pexeso-logo.png" },
     likes: 1247,
     plays: 5832,
@@ -88,6 +90,7 @@ const defaultDecks: Deck[] = [
     user_id: "system",
     is_public: true,
     created_at: new Date().toISOString(),
+    cards_count: 16,
     user: { username: "PexesoAI", avatar_url: "/images/pexeso-logo.png" },
     likes: 892,
     plays: 3421,
@@ -108,6 +111,7 @@ const defaultDecks: Deck[] = [
     user_id: "system",
     is_public: true,
     created_at: new Date().toISOString(),
+    cards_count: 16,
     user: { username: "PexesoAI", avatar_url: "/images/pexeso-logo.png" },
     likes: 634,
     plays: 2156,
@@ -285,6 +289,7 @@ export function DeckGallery() {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg text-white mb-1 line-clamp-1">{deck.title}</h3>
+                    <p className="text-sm text-gray-400 mb-2">{deck.cards_count || 16} cards</p>
                     <div className="flex items-center gap-2 text-sm text-gray-300">
                       <div className="flex items-center gap-1">
                         {deck.user?.avatar_url && (

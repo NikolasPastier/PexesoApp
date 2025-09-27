@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Upload, X, Plus } from "lucide-react"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
@@ -20,9 +21,12 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [deckTitle, setDeckTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [cardCount, setCardCount] = useState<number | null>(null)
   const [selectedImages, setSelectedImages] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const getMaxImages = (cards: number) => cards / 2
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || [])
@@ -30,6 +34,19 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
 
     if (imageFiles.length !== files.length) {
       setError("Only image files are allowed (jpg, png, webp)")
+      return
+    }
+
+    if (!cardCount) {
+      setError("Please select the number of playing cards first")
+      return
+    }
+
+    const maxImages = getMaxImages(cardCount)
+    const totalImages = selectedImages.length + imageFiles.length
+
+    if (totalImages > maxImages) {
+      setError(`You can only upload ${maxImages} images for ${cardCount} cards.`)
       return
     }
 
@@ -49,8 +66,19 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
       return
     }
 
+    if (!cardCount) {
+      setError("Please select the number of playing cards")
+      return
+    }
+
     if (selectedImages.length === 0) {
       setError("At least one image is required")
+      return
+    }
+
+    const requiredImages = getMaxImages(cardCount)
+    if (selectedImages.length !== requiredImages) {
+      setError(`You need exactly ${requiredImages} images for ${cardCount} cards`)
       return
     }
 
@@ -92,12 +120,12 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
         imageUrls.push(publicUrl)
       }
 
-      // Save deck metadata to database
       const { error: dbError } = await supabase.from("decks").insert({
         user_id: user.id,
         title: deckTitle.trim(),
         description: description.trim() || null,
         images: imageUrls,
+        cards_count: cardCount,
         is_public: true,
       })
 
@@ -114,6 +142,7 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
       // Reset form and close modal
       setDeckTitle("")
       setDescription("")
+      setCardCount(null)
       setSelectedImages([])
       setIsOpen(false)
 
@@ -173,6 +202,31 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
               />
             </div>
 
+            <div className="space-y-2">
+              <Label className="text-gray-200">Number of Playing Cards *</Label>
+              <Select value={cardCount?.toString()} onValueChange={(value) => setCardCount(Number(value))}>
+                <SelectTrigger className="bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
+                  <SelectValue placeholder="Select card count..." />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 border-gray-600/30">
+                  <SelectItem value="16" className="text-white hover:bg-gray-700">
+                    16 cards (upload 8 images)
+                  </SelectItem>
+                  <SelectItem value="24" className="text-white hover:bg-gray-700">
+                    24 cards (upload 12 images)
+                  </SelectItem>
+                  <SelectItem value="32" className="text-white hover:bg-gray-700">
+                    32 cards (upload 16 images)
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              {cardCount && (
+                <p className="text-sm text-gray-400">
+                  You need to upload exactly {getMaxImages(cardCount)} images for {cardCount} cards.
+                </p>
+              )}
+            </div>
+
             {/* Image Upload */}
             <div className="space-y-4">
               <Label className="text-gray-200">Images *</Label>
@@ -180,6 +234,11 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
                 <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-300 mb-4">Drag and drop images here, or click to select</p>
                 <p className="text-sm text-gray-400 mb-4">Accepts: JPG, PNG, WebP</p>
+                {cardCount && (
+                  <p className="text-sm text-primary mb-4">
+                    Upload {getMaxImages(cardCount)} images for {cardCount} cards
+                  </p>
+                )}
                 <Input
                   type="file"
                   multiple
@@ -187,12 +246,14 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
                   onChange={handleImageUpload}
                   className="hidden"
                   id="image-upload"
+                  disabled={!cardCount}
                 />
                 <Button
                   type="button"
                   variant="outline"
                   asChild
                   className="bg-gray-700/50 border-gray-600/30 text-gray-200 hover:bg-gray-600/50"
+                  disabled={!cardCount}
                 >
                   <label htmlFor="image-upload" className="cursor-pointer">
                     Select Images
@@ -203,7 +264,10 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
               {/* Image Preview */}
               {selectedImages.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-200">{selectedImages.length} image(s) selected</p>
+                  <p className="text-sm font-medium text-gray-200">
+                    {selectedImages.length} image(s) selected
+                    {cardCount && ` (${getMaxImages(cardCount)} required)`}
+                  </p>
                   <div className="grid grid-cols-4 gap-3 max-h-48 overflow-y-auto">
                     {selectedImages.map((image, index) => (
                       <div key={index} className="relative group">
@@ -249,7 +313,12 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
               </Button>
               <Button
                 type="submit"
-                disabled={isUploading || !deckTitle.trim() || selectedImages.length === 0}
+                disabled={
+                  isUploading ||
+                  !deckTitle.trim() ||
+                  !cardCount ||
+                  selectedImages.length !== getMaxImages(cardCount || 0)
+                }
                 className="bg-primary hover:bg-primary/90"
               >
                 {isUploading ? "Uploading..." : "Save Deck"}
