@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { UploadDeckModal } from "@/components/upload-deck-modal"
 import Image from "next/image"
 
 const HeartIcon = () => (
@@ -119,19 +120,22 @@ export function DeckGallery() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    loadDecksFromStorage()
+    loadDecks()
   }, [])
 
-  const loadDecksFromStorage = () => {
+  const loadDecks = async () => {
     try {
-      // Load user-generated decks from localStorage
-      const savedDecks = localStorage.getItem("userGeneratedDecks")
-      const userDecks = savedDecks ? JSON.parse(savedDecks) : []
-
-      // Combine default decks with user-generated decks
-      setDecks([...defaultDecks, ...userDecks])
+      const response = await fetch("/api/decks")
+      if (response.ok) {
+        const { decks: supabaseDecks } = await response.json()
+        // Combine default decks with Supabase decks
+        setDecks([...defaultDecks, ...supabaseDecks])
+      } else {
+        // Fallback to default decks if API fails
+        setDecks(defaultDecks)
+      }
     } catch (error) {
-      console.error("Error loading decks from storage:", error)
+      console.error("Error loading decks:", error)
       setDecks(defaultDecks)
     } finally {
       setIsLoading(false)
@@ -149,6 +153,10 @@ export function DeckGallery() {
       detail: { message: `Selected "${deck.title}" deck for your next game!` },
     })
     window.dispatchEvent(event)
+  }
+
+  const handleDeckUploaded = () => {
+    loadDecks()
   }
 
   if (isLoading) {
@@ -185,12 +193,15 @@ export function DeckGallery() {
               Explore decks created by the community and choose your favorite to play with.
             </p>
           </div>
-          <Button
-            variant="ghost"
-            className="text-primary hover:text-primary/80 hover:bg-gray-700/50 border border-gray-600/30"
-          >
-            Browse All <ChevronRightIcon />
-          </Button>
+          <div className="flex items-center gap-3">
+            <UploadDeckModal onDeckUploaded={handleDeckUploaded} />
+            <Button
+              variant="ghost"
+              className="text-primary hover:text-primary/80 hover:bg-gray-700/50 border border-gray-600/30"
+            >
+              Browse All <ChevronRightIcon />
+            </Button>
+          </div>
         </div>
 
         {/* Deck Grid */}
@@ -232,9 +243,9 @@ export function DeckGallery() {
                           <span className="ml-1">Preview</span>
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-2xl">
+                      <DialogContent className="max-w-2xl bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 text-white">
                         <DialogHeader>
-                          <DialogTitle>{selectedDeck?.title}</DialogTitle>
+                          <DialogTitle className="text-white">{selectedDeck?.title}</DialogTitle>
                         </DialogHeader>
                         <div className="grid grid-cols-4 gap-3 p-4">
                           {selectedDeck?.images.map((image, index) => (
@@ -251,7 +262,7 @@ export function DeckGallery() {
                             </div>
                           ))}
                         </div>
-                        <div className="flex justify-end gap-2 p-4 border-t">
+                        <div className="flex justify-end gap-2 p-4 border-t border-gray-600/30">
                           <Button
                             onClick={() => handleSelectDeck(selectedDeck!)}
                             className="bg-primary hover:bg-primary/90"

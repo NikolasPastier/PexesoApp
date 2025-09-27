@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import { Loader2, Sparkles, Save, Plus, Globe, Mic, ArrowUp } from "lucide-react"
+import { Loader2, Sparkles, Save, ArrowUp } from "lucide-react"
 import Image from "next/image"
 
 interface GeneratedImage {
@@ -82,15 +82,6 @@ export function DeckGenerator() {
         {/* Main Prompt Container - Dark rounded design similar to the image */}
         <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900/20 rounded-3xl p-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
           <div className="flex items-center gap-4">
-            {/* Plus button on the left */}
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-10 w-10 rounded-full bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border border-gray-600/30"
-            >
-              <Plus className="w-5 h-5" />
-            </Button>
-
             {/* Main input area */}
             <div className="flex-1 relative">
               <Input
@@ -102,26 +93,8 @@ export function DeckGenerator() {
               />
             </div>
 
-            {/* Public indicator */}
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-10 px-4 rounded-full bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border border-gray-600/30 gap-2"
-            >
-              <Globe className="w-4 h-4" />
-              <span className="text-sm">Public</span>
-            </Button>
-
             {/* Right side controls */}
             <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-10 w-10 rounded-full bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border border-gray-600/30"
-              >
-                <Mic className="w-4 h-4" />
-              </Button>
-
               <Button
                 onClick={handleGenerate}
                 disabled={!prompt.trim() || isGenerating}
@@ -135,7 +108,6 @@ export function DeckGenerator() {
         </div>
 
         {/* Subtitle */}
-        
       </div>
 
       {/* Generated Images Grid */}
