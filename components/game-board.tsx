@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, Timer, Target, Grid3X3, Trophy, Clock, Zap, ChevronDown, Bot } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { DeckSelector } from "./deck-selector"
 import { useTranslations } from "next-intl"
 
@@ -430,8 +430,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                 <div className="flex items-center gap-4 flex-wrap max-sm:flex-col max-sm:gap-3">
                   <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
                     <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-white" />
-                      <span className="text-white text-sm">{t("players")}:</span>
+                      <span className="text-white text-sm">{t("players")}</span>
                     </div>
                     <Select value={players} onValueChange={(value: "solo" | "two" | "bot") => setPlayers(value)}>
                       <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px] max-sm:flex-1">
@@ -454,8 +453,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
 
                   <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
                     <div className="flex items-center gap-2">
-                      <Timer className="w-4 h-4 text-white" />
-                      <span className="text-white text-sm">{t("timer")}:</span>
+                      <span className="text-white text-sm">{t("timer")}</span>
                     </div>
                     <Select
                       value={timer === "unlimited" ? "unlimited" : "custom"}
@@ -504,8 +502,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
 
                   <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
                     <div className="flex items-center gap-2">
-                      <Target className="w-4 h-4 text-white" />
-                      <span className="text-white text-sm">{t("matches")}:</span>
+                      <span className="text-white text-sm">{t("matches")}</span>
                     </div>
                     <Select
                       value={matches === "unlimited" ? "unlimited" : "custom"}
@@ -554,8 +551,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
 
                   <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
                     <div className="flex items-center gap-2">
-                      <Grid3X3 className="w-4 h-4 text-white" />
-                      <span className="text-white text-sm">{t("cards")}:</span>
+                      <span className="text-white text-sm">{t("cards")}</span>
                     </div>
                     <Select
                       value={cardCount.toString()}
@@ -591,7 +587,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                 <div>
                   {players === "bot" && isBotThinking && (
                     <div className="mb-4 flex items-center justify-center gap-2 text-blue-400">
-                      <Bot className="w-5 h-5 animate-pulse" />
                       <span className="text-sm font-medium">{t("botThinking")}</span>
                     </div>
                   )}
@@ -603,11 +598,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                         className={`bg-gray-800/50 border-gray-600/30 ${currentPlayer === index ? "ring-2 ring-blue-400" : ""}`}
                       >
                         <CardHeader className="pb-2">
-                          <CardTitle className="text-white flex items-center gap-2">
-                            {playerStat.name}
-                            {currentPlayer === index && <Zap className="w-4 h-4 text-yellow-400" />}
-                            {playerStat.name === t("bot") && <Bot className="w-4 h-4 text-blue-400" />}
-                          </CardTitle>
+                          <CardTitle className="text-white flex items-center gap-2">{playerStat.name}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
                           <div className="text-gray-300">
@@ -620,7 +611,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                             </div>
                             {typeof timer === "number" && (
                               <div className="flex items-center gap-1">
-                                <Clock className="w-4 h-4" />
                                 {t("time")}: {formatTime(timeLeft)}
                               </div>
                             )}
@@ -659,7 +649,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
           <div className="absolute inset-0 bg-gray-900/20 rounded-lg z-10 flex items-center justify-center">
             <div className="bg-gray-800/90 px-4 py-2 rounded-lg border border-gray-600/30">
               <div className="flex items-center gap-2 text-blue-400">
-                <Bot className="w-4 h-4 animate-pulse" />
                 <span className="text-sm font-medium">{t("botTurn")}</span>
               </div>
             </div>
@@ -713,9 +702,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
           </DialogHeader>
 
           <div className="space-y-4">
-            <div className="text-center">
-              <Trophy className="w-16 h-16 mx-auto text-yellow-400 mb-4" />
-            </div>
+            <div className="text-center"></div>
 
             <div className={`${players !== "solo" ? "grid grid-cols-2 gap-4" : ""}`}>
               <div className="space-y-2">
