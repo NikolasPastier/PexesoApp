@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, Timer, Target, Grid3X3, Trophy, Clock, Zap, ChevronDown } from "lucide-react"
+import { Users, Timer, Target, Grid3X3, Trophy, Clock, Zap, ChevronDown, Bot } from "lucide-react"
 import { DeckSelector } from "./deck-selector"
 
 interface GameCard {
@@ -63,6 +63,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
   const [stats, setStats] = useState<PlayerStats[]>([])
   const [showEndModal, setShowEndModal] = useState(false)
   const [currentPlayer, setCurrentPlayer] = useState(0)
+  const [isUserTurn, setIsUserTurn] = useState(true)
+  const [isBotThinking, setIsBotThinking] = useState(false)
 
   const [gameCards, setGameCards] = useState<GameCard[]>([])
   const [flippedCards, setFlippedCards] = useState<string[]>([])
@@ -133,6 +135,9 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
 
   useEffect(() => {
     if (gameStatus === "running" && players === "bot" && currentPlayer === 1 && !gameComplete && !gameOver) {
+      setIsUserTurn(false)
+      setIsBotThinking(true)
+
       const botDelay = setTimeout(
         () => {
           const availableCards = gameCards.filter(
@@ -148,6 +153,9 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
       )
 
       return () => clearTimeout(botDelay)
+    } else if (gameStatus === "running" && players === "bot" && currentPlayer === 0) {
+      setIsUserTurn(true)
+      setIsBotThinking(false)
     }
   }, [currentPlayer, gameStatus, players, flippedCards, matchedCards, gameComplete, gameOver, gameCards])
 
@@ -157,7 +165,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
       flippedCards.length === 2 ||
       flippedCards.includes(cardId) ||
       matchedCards.includes(cardId) ||
-      gameOver
+      gameOver ||
+      (players === "bot" && !isUserTurn)
     ) {
       return
     }
@@ -176,6 +185,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
         setTimeout(() => {
           setMatchedCards((prev) => [...prev, firstCard, secondCard])
           setFlippedCards([])
+          setIsBotThinking(false)
 
           updatePlayerStats(true)
 
@@ -186,6 +196,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
       } else {
         setTimeout(() => {
           setFlippedCards([])
+          setIsBotThinking(false)
           updatePlayerStats(false)
 
           if (players === "two") {
@@ -249,6 +260,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
     setGameOver(false)
     setCurrentPlayer(0)
     setGameStartTime(Date.now())
+    setIsUserTurn(true)
+    setIsBotThinking(false)
 
     const newGameCards = generateGameCards()
     setGameCards(newGameCards)
@@ -301,6 +314,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
     setTimeLeft(0)
     setCurrentPlayer(0)
     setGameCards([])
+    setIsUserTurn(true)
+    setIsBotThinking(false)
 
     const classicAnimals = defaultDecks.find((deck) => deck.title === "Classic Animals")
     if (classicAnimals) {
@@ -544,6 +559,13 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                 </div>
               ) : (
                 <div>
+                  {players === "bot" && isBotThinking && (
+                    <div className="mb-4 flex items-center justify-center gap-2 text-blue-400">
+                      <Bot className="w-5 h-5 animate-pulse" />
+                      <span className="text-sm font-medium">Bot is thinking...</span>
+                    </div>
+                  )}
+
                   <div className={`grid ${players === "solo" ? "grid-cols-1" : "grid-cols-2"} gap-4`}>
                     {stats.map((playerStat, index) => (
                       <Card
@@ -554,6 +576,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                           <CardTitle className="text-white flex items-center gap-2">
                             {playerStat.name}
                             {currentPlayer === index && <Zap className="w-4 h-4 text-yellow-400" />}
+                            {playerStat.name === "Bot" && <Bot className="w-4 h-4 text-blue-400" />}
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
@@ -598,41 +621,56 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
         </div>
       </div>
 
-      <div className={`grid ${gridCols} gap-4 justify-items-center`}>
-        {gameStatus === "idle"
-          ? Array.from({ length: cardCount }).map((_, index) => {
-              let previewImage
+      <div className={`relative ${players === "bot" && !isUserTurn ? "pointer-events-none" : ""}`}>
+        {players === "bot" && !isUserTurn && (
+          <div className="absolute inset-0 bg-gray-900/20 rounded-lg z-10 flex items-center justify-center">
+            <div className="bg-gray-800/90 px-4 py-2 rounded-lg border border-gray-600/30">
+              <div className="flex items-center gap-2 text-blue-400">
+                <Bot className="w-4 h-4 animate-pulse" />
+                <span className="text-sm font-medium">Bot's Turn</span>
+              </div>
+            </div>
+          </div>
+        )}
 
-              if (deckImages.length > 0 && deckImages[index % deckImages.length]) {
-                previewImage = deckImages[index % deckImages.length]
-              } else {
-                const allDefaultImages = defaultDecks.flatMap((deck) => deck.images)
-                previewImage =
-                  allDefaultImages[index % allDefaultImages.length] ||
-                  `/placeholder.svg?height=100&width=100&query=card-${index}`
-              }
+        <div
+          className={`grid ${gridCols} gap-4 justify-items-center ${players === "bot" && !isUserTurn ? "opacity-75" : ""}`}
+        >
+          {gameStatus === "idle"
+            ? Array.from({ length: cardCount }).map((_, index) => {
+                let previewImage
 
-              return (
+                if (deckImages.length > 0 && deckImages[index % deckImages.length]) {
+                  previewImage = deckImages[index % deckImages.length]
+                } else {
+                  const allDefaultImages = defaultDecks.flatMap((deck) => deck.images)
+                  previewImage =
+                    allDefaultImages[index % allDefaultImages.length] ||
+                    `/placeholder.svg?height=100&width=100&query=card-${index}`
+                }
+
+                return (
+                  <MemoryCard
+                    key={`preview-${index}`}
+                    id={`preview-${index}`}
+                    frontImage={previewImage}
+                    isFlipped={false}
+                    isMatched={false}
+                    onClick={() => {}} // No-op in preview mode
+                  />
+                )
+              })
+            : gameCards.map((card) => (
                 <MemoryCard
-                  key={`preview-${index}`}
-                  id={`preview-${index}`}
-                  frontImage={previewImage}
-                  isFlipped={false}
-                  isMatched={false}
-                  onClick={() => {}} // No-op in preview mode
+                  key={card.id}
+                  id={card.id}
+                  frontImage={card.image}
+                  isFlipped={flippedCards.includes(card.id) || matchedCards.includes(card.id)}
+                  isMatched={matchedCards.includes(card.id)}
+                  onClick={() => handleCardClick(card.id)}
                 />
-              )
-            })
-          : gameCards.map((card) => (
-              <MemoryCard
-                key={card.id}
-                id={card.id}
-                frontImage={card.image}
-                isFlipped={flippedCards.includes(card.id) || matchedCards.includes(card.id)}
-                isMatched={matchedCards.includes(card.id)}
-                onClick={() => handleCardClick(card.id)}
-              />
-            ))}
+              ))}
+        </div>
       </div>
 
       <Dialog open={showEndModal} onOpenChange={setShowEndModal}>
