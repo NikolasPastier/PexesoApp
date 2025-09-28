@@ -7,6 +7,7 @@ import { Modal } from "@/components/modal"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAuth } from "@/contexts/auth-context"
 import Image from "next/image"
 
@@ -57,6 +58,7 @@ interface FavouritesModalProps {
 export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
   const [favouriteDecks, setFavouriteDecks] = useState<Deck[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedCardCount, setSelectedCardCount] = useState<string>("all")
   const { user } = useAuth()
 
   useEffect(() => {
@@ -83,6 +85,13 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
       setIsLoading(false)
     }
   }
+
+  const filteredDecks =
+    selectedCardCount === "all"
+      ? favouriteDecks
+      : favouriteDecks.filter((deck) => deck.cards_count === Number.parseInt(selectedCardCount))
+
+  const availableCardCounts = [...new Set(favouriteDecks.map((deck) => deck.cards_count || 16))].sort()
 
   const handleSelectDeck = (deck: Deck) => {
     // Store selected deck in localStorage for the game to use
@@ -131,6 +140,27 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Your Favourite Decks">
       <div className="space-y-4">
+        {!isLoading && favouriteDecks.length > 0 && (
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm text-gray-300">Filter by cards:</span>
+            <Select value={selectedCardCount} onValueChange={setSelectedCardCount}>
+              <SelectTrigger className="w-32 bg-gray-800 border-gray-600/30 text-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-800 border-gray-600/30">
+                <SelectItem value="all" className="text-white hover:bg-gray-700">
+                  All
+                </SelectItem>
+                {availableCardCounts.map((count) => (
+                  <SelectItem key={count} value={count.toString()} className="text-white hover:bg-gray-700">
+                    {count} cards
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
         {isLoading ? (
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
@@ -143,9 +173,17 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
             <p className="text-gray-400 mt-2">No favourite decks yet</p>
             <p className="text-sm text-gray-500 mt-1">Browse the deck gallery and heart the decks you love!</p>
           </div>
+        ) : filteredDecks.length === 0 ? (
+          <div className="text-center py-8">
+            <HeartIcon />
+            <p className="text-gray-400 mt-2">No favourite decks with {selectedCardCount} cards</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Try selecting a different card count or browse the gallery for more decks!
+            </p>
+          </div>
         ) : (
           <div className="grid gap-4 max-h-96 overflow-y-auto pr-2">
-            {favouriteDecks.map((deck) => (
+            {filteredDecks.map((deck) => (
               <Card
                 key={deck.id}
                 className="group hover:shadow-lg transition-all duration-200 cursor-pointer bg-gray-800/50 border-gray-600/30 hover:bg-gray-700/50"

@@ -540,13 +540,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                     </Select>
                   </div>
 
-                  {cardCount === 16 && (
-                    <DeckSelector
-                      selectedDeckId={selectedDeckId}
-                      onDeckChange={handleDeckChange}
-                      cardCount={cardCount}
-                    />
-                  )}
+                  <DeckSelector selectedDeckId={selectedDeckId} onDeckChange={handleDeckChange} cardCount={cardCount} />
                 </div>
               ) : (
                 <div>

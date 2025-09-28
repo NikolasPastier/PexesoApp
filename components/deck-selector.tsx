@@ -150,8 +150,12 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
           )}
 
           {/* Incompatible decks (disabled) */}
-          {incompatibleDecks.length > 0 && (
+          {(compatibleDecks.length > 0 || favoriteDecks.length > 0) && incompatibleDecks.length > 0 && (
             <>
+              <div className="h-px bg-gray-600/30 my-1" />
+              <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                Other Card Counts
+              </div>
               {incompatibleDecks.map((deck) => (
                 <SelectItem
                   key={deck.id}
@@ -169,9 +173,9 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
             </>
           )}
 
-          {decks.length === 0 && (
-            <SelectItem value="no-decks" disabled className="text-gray-500">
-              No decks available
+          {compatibleDecks.length === 0 && favoriteDecks.length === 0 && (
+            <SelectItem value="no-compatible-decks" disabled className="text-gray-500">
+              No decks available for {cardCount} cards
             </SelectItem>
           )}
         </SelectContent>
