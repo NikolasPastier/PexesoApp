@@ -140,7 +140,7 @@ export function DeckGenerator() {
     <div className="w-full max-w-4xl mx-auto space-y-8">
       <div className="relative">
         {/* Main Prompt Container - Dark rounded design similar to the image */}
-        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900/20 rounded-3xl p-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
+        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900/20 rounded-3xl p-4 sm:p-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
           <div className="flex flex-col sm:flex-row gap-4 mb-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-300 mb-2">Card Count</label>
@@ -183,25 +183,25 @@ export function DeckGenerator() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 max-sm:flex-col max-sm:items-stretch max-sm:gap-3">
             {/* Main input area */}
-            <div className="flex-1 relative">
+            <div className="flex-1 relative min-w-0">
               <Input
                 placeholder="Ask PexesoAI to create a deck about..."
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && !isGenerating && handleGenerate()}
-                className="bg-transparent border-none text-gray-200 placeholder:text-gray-400 text-lg h-12 focus:ring-0 focus:outline-none px-0"
+                className="bg-transparent border-none text-gray-200 placeholder:text-gray-400 text-lg max-sm:text-base h-12 focus:ring-0 focus:outline-none px-0"
               />
             </div>
 
             {/* Right side controls */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-center">
               <Button
                 onClick={handleGenerate}
                 disabled={!prompt.trim() || isGenerating}
                 size="sm"
-                className="h-10 w-10 rounded-full bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
+                className="h-10 w-10 max-sm:w-full max-sm:h-12 rounded-full max-sm:rounded-lg bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
               >
                 {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
               </Button>

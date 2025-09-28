@@ -228,20 +228,20 @@ export function DeckGallery() {
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-3xl backdrop-blur-sm border border-gray-700/30 shadow-2xl"></div>
 
         {/* Content */}
-        <div className="relative w-full max-w-7xl mx-auto p-8">
+        <div className="relative w-full max-w-7xl mx-auto p-4 sm:p-8">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-8 max-lg:flex-col max-lg:items-start max-lg:gap-4">
             <div>
               <h2 className="text-3xl font-bold text-white mb-2">Deck Gallery</h2>
               <p className="text-gray-300">
                 Explore decks created by the community and choose your favorite to play with.
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 max-lg:w-full max-lg:justify-start max-lg:flex-wrap">
               <UploadDeckModal onDeckUploaded={handleDeckUploaded} />
               <Button
                 variant="ghost"
-                className="text-primary hover:text-primary/80 hover:bg-gray-700/50 border border-gray-600/30"
+                className="text-primary hover:text-primary/80 hover:bg-gray-700/50 border border-gray-600/30 max-lg:w-full"
                 onClick={handleBrowseAll}
               >
                 Browse All <ChevronRightIcon />
