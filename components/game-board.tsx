@@ -9,6 +9,7 @@ import { Slider } from "@/components/ui/slider"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Timer, Target, Grid3X3, Trophy, Clock, Zap, ChevronDown, Bot } from "lucide-react"
 import { DeckSelector } from "./deck-selector"
+import { useTranslations } from "next-intl"
 
 interface GameCard {
   id: string
@@ -79,6 +80,9 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null)
   const [deckImages, setDeckImages] = useState<string[]>([])
   const [defaultDecks, setDefaultDecks] = useState<Deck[]>([])
+
+  const t = useTranslations("game")
+  const tCommon = useTranslations("common")
 
   useEffect(() => {
     const loadDefaultDecks = async () => {
@@ -279,7 +283,11 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
     }
 
     const playerNames =
-      players === "solo" ? ["Player"] : players === "two" ? ["Player 1", "Player 2"] : ["Player", "Bot"]
+      players === "solo"
+        ? [t("player")]
+        : players === "two"
+          ? [`${t("player")} 1`, `${t("player")} 2`]
+          : [t("player"), t("bot")]
 
     const initialStats: PlayerStats[] = playerNames.map((name) => ({
       name,
@@ -327,31 +335,39 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
 
   const getWinnerAnnouncement = () => {
     if (players === "solo") {
-      return gameComplete ? "Congratulations! You Won!" : "Game Over!"
+      return gameComplete ? t("winner") + "!" : t("gameOver") + "!"
     }
 
     const player1Matches = stats[0]?.matchesCompleted || 0
     const player2Matches = stats[1]?.matchesCompleted || 0
 
     if (player1Matches > player2Matches) {
-      return `${stats[0]?.name} Wins!`
+      return `${stats[0]?.name} ${t("winner")}!`
     } else if (player2Matches > player1Matches) {
-      return `${stats[1]?.name} Wins!`
+      return `${stats[1]?.name} ${t("winner")}!`
     } else {
       const player1Moves = stats[0]?.movesUsed || 0
       const player2Moves = stats[1]?.movesUsed || 0
 
       if (player1Moves < player2Moves) {
-        return `${stats[0]?.name} Wins!`
+        return `${stats[0]?.name} ${t("winner")}!`
       } else if (player2Moves < player1Moves) {
-        return `${stats[1]?.name} Wins!`
+        return `${stats[1]?.name} ${t("winner")}!`
       } else {
         return "It's a Draw!"
       }
     }
   }
 
-  const gridCols = cardCount <= 16 ? "grid-cols-4" : cardCount <= 24 ? "grid-cols-6" : "grid-cols-8"
+  const getResponsiveGridCols = () => {
+    if (cardCount <= 16) {
+      return "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
+    } else if (cardCount <= 24) {
+      return "grid-cols-3 sm:grid-cols-4 md:grid-cols-6"
+    } else {
+      return "grid-cols-4 sm:grid-cols-6 md:grid-cols-8"
+    }
+  }
 
   const handleDeckChange = (deckId: string, deck: any) => {
     setSelectedDeckId(deckId)
@@ -408,15 +424,17 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
     <div className="w-full max-w-6xl mx-auto p-4">
       <div className="mb-6">
         <div className="relative p-6 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-2xl backdrop-blur-sm border border-gray-700/30 shadow-2xl py-7">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center max-lg:flex-col max-lg:items-stretch max-lg:gap-4">
             <div className="flex-1">
               {gameStatus === "idle" ? (
-                <div className="flex items-center gap-4 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-white" />
-                    <span className="text-white text-sm">Players:</span>
+                <div className="flex items-center gap-4 flex-wrap max-sm:flex-col max-sm:gap-3">
+                  <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-white" />
+                      <span className="text-white text-sm">{t("players")}:</span>
+                    </div>
                     <Select value={players} onValueChange={(value: "solo" | "two" | "bot") => setPlayers(value)}>
-                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px]">
+                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px] max-sm:flex-1">
                         <SelectValue />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
@@ -425,18 +443,20 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                           Solo
                         </SelectItem>
                         <SelectItem value="two" className="text-white hover:bg-gray-700">
-                          2 Players
+                          2 {t("players")}
                         </SelectItem>
                         <SelectItem value="bot" className="text-white hover:bg-gray-700">
-                          Bot
+                          {t("bot")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <Timer className="w-4 h-4 text-white" />
-                    <span className="text-white text-sm">Timer:</span>
+                  <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
+                    <div className="flex items-center gap-2">
+                      <Timer className="w-4 h-4 text-white" />
+                      <span className="text-white text-sm">{t("timer")}:</span>
+                    </div>
                     <Select
                       value={timer === "unlimited" ? "unlimited" : "custom"}
                       onValueChange={(value) => {
@@ -447,7 +467,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                         }
                       }}
                     >
-                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px]">
+                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px] max-sm:flex-1">
                         <SelectValue>{timer === "unlimited" ? "Unlimited" : `Custom (${timer} min)`}</SelectValue>
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
@@ -482,9 +502,11 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                     </Select>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <Target className="w-4 h-4 text-white" />
-                    <span className="text-white text-sm">Matches:</span>
+                  <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
+                    <div className="flex items-center gap-2">
+                      <Target className="w-4 h-4 text-white" />
+                      <span className="text-white text-sm">{t("matches")}:</span>
+                    </div>
                     <Select
                       value={matches === "unlimited" ? "unlimited" : "custom"}
                       onValueChange={(value) => {
@@ -495,7 +517,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                         }
                       }}
                     >
-                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px]">
+                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px] max-sm:flex-1">
                         <SelectValue>{matches === "unlimited" ? "Unlimited" : `Custom (${matches})`}</SelectValue>
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
@@ -530,39 +552,47 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                     </Select>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <Grid3X3 className="w-4 h-4 text-white" />
-                    <span className="text-white text-sm">Cards:</span>
+                  <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
+                    <div className="flex items-center gap-2">
+                      <Grid3X3 className="w-4 h-4 text-white" />
+                      <span className="text-white text-sm">{t("cards")}:</span>
+                    </div>
                     <Select
                       value={cardCount.toString()}
                       onValueChange={(value) => handleCardCountChange(Number.parseInt(value))}
                     >
-                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px]">
+                      <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px] max-sm:flex-1">
                         <SelectValue />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
                         <SelectItem value="16" className="text-white hover:bg-gray-700">
-                          16 cards
+                          16 {t("cards")}
                         </SelectItem>
                         <SelectItem value="24" className="text-white hover:bg-gray-700">
-                          24 cards
+                          24 {t("cards")}
                         </SelectItem>
                         <SelectItem value="32" className="text-white hover:bg-gray-700">
-                          32 cards
+                          32 {t("cards")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <DeckSelector selectedDeckId={selectedDeckId} onDeckChange={handleDeckChange} cardCount={cardCount} />
+                  <div className="max-sm:w-full">
+                    <DeckSelector
+                      selectedDeckId={selectedDeckId}
+                      onDeckChange={handleDeckChange}
+                      cardCount={cardCount}
+                    />
+                  </div>
                 </div>
               ) : (
                 <div>
                   {players === "bot" && isBotThinking && (
                     <div className="mb-4 flex items-center justify-center gap-2 text-blue-400">
                       <Bot className="w-5 h-5 animate-pulse" />
-                      <span className="text-sm font-medium">Bot is thinking...</span>
+                      <span className="text-sm font-medium">{t("botThinking")}</span>
                     </div>
                   )}
 
@@ -576,22 +606,22 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                           <CardTitle className="text-white flex items-center gap-2">
                             {playerStat.name}
                             {currentPlayer === index && <Zap className="w-4 h-4 text-yellow-400" />}
-                            {playerStat.name === "Bot" && <Bot className="w-4 h-4 text-blue-400" />}
+                            {playerStat.name === t("bot") && <Bot className="w-4 h-4 text-blue-400" />}
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
                           <div className="text-gray-300">
                             <div>
-                              Matches: {playerStat.matchesCompleted}/{cardCount / 2}
+                              {t("matches")}: {playerStat.matchesCompleted}/{cardCount / 2}
                             </div>
                             <div>
-                              Moves: {playerStat.movesUsed}
+                              {t("moves")}: {playerStat.movesUsed}
                               {playerStat.movesRemaining && `/${playerStat.movesRemaining}`}
                             </div>
                             {typeof timer === "number" && (
                               <div className="flex items-center gap-1">
                                 <Clock className="w-4 h-4" />
-                                Time: {formatTime(timeLeft)}
+                                {t("time")}: {formatTime(timeLeft)}
                               </div>
                             )}
                           </div>
@@ -603,16 +633,19 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
               )}
             </div>
 
-            <div className="ml-6">
+            <div className="ml-6 max-lg:ml-0 max-lg:w-full">
               {gameStatus === "idle" ? (
                 <Button
                   onClick={handleStartGame}
-                  className="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-lg"
+                  className="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-lg max-sm:px-4 max-sm:py-2 max-lg:w-full"
                 >
-                  Start Game
+                  {t("startGame")}
                 </Button>
               ) : (
-                <Button onClick={handleEndGame} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg">
+                <Button
+                  onClick={handleEndGame}
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg max-lg:w-full"
+                >
                   End Game
                 </Button>
               )}
@@ -627,14 +660,14 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
             <div className="bg-gray-800/90 px-4 py-2 rounded-lg border border-gray-600/30">
               <div className="flex items-center gap-2 text-blue-400">
                 <Bot className="w-4 h-4 animate-pulse" />
-                <span className="text-sm font-medium">Bot's Turn</span>
+                <span className="text-sm font-medium">{t("botTurn")}</span>
               </div>
             </div>
           </div>
         )}
 
         <div
-          className={`grid ${gridCols} gap-4 justify-items-center ${players === "bot" && !isUserTurn ? "opacity-75" : ""}`}
+          className={`grid ${getResponsiveGridCols()} gap-4 justify-items-center ${players === "bot" && !isUserTurn ? "opacity-75" : ""}`}
         >
           {gameStatus === "idle"
             ? Array.from({ length: cardCount }).map((_, index) => {
@@ -688,24 +721,32 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
               <div className="space-y-2">
                 <h3 className="font-semibold">Final Stats:</h3>
                 <div className="rounded-lg p-4 space-y-2 bg-transparent">
-                  <div>Cards: {cardCount}</div>
                   <div>
-                    Total Matches: {matchedCards.length / 2}/{cardCount / 2}
+                    {t("cards")}: {cardCount}
                   </div>
-                  <div>Total Moves: {moves}</div>
-                  {typeof timer === "number" && <div>Time Used: {formatTime(timer * 60 - timeLeft)}</div>}
+                  <div>
+                    Total {t("matches")}: {matchedCards.length / 2}/{cardCount / 2}
+                  </div>
+                  <div>
+                    Total {t("moves")}: {moves}
+                  </div>
+                  {typeof timer === "number" && (
+                    <div>
+                      {t("time")} Used: {formatTime(timer * 60 - timeLeft)}
+                    </div>
+                  )}
                 </div>
               </div>
 
               {players !== "solo" && (
                 <div className="space-y-2">
-                  <h3 className="font-semibold">Player Stats:</h3>
+                  <h3 className="font-semibold">{t("player")} Stats:</h3>
                   <div className="space-y-2">
                     {stats.map((playerStat, index) => (
                       <div key={index} className="rounded-lg p-3 bg-transparent">
                         <div className="font-medium">{playerStat.name}</div>
                         <div className="text-sm text-gray-300">
-                          Matches: {playerStat.matchesCompleted} | Moves: {playerStat.movesUsed}
+                          {t("matches")}: {playerStat.matchesCompleted} | {t("moves")}: {playerStat.movesUsed}
                         </div>
                       </div>
                     ))}
@@ -721,7 +762,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
               }}
               className="w-full bg-blue-500 hover:bg-blue-600"
             >
-              Close
+              {tCommon("close")}
             </Button>
           </div>
         </DialogContent>

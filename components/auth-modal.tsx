@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/auth-context"
 import { X } from "lucide-react"
 import { PrivacyPolicyModal } from "@/components/privacy-policy-modal"
 import { TermsModal } from "@/components/terms-modal"
+import { useTranslations } from "next-intl"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -35,6 +36,9 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
   const [showTermsModal, setShowTermsModal] = useState(false)
   const { refreshUser } = useAuth()
   const supabase = createClient()
+
+  const t = useTranslations("auth")
+  const tNavbar = useTranslations("navbar")
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -143,7 +147,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
           </Button>
 
           <div className="mb-6 pt-2">
-            <h2 className="text-2xl font-bold text-center text-white">Welcome to Pexeso</h2>
+            <h2 className="text-2xl font-bold text-center text-white">{t("welcomeBack")}</h2>
           </div>
 
           <div className="flex-1 overflow-y-auto">
@@ -165,13 +169,13 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                   value="login"
                   className="text-gray-300 data-[state=active]:text-white data-[state=active]:bg-gray-700/50"
                 >
-                  Login
+                  {t("login")}
                 </TabsTrigger>
                 <TabsTrigger
                   value="signup"
                   className="text-gray-300 data-[state=active]:text-white data-[state=active]:bg-gray-700/50"
                 >
-                  Sign Up
+                  {t("signup")}
                 </TabsTrigger>
               </TabsList>
 
@@ -179,12 +183,12 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="login-email" className="text-gray-300">
-                      Email
+                      {t("email")}
                     </Label>
                     <Input
                       id="login-email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder={t("email")}
                       value={loginData.email}
                       onChange={(e) => setLoginData((prev) => ({ ...prev, email: e.target.value }))}
                       required
@@ -194,12 +198,12 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="login-password" className="text-gray-300">
-                      Password
+                      {t("password")}
                     </Label>
                     <Input
                       id="login-password"
                       type="password"
-                      placeholder="Enter your password"
+                      placeholder={t("password")}
                       value={loginData.password}
                       onChange={(e) => setLoginData((prev) => ({ ...prev, password: e.target.value }))}
                       required
@@ -208,7 +212,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Signing in..." : "Login"}
+                    {loading ? "Signing in..." : t("login")}
                   </Button>
                 </form>
 
@@ -223,7 +227,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </Label>
                     <Input
                       id="signup-username"
-                      placeholder="Choose a username"
+                      placeholder="Username"
                       value={signupData.username}
                       onChange={(e) => setSignupData((prev) => ({ ...prev, username: e.target.value }))}
                       required
@@ -233,12 +237,12 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="signup-email" className="text-gray-300">
-                      Email
+                      {t("email")}
                     </Label>
                     <Input
                       id="signup-email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder={t("email")}
                       value={signupData.email}
                       onChange={(e) => setSignupData((prev) => ({ ...prev, email: e.target.value }))}
                       required
@@ -248,12 +252,12 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="signup-password" className="text-gray-300">
-                      Password
+                      {t("password")}
                     </Label>
                     <Input
                       id="signup-password"
                       type="password"
-                      placeholder="Create a password (min 6 characters)"
+                      placeholder={t("password")}
                       value={signupData.password}
                       onChange={(e) => setSignupData((prev) => ({ ...prev, password: e.target.value }))}
                       required
@@ -263,12 +267,12 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="signup-confirm" className="text-gray-300">
-                      Confirm Password
+                      {t("confirmPassword")}
                     </Label>
                     <Input
                       id="signup-confirm"
                       type="password"
-                      placeholder="Confirm your password"
+                      placeholder={t("confirmPassword")}
                       value={signupData.confirmPassword}
                       onChange={(e) => setSignupData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
                       required
@@ -277,7 +281,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Creating account..." : "Sign Up"}
+                    {loading ? "Creating account..." : t("signup")}
                   </Button>
                 </form>
 

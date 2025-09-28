@@ -23,7 +23,7 @@ export function MemoryCard({
   return (
     <div
       className={cn(
-        "relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 cursor-pointer transition-all duration-300",
+        "relative w-20 h-20 max-sm:w-16 max-sm:h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 cursor-pointer transition-all duration-300",
         "hover:scale-105 hover:shadow-lg",
         isMatched && "opacity-75 cursor-default",
         className,

@@ -1,11 +1,12 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Suspense } from "react"
-import "./globals.css"
+import "../globals.css"
 import { AuthProvider } from "@/contexts/auth-context"
 import { I18nProvider } from "@/contexts/i18n-context"
 import { NextIntlClientProvider } from "next-intl"
-import { getLocale, getMessages } from "next-intl/server"
+import { getMessages } from "next-intl/server"
+import { locales } from "@/lib/i18n/config"
 
 export const metadata: Metadata = {
   title: "Pexeso - Memory Card Game",
@@ -13,12 +14,17 @@ export const metadata: Metadata = {
   generator: "v0.app",
 }
 
-export default async function RootLayout({
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }))
+}
+
+export default async function LocaleLayout({
   children,
-}: Readonly<{
+  params: { locale },
+}: {
   children: React.ReactNode
-}>) {
-  const locale = await getLocale()
+  params: { locale: string }
+}) {
   const messages = await getMessages()
 
   return (
