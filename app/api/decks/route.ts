@@ -5,7 +5,12 @@ export async function GET() {
   try {
     const supabase = await createClient()
 
-    // Fetch all public decks with user information
+    // Get current user (optional - for checking favorites)
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    // Fetch all public decks with user information and favorite counts
     const { data: decks, error } = await supabase
       .from("decks")
       .select(`
@@ -23,20 +28,50 @@ export async function GET() {
       return NextResponse.json({ error: "Failed to fetch decks" }, { status: 500 })
     }
 
-    // Transform the data to match the expected format
-    const transformedDecks = decks.map((deck) => ({
-      ...deck,
-      user: deck.users
-        ? {
-            username: deck.users.username,
-            avatar_url: deck.users.avatar_url,
-          }
-        : null,
-      likes: Math.floor(Math.random() * 1000) + 100, // Mock data for now
-      plays: Math.floor(Math.random() * 5000) + 500, // Mock data for now
-    }))
+    const decksWithStats = await Promise.all(
+      decks.map(async (deck) => {
+        // Get favorite count for this deck
+        const { count: favoritesCount } = await supabase
+          .from("favorites")
+          .select("*", { count: "exact", head: true })
+          .eq("deck_id", deck.id)
 
-    return NextResponse.json({ decks: transformedDecks })
+        // Check if current user has favorited this deck
+        let isFavorited = false
+        if (user) {
+          const { data: userFavorite } = await supabase
+            .from("favorites")
+            .select("id")
+            .eq("user_id", user.id)
+            .eq("deck_id", deck.id)
+            .single()
+
+          isFavorited = !!userFavorite
+        }
+
+        return {
+          ...deck,
+          user: deck.users
+            ? {
+                username: deck.users.username,
+                avatar_url: deck.users.avatar_url,
+              }
+            : null,
+          likes: favoritesCount || 0, // Use real favorite count instead of mock data
+          plays: deck.plays_count || 0, // Use real plays count instead of mock data
+          isFavorited, // Add user's favorite status
+        }
+      }),
+    )
+
+    const sortedDecks = decksWithStats.sort((a, b) => {
+      if (b.likes !== a.likes) {
+        return b.likes - a.likes // Most liked first
+      }
+      return b.plays - a.plays // Then most played
+    })
+
+    return NextResponse.json({ decks: sortedDecks })
   } catch (error) {
     console.error("Error fetching decks:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })

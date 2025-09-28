@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ChevronDown, ImageIcon, Lock, Globe } from "lucide-react"
+import { ChevronDown, ImageIcon, Lock, Globe, Heart } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
 
 interface Deck {
   id: string
@@ -11,6 +12,7 @@ interface Deck {
   cards_count: number
   is_public: boolean
   isOwned?: boolean
+  isFavorited?: boolean
   user?: {
     username: string
     avatar_url?: string
@@ -27,6 +29,7 @@ interface DeckSelectorProps {
 export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, className }: DeckSelectorProps) {
   const [decks, setDecks] = useState<Deck[]>([])
   const [loading, setLoading] = useState(true)
+  const { user } = useAuth()
 
   useEffect(() => {
     fetchDecks()
@@ -40,24 +43,21 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
         setDecks(data.decks || [])
       } else {
         console.error("Failed to fetch decks")
+        setDecks([])
       }
     } catch (error) {
       console.error("Error fetching decks:", error)
+      setDecks([])
     } finally {
       setLoading(false)
     }
   }
 
-  // Filter decks that match the selected card count
-  const compatibleDecks = decks.filter((deck) => deck.cards_count === cardCount)
+  const favoriteDecks = decks.filter((deck) => deck.isFavorited && deck.cards_count === cardCount)
+  const compatibleDecks = decks.filter((deck) => !deck.isFavorited && deck.cards_count === cardCount)
   const incompatibleDecks = decks.filter((deck) => deck.cards_count !== cardCount)
 
   const handleDeckChange = (deckId: string) => {
-    if (deckId === "default") {
-      onDeckChange("default", null)
-      return
-    }
-
     const selectedDeck = decks.find((deck) => deck.id === deckId)
     onDeckChange(deckId, selectedDeck || null)
   }
@@ -100,13 +100,39 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
           <ChevronDown className="w-4 h-4" />
         </SelectTrigger>
         <SelectContent className="bg-gray-800 border-gray-600/30 max-h-60">
-          {/* Default deck option */}
-          <SelectItem value="default" className="text-white hover:bg-gray-700">
-            <div className="flex items-center gap-2">
-              <ImageIcon className="w-3 h-3 text-blue-400" />
-              <span>Default Deck</span>
-            </div>
-          </SelectItem>
+          {user && (
+            <>
+              {favoriteDecks.length > 0 ? (
+                <>
+                  <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
+                  {favoriteDecks.map((deck) => (
+                    <SelectItem key={deck.id} value={deck.id} className="text-white hover:bg-gray-700">
+                      <div className="flex items-center gap-2 w-full">
+                        <Heart className="w-3 h-3 text-red-400 fill-current" />
+                        <span className="truncate">{getDeckDisplayName(deck)}</span>
+                        <span className="text-xs text-gray-400 ml-auto">{deck.cards_count}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                  <div className="h-px bg-gray-600/30 my-1" />
+                </>
+              ) : (
+                <>
+                  <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
+                  <div className="px-2 py-2 text-xs text-gray-500">No favorited decks with {cardCount} cards</div>
+                  <div className="h-px bg-gray-600/30 my-1" />
+                </>
+              )}
+            </>
+          )}
+
+          {!user && (
+            <>
+              <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
+              <div className="px-2 py-2 text-xs text-gray-500">Log in to save and play with favorited decks</div>
+              <div className="h-px bg-gray-600/30 my-1" />
+            </>
+          )}
 
           {/* Compatible decks */}
           {compatibleDecks.length > 0 && (

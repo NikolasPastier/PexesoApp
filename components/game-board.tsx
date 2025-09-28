@@ -41,6 +41,18 @@ interface GameBoardProps {
   gameConfig?: GameConfig
 }
 
+interface Deck {
+  id: string
+  title: string
+  images: string[]
+  cards_count: number
+  is_public: boolean
+  user?: {
+    username: string
+    avatar_url?: string
+  }
+}
+
 export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardProps) {
   const [gameStatus, setGameStatus] = useState<"idle" | "running">("idle")
   const [players, setPlayers] = useState<"solo" | "two" | "bot">("solo")
@@ -61,9 +73,54 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   const [gameOver, setGameOver] = useState(false)
   const [gameStartTime, setGameStartTime] = useState<number>(0)
 
-  const [selectedDeckId, setSelectedDeckId] = useState<string>("default")
-  const [selectedDeck, setSelectedDeck] = useState<any>(null)
+  const [selectedDeckId, setSelectedDeckId] = useState<string>("")
+  const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null)
   const [deckImages, setDeckImages] = useState<string[]>([])
+  const [defaultDecks, setDefaultDecks] = useState<Deck[]>([])
+
+  useEffect(() => {
+    const loadDefaultDecks = async () => {
+      try {
+        const response = await fetch("/api/decks/accessible")
+        if (response.ok) {
+          const data = await response.json()
+          const decks = data.decks || []
+          setDefaultDecks(decks)
+
+          // Find Classic Animals deck and set as default
+          const classicAnimals = decks.find((deck: Deck) => deck.title === "Classic Animals")
+          if (classicAnimals) {
+            setSelectedDeckId(classicAnimals.id)
+            setSelectedDeck(classicAnimals)
+            setDeckImages(classicAnimals.images)
+          }
+        }
+      } catch (error) {
+        console.error("Error loading default decks:", error)
+      }
+    }
+
+    loadDefaultDecks()
+  }, [])
+
+  useEffect(() => {
+    const handleDeckSelected = (event: CustomEvent) => {
+      const deck = event.detail
+      setSelectedDeckId(deck.id)
+      setSelectedDeck(deck)
+      if (deck.images) {
+        setDeckImages(deck.images)
+      }
+
+      // Scroll to top of page
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+
+    window.addEventListener("deckSelected", handleDeckSelected as EventListener)
+    return () => {
+      window.removeEventListener("deckSelected", handleDeckSelected as EventListener)
+    }
+  }, [])
 
   useEffect(() => {
     if (gameStatus === "running" && typeof timer === "number" && timeLeft > 0 && !gameComplete && !gameOver) {
@@ -199,6 +256,14 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     setCurrentPlayer(0)
     setGameStartTime(Date.now())
 
+    if (selectedDeck && selectedDeck.id) {
+      fetch(`/api/decks/${selectedDeck.id}/play`, {
+        method: "POST",
+      }).catch((error) => {
+        console.error("Error tracking deck play:", error)
+      })
+    }
+
     // Initialize timer
     if (typeof timer === "number") {
       setTimeLeft(timer * 60) // Convert minutes to seconds
@@ -240,9 +305,13 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     setGameOver(false)
     setTimeLeft(0)
     setCurrentPlayer(0)
-    setSelectedDeckId("default")
-    setSelectedDeck(null)
-    setDeckImages([])
+
+    const classicAnimals = defaultDecks.find((deck) => deck.title === "Classic Animals")
+    if (classicAnimals) {
+      setSelectedDeckId(classicAnimals.id)
+      setSelectedDeck(classicAnimals)
+      setDeckImages(classicAnimals.images)
+    }
   }
 
   const getWinnerAnnouncement = () => {
@@ -289,9 +358,15 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   const handleCardCountChange = (newCardCount: number) => {
     setCardCount(newCardCount)
 
-    // If selected deck doesn't match new card count, reset to default
-    if (selectedDeck && selectedDeck.cards_count !== newCardCount) {
-      setSelectedDeckId("default")
+    if (newCardCount === 16) {
+      const classicAnimals = defaultDecks.find((deck) => deck.title === "Classic Animals")
+      if (classicAnimals) {
+        setSelectedDeckId(classicAnimals.id)
+        setSelectedDeck(classicAnimals)
+        setDeckImages(classicAnimals.images)
+      }
+    } else {
+      setSelectedDeckId("")
       setSelectedDeck(null)
       setDeckImages([])
     }
@@ -302,15 +377,16 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     const cards = []
 
     if (deckImages.length > 0 && deckImages.length >= pairs) {
-      // Use selected deck images
       for (let i = 0; i < pairs; i++) {
         const image = deckImages[i]
         cards.push({ id: `${i}-a`, image, matched: false }, { id: `${i}-b`, image, matched: false })
       }
     } else {
-      // Use default placeholder images
+      const allDefaultImages = defaultDecks.flatMap((deck) => deck.images)
+
       for (let i = 0; i < pairs; i++) {
-        const image = `/placeholder.svg?height=100&width=100&text=Card${i + 1}`
+        const image =
+          allDefaultImages[i % allDefaultImages.length] || `/placeholder.svg?height=100&width=100&query=card-${i}`
         cards.push({ id: `${i}-a`, image, matched: false }, { id: `${i}-b`, image, matched: false })
       }
     }
@@ -477,7 +553,13 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                   </div>
 
                   {/* Deck Style Selector */}
-                  <DeckSelector selectedDeckId={selectedDeckId} onDeckChange={handleDeckChange} cardCount={cardCount} />
+                  {cardCount === 16 && (
+                    <DeckSelector
+                      selectedDeckId={selectedDeckId}
+                      onDeckChange={handleDeckChange}
+                      cardCount={cardCount}
+                    />
+                  )}
                 </div>
               ) : (
                 /* Stats Row */
@@ -539,12 +621,17 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
 
       <div className={`grid ${gridCols} gap-4 justify-items-center`}>
         {gameStatus === "idle"
-          ? /* Preview Grid */
-            Array.from({ length: cardCount }).map((_, index) => {
-              const previewImage =
-                deckImages.length > 0 && deckImages[index % deckImages.length]
-                  ? deckImages[index % deckImages.length]
-                  : `/placeholder.svg?height=100&width=100&text=Card`
+          ? Array.from({ length: cardCount }).map((_, index) => {
+              let previewImage
+
+              if (deckImages.length > 0 && deckImages[index % deckImages.length]) {
+                previewImage = deckImages[index % deckImages.length]
+              } else {
+                const allDefaultImages = defaultDecks.flatMap((deck) => deck.images)
+                previewImage =
+                  allDefaultImages[index % allDefaultImages.length] ||
+                  `/placeholder.svg?height=100&width=100&query=card-${index}`
+              }
 
               return (
                 <MemoryCard
@@ -557,8 +644,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                 />
               )
             })
-          : /* Active Game Grid */
-            generateGameCards()
+          : generateGameCards()
               .slice(0, cardCount)
               .map((card) => (
                 <MemoryCard
