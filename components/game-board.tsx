@@ -35,7 +35,6 @@ interface PlayerStats {
 }
 
 interface GameBoardProps {
-  cards: GameCard[]
   onRestart?: () => void
   onExit?: () => void
   gameConfig?: GameConfig
@@ -53,7 +52,7 @@ interface Deck {
   }
 }
 
-export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardProps) {
+export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
   const [gameStatus, setGameStatus] = useState<"idle" | "running">("idle")
   const [players, setPlayers] = useState<"solo" | "two" | "bot">("solo")
   const [timer, setTimer] = useState<number | "unlimited">("unlimited")
@@ -65,6 +64,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   const [showEndModal, setShowEndModal] = useState(false)
   const [currentPlayer, setCurrentPlayer] = useState(0)
 
+  const [gameCards, setGameCards] = useState<GameCard[]>([])
   const [flippedCards, setFlippedCards] = useState<string[]>([])
   const [matchedCards, setMatchedCards] = useState<string[]>([])
   const [moves, setMoves] = useState(0)
@@ -87,7 +87,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
           const decks = data.decks || []
           setDefaultDecks(decks)
 
-          // Find Classic Animals deck and set as default
           const classicAnimals = decks.find((deck: Deck) => deck.title === "Classic Animals")
           if (classicAnimals) {
             setSelectedDeckId(classicAnimals.id)
@@ -112,7 +111,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
         setDeckImages(deck.images)
       }
 
-      // Scroll to top of page
       window.scrollTo({ top: 0, behavior: "smooth" })
     }
 
@@ -137,8 +135,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     if (gameStatus === "running" && players === "bot" && currentPlayer === 1 && !gameComplete && !gameOver) {
       const botDelay = setTimeout(
         () => {
-          // Simple bot logic - pick random unmatched, unflipped cards
-          const availableCards = cards.filter(
+          const availableCards = gameCards.filter(
             (card) => !matchedCards.includes(card.id) && !flippedCards.includes(card.id),
           )
 
@@ -148,11 +145,11 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
           }
         },
         1000 + Math.random() * 1000,
-      ) // Random delay between 1-2 seconds
+      )
 
       return () => clearTimeout(botDelay)
     }
-  }, [currentPlayer, gameStatus, players, flippedCards, matchedCards, gameComplete, gameOver])
+  }, [currentPlayer, gameStatus, players, flippedCards, matchedCards, gameComplete, gameOver, gameCards])
 
   const handleCardClick = (cardId: string) => {
     if (
@@ -172,24 +169,21 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
       setMoves((prev) => prev + 1)
 
       const [firstCard, secondCard] = newFlippedCards
-      const firstCardData = cards.find((card) => card.id === firstCard)
-      const secondCardData = cards.find((card) => card.id === secondCard)
+      const firstCardData = gameCards.find((card) => card.id === firstCard)
+      const secondCardData = gameCards.find((card) => card.id === secondCard)
 
       if (firstCardData?.image === secondCardData?.image) {
-        // Match found
         setTimeout(() => {
           setMatchedCards((prev) => [...prev, firstCard, secondCard])
           setFlippedCards([])
 
           updatePlayerStats(true)
 
-          // Check if matches limit reached
           if (typeof matches === "number" && matchedCards.length / 2 + 1 >= matches) {
             handleGameEnd()
           }
         }, 1000)
       } else {
-        // No match
         setTimeout(() => {
           setFlippedCards([])
           updatePlayerStats(false)
@@ -219,7 +213,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
           matchesRemaining: foundMatch
             ? newStats[playerIndex].matchesRemaining - 1
             : newStats[playerIndex].matchesRemaining,
-          timeUsed: typeof timer === "number" ? (typeof timer === "number" ? timer * 60 - timeLeft : 0) : undefined,
+          timeUsed: typeof timer === "number" ? timer * 60 - timeLeft : undefined,
           timeRemaining: typeof timer === "number" ? timeLeft : undefined,
         }
       }
@@ -229,10 +223,10 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   }
 
   useEffect(() => {
-    if (matchedCards.length === cards.length && cards.length > 0) {
+    if (matchedCards.length === gameCards.length && gameCards.length > 0) {
       handleGameEnd()
     }
-  }, [matchedCards.length, cards.length])
+  }, [matchedCards.length, gameCards.length])
 
   const handleGameEnd = () => {
     setGameComplete(true)
@@ -256,6 +250,9 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     setCurrentPlayer(0)
     setGameStartTime(Date.now())
 
+    const newGameCards = generateGameCards()
+    setGameCards(newGameCards)
+
     if (selectedDeck && selectedDeck.id) {
       fetch(`/api/decks/${selectedDeck.id}/play`, {
         method: "POST",
@@ -264,12 +261,10 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
       })
     }
 
-    // Initialize timer
     if (typeof timer === "number") {
-      setTimeLeft(timer * 60) // Convert minutes to seconds
+      setTimeLeft(timer * 60)
     }
 
-    // Initialize player stats
     const playerNames =
       players === "solo" ? ["Player"] : players === "two" ? ["Player 1", "Player 2"] : ["Player", "Bot"]
 
@@ -305,6 +300,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     setGameOver(false)
     setTimeLeft(0)
     setCurrentPlayer(0)
+    setGameCards([])
 
     const classicAnimals = defaultDecks.find((deck) => deck.title === "Classic Animals")
     if (classicAnimals) {
@@ -327,7 +323,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     } else if (player2Matches > player1Matches) {
       return `${stats[1]?.name} Wins!`
     } else {
-      // Tie on matches, check moves
       const player1Moves = stats[0]?.movesUsed || 0
       const player2Moves = stats[1]?.movesUsed || 0
 
@@ -350,13 +345,13 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     if (deck && deck.images) {
       setDeckImages(deck.images)
     } else {
-      // Reset to default images
       setDeckImages([])
     }
   }
 
   const handleCardCountChange = (newCardCount: number) => {
     setCardCount(newCardCount)
+    setGameCards([])
 
     if (newCardCount === 16) {
       const classicAnimals = defaultDecks.find((deck) => deck.title === "Classic Animals")
@@ -372,7 +367,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     }
   }
 
-  const generateGameCards = () => {
+  const generateGameCards = (): GameCard[] => {
     const pairs = cardCount / 2
     const cards = []
 
@@ -391,7 +386,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
       }
     }
 
-    // Shuffle cards
     return cards.sort(() => Math.random() - 0.5)
   }
 
@@ -400,12 +394,9 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
       <div className="mb-6">
         <div className="relative p-6 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-2xl backdrop-blur-sm border border-gray-700/30 shadow-2xl py-7">
           <div className="flex justify-between items-center">
-            {/* Left side - Settings or Stats */}
             <div className="flex-1">
               {gameStatus === "idle" ? (
-                /* Settings Row */
                 <div className="flex items-center gap-4 flex-wrap">
-                  {/* Players Setting */}
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-white" />
                     <span className="text-white text-sm">Players:</span>
@@ -428,7 +419,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                     </Select>
                   </div>
 
-                  {/* Timer Setting */}
                   <div className="flex items-center gap-2">
                     <Timer className="w-4 h-4 text-white" />
                     <span className="text-white text-sm">Timer:</span>
@@ -477,7 +467,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                     </Select>
                   </div>
 
-                  {/* Matches Setting */}
                   <div className="flex items-center gap-2">
                     <Target className="w-4 h-4 text-white" />
                     <span className="text-white text-sm">Matches:</span>
@@ -526,7 +515,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                     </Select>
                   </div>
 
-                  {/* Cards Setting */}
                   <div className="flex items-center gap-2">
                     <Grid3X3 className="w-4 h-4 text-white" />
                     <span className="text-white text-sm">Cards:</span>
@@ -552,7 +540,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                     </Select>
                   </div>
 
-                  {/* Deck Style Selector */}
                   {cardCount === 16 && (
                     <DeckSelector
                       selectedDeckId={selectedDeckId}
@@ -562,7 +549,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                   )}
                 </div>
               ) : (
-                /* Stats Row */
                 <div>
                   <div className={`grid ${players === "solo" ? "grid-cols-1" : "grid-cols-2"} gap-4`}>
                     {stats.map((playerStat, index) => (
@@ -600,7 +586,6 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
               )}
             </div>
 
-            {/* Right side - Start/End Button */}
             <div className="ml-6">
               {gameStatus === "idle" ? (
                 <Button
@@ -644,18 +629,16 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                 />
               )
             })
-          : generateGameCards()
-              .slice(0, cardCount)
-              .map((card) => (
-                <MemoryCard
-                  key={card.id}
-                  id={card.id}
-                  frontImage={card.image}
-                  isFlipped={flippedCards.includes(card.id) || matchedCards.includes(card.id)}
-                  isMatched={matchedCards.includes(card.id)}
-                  onClick={() => handleCardClick(card.id)}
-                />
-              ))}
+          : gameCards.map((card) => (
+              <MemoryCard
+                key={card.id}
+                id={card.id}
+                frontImage={card.image}
+                isFlipped={flippedCards.includes(card.id) || matchedCards.includes(card.id)}
+                isMatched={matchedCards.includes(card.id)}
+                onClick={() => handleCardClick(card.id)}
+              />
+            ))}
       </div>
 
       <Dialog open={showEndModal} onOpenChange={setShowEndModal}>
