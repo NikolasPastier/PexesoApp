@@ -1,36 +1,25 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Suspense } from "react"
-import "./globals.css"
-import { AuthProvider } from "@/contexts/auth-context"
-import { I18nProvider } from "@/contexts/i18n-context"
-import { NextIntlClientProvider } from "next-intl"
-import { getLocale, getMessages } from "next-intl/server"
+import type { Metadata } from 'next'
+import { GeistSans } from 'geist/font/sans'
+import { GeistMono } from 'geist/font/mono'
+import { Analytics } from '@vercel/analytics/next'
+import './globals.css'
 
 export const metadata: Metadata = {
-  title: "Pexeso - Memory Card Game",
-  description: "Train your memory with the classic Pexeso card matching game. Play solo, multiplayer, or against AI.",
-  generator: "v0.app",
+  title: 'v0 App',
+  description: 'Created with v0',
+  generator: 'v0.app',
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const locale = await getLocale()
-  const messages = await getMessages()
-
   return (
-    <html lang={locale}>
-      <body className="font-sans antialiased">
-        <NextIntlClientProvider messages={messages}>
-          <I18nProvider>
-            <AuthProvider>
-              <Suspense fallback={null}>{children}</Suspense>
-            </AuthProvider>
-          </I18nProvider>
-        </NextIntlClientProvider>
+    <html lang="en">
+      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+        {children}
+        <Analytics />
       </body>
     </html>
   )
