@@ -78,7 +78,7 @@ export function Navbar() {
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
-                            className="flex items-center gap-2 text-white hover:bg-gray-700/50 border border-gray-600/30 rounded-lg px-3 py-2 h-10 max-sm:px-3 max-sm:text-sm transition-all duration-200"
+                            className="flex items-center gap-2 text-white hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-600/30 rounded-lg px-3 py-2 h-10 max-sm:px-3 max-sm:text-sm transition-all duration-200"
                           >
                             <Avatar className="h-6 w-6">
                               <AvatarImage src={user.user_metadata?.avatar_url || "/placeholder.svg"} />
@@ -98,7 +98,7 @@ export function Navbar() {
                             className="cursor-pointer hover:bg-gray-700/50 focus:bg-gray-700/50"
                             onClick={() => setShowFavouritesModal(true)}
                           >
-                            <Heart className="mr-2 h-4 w-4" />
+                            <Heart className="mr-2 h-4 w-4 text-white" />
                             {t("favourites")}
                           </DropdownMenuItem>
 
@@ -106,7 +106,7 @@ export function Navbar() {
                             className="cursor-pointer hover:bg-gray-700/50 focus:bg-gray-700/50"
                             onClick={() => setShowSettingsModal(true)}
                           >
-                            <Settings className="mr-2 h-4 w-4" />
+                            <Settings className="mr-2 h-4 w-4 text-white" />
                             {t("settings")}
                           </DropdownMenuItem>
 
@@ -116,7 +116,7 @@ export function Navbar() {
                             className="cursor-pointer text-red-400 hover:bg-gray-700/50 focus:bg-gray-700/50"
                             onClick={signOut}
                           >
-                            <LogOut className="mr-2 h-4 w-4" />
+                            <LogOut className="mr-2 h-4 w-4 text-white" />
                             {t("logout")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -126,13 +126,13 @@ export function Navbar() {
                         <Button
                           variant="ghost"
                           onClick={handleShowLogin}
-                          className="text-white hover:bg-gray-700/50 border border-gray-600/30 rounded-lg px-4 py-2 h-10 max-sm:px-3 max-sm:text-sm transition-all duration-200"
+                          className="text-white hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-600/30 rounded-lg px-4 py-2 h-10 max-sm:px-3 max-sm:text-sm transition-all duration-200"
                         >
                           {t("login")}
                         </Button>
                         <Button
                           onClick={handleShowSignup}
-                          className="bg-white text-gray-900 hover:bg-gray-100 rounded-lg px-4 py-2 h-10 max-sm:px-3 max-sm:text-sm font-medium transition-all duration-200"
+                          className="bg-green-500 hover:bg-green-600 text-white hover:text-white rounded-lg px-4 py-2 h-10 max-sm:px-3 max-sm:text-sm font-medium transition-all duration-200"
                         >
                           {t("signup")}
                         </Button>

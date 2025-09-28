@@ -167,7 +167,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
               placeholder="Enter your username"
             />
           </div>
@@ -181,12 +181,16 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
               placeholder="Enter your email"
             />
           </div>
 
-          <Button type="submit" disabled={isLoading} className="w-full bg-primary hover:bg-primary/90">
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
+          >
             {isLoading ? "Updating..." : "Update Profile"}
           </Button>
         </form>
@@ -204,7 +208,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
               placeholder="Enter current password"
             />
           </div>
@@ -218,7 +222,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
               placeholder="Enter new password"
             />
           </div>
@@ -232,7 +236,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
               placeholder="Confirm new password"
             />
           </div>
@@ -240,7 +244,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           <Button
             type="submit"
             disabled={isLoading || !currentPassword || !newPassword || !confirmPassword}
-            className="w-full bg-primary hover:bg-primary/90"
+            className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
           >
             {isLoading ? "Updating..." : "Update Password"}
           </Button>
@@ -278,7 +282,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <Button
                   onClick={handleDeleteAccount}
                   disabled={isLoading}
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white hover:text-white"
                 >
                   {isLoading ? "Deleting..." : "Delete Account"}
                 </Button>

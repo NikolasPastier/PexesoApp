@@ -19,7 +19,7 @@ export function LanguageSwitcher() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex items-center gap-2 text-white hover:bg-gray-700/50 border border-gray-600/30 rounded-lg px-3 py-2 h-10 max-sm:px-2 max-sm:text-sm transition-all duration-200"
+          className="flex items-center gap-2 text-white hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-600/30 rounded-lg px-3 py-2 h-10 max-sm:px-2 max-sm:text-sm transition-all duration-200"
           title={t("switchLanguage")}
         >
           <span className="text-base">{localeFlags[locale]}</span>

@@ -141,7 +141,11 @@ export function AuthForm() {
                   disabled={loading}
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
+                disabled={loading}
+              >
                 {loading ? "Signing in..." : "Login"}
               </Button>
             </form>
@@ -198,7 +202,11 @@ export function AuthForm() {
                   disabled={loading}
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
+                disabled={loading}
+              >
                 {loading ? "Creating account..." : "Sign Up"}
               </Button>
             </form>

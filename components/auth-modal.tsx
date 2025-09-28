@@ -193,7 +193,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setLoginData((prev) => ({ ...prev, email: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -208,10 +208,14 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setLoginData((prev) => ({ ...prev, password: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
+                    disabled={loading}
+                  >
                     {loading ? "Signing in..." : t("login")}
                   </Button>
                 </form>
@@ -232,7 +236,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setSignupData((prev) => ({ ...prev, username: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -247,7 +251,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setSignupData((prev) => ({ ...prev, email: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -262,7 +266,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setSignupData((prev) => ({ ...prev, password: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -277,10 +281,14 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setSignupData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
+                    disabled={loading}
+                  >
                     {loading ? "Creating account..." : t("signup")}
                   </Button>
                 </form>
