@@ -45,25 +45,22 @@ const generateMockCards = (pairs: number) => {
 
 export function MainGame() {
   const [gameStarted, setGameStarted] = useState(true)
-  const [cards, setCards] = useState<any[]>(() => generateMockCards(12)) // 12 pairs = 24 cards for 4x6 grid
+  const [cards, setCards] = useState<any[]>([])
   const [gameConfig] = useState({
     mode: "standard",
     pairs: 12,
   })
 
   const handleRestart = () => {
-    setCards(generateMockCards(12))
+    setCards([])
   }
 
   const handleExit = () => {
-    // Reset the game
-    setCards(generateMockCards(12))
+    setCards([])
   }
 
   return (
     <div className="space-y-8">
-      
-
       <GameBoard cards={cards} onRestart={handleRestart} onExit={handleExit} gameConfig={gameConfig} />
     </div>
   )

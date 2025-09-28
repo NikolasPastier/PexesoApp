@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Timer, Target, Grid3X3, Trophy, Clock, Zap, ChevronDown } from "lucide-react"
+import { DeckSelector } from "./deck-selector"
 
 interface GameCard {
   id: string
@@ -59,6 +60,10 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   const [timeLeft, setTimeLeft] = useState(0)
   const [gameOver, setGameOver] = useState(false)
   const [gameStartTime, setGameStartTime] = useState<number>(0)
+
+  const [selectedDeckId, setSelectedDeckId] = useState<string>("default")
+  const [selectedDeck, setSelectedDeck] = useState<any>(null)
+  const [deckImages, setDeckImages] = useState<string[]>([])
 
   useEffect(() => {
     if (gameStatus === "running" && typeof timer === "number" && timeLeft > 0 && !gameComplete && !gameOver) {
@@ -235,6 +240,9 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
     setGameOver(false)
     setTimeLeft(0)
     setCurrentPlayer(0)
+    setSelectedDeckId("default")
+    setSelectedDeck(null)
+    setDeckImages([])
   }
 
   const getWinnerAnnouncement = () => {
@@ -265,6 +273,51 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
   }
 
   const gridCols = cardCount <= 16 ? "grid-cols-4" : cardCount <= 24 ? "grid-cols-6" : "grid-cols-8"
+
+  const handleDeckChange = (deckId: string, deck: any) => {
+    setSelectedDeckId(deckId)
+    setSelectedDeck(deck)
+
+    if (deck && deck.images) {
+      setDeckImages(deck.images)
+    } else {
+      // Reset to default images
+      setDeckImages([])
+    }
+  }
+
+  const handleCardCountChange = (newCardCount: number) => {
+    setCardCount(newCardCount)
+
+    // If selected deck doesn't match new card count, reset to default
+    if (selectedDeck && selectedDeck.cards_count !== newCardCount) {
+      setSelectedDeckId("default")
+      setSelectedDeck(null)
+      setDeckImages([])
+    }
+  }
+
+  const generateGameCards = () => {
+    const pairs = cardCount / 2
+    const cards = []
+
+    if (deckImages.length > 0 && deckImages.length >= pairs) {
+      // Use selected deck images
+      for (let i = 0; i < pairs; i++) {
+        const image = deckImages[i]
+        cards.push({ id: `${i}-a`, image, matched: false }, { id: `${i}-b`, image, matched: false })
+      }
+    } else {
+      // Use default placeholder images
+      for (let i = 0; i < pairs; i++) {
+        const image = `/placeholder.svg?height=100&width=100&text=Card${i + 1}`
+        cards.push({ id: `${i}-a`, image, matched: false }, { id: `${i}-b`, image, matched: false })
+      }
+    }
+
+    // Shuffle cards
+    return cards.sort(() => Math.random() - 0.5)
+  }
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4">
@@ -403,7 +456,7 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                     <span className="text-white text-sm">Cards:</span>
                     <Select
                       value={cardCount.toString()}
-                      onValueChange={(value) => setCardCount(Number.parseInt(value))}
+                      onValueChange={(value) => handleCardCountChange(Number.parseInt(value))}
                     >
                       <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px]">
                         <SelectValue />
@@ -422,6 +475,9 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {/* Deck Style Selector */}
+                  <DeckSelector selectedDeckId={selectedDeckId} onDeckChange={handleDeckChange} cardCount={cardCount} />
                 </div>
               ) : (
                 /* Stats Row */
@@ -484,18 +540,25 @@ export function GameBoard({ cards, onRestart, onExit, gameConfig }: GameBoardPro
       <div className={`grid ${gridCols} gap-4 justify-items-center`}>
         {gameStatus === "idle"
           ? /* Preview Grid */
-            Array.from({ length: cardCount }).map((_, index) => (
-              <MemoryCard
-                key={`preview-${index}`}
-                id={`preview-${index}`}
-                frontImage="/placeholder.svg?height=100&width=100&text=Card"
-                isFlipped={false}
-                isMatched={false}
-                onClick={() => {}} // No-op in preview mode
-              />
-            ))
+            Array.from({ length: cardCount }).map((_, index) => {
+              const previewImage =
+                deckImages.length > 0 && deckImages[index % deckImages.length]
+                  ? deckImages[index % deckImages.length]
+                  : `/placeholder.svg?height=100&width=100&text=Card`
+
+              return (
+                <MemoryCard
+                  key={`preview-${index}`}
+                  id={`preview-${index}`}
+                  frontImage={previewImage}
+                  isFlipped={false}
+                  isMatched={false}
+                  onClick={() => {}} // No-op in preview mode
+                />
+              )
+            })
           : /* Active Game Grid */
-            cards
+            generateGameCards()
               .slice(0, cardCount)
               .map((card) => (
                 <MemoryCard
