@@ -12,18 +12,20 @@ const intlMiddleware = createMiddleware({
 export async function middleware(request: NextRequest) {
   const intlResponse = intlMiddleware(request)
 
-  // Apply Supabase session handling
-  const response = await updateSession(request)
+  const supabaseResponse = await updateSession(request)
 
-  // Merge headers from both middlewares
-  if (intlResponse.headers.get("x-middleware-request-x-nextjs-data")) {
-    response.headers.set(
-      "x-middleware-request-x-nextjs-data",
-      intlResponse.headers.get("x-middleware-request-x-nextjs-data")!,
-    )
+  if (supabaseResponse.headers.get("set-cookie")) {
+    intlResponse.headers.set("set-cookie", supabaseResponse.headers.get("set-cookie")!)
   }
 
-  return response
+  // Copy any other important headers from Supabase response
+  supabaseResponse.headers.forEach((value, key) => {
+    if (key.startsWith("x-") || key === "authorization") {
+      intlResponse.headers.set(key, value)
+    }
+  })
+
+  return intlResponse
 }
 
 export const config = {

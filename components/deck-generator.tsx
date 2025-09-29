@@ -141,49 +141,7 @@ export function DeckGenerator() {
       <div className="relative">
         {/* Main Prompt Container - Dark rounded design similar to the image */}
         <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900/20 rounded-3xl p-4 sm:p-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
-          <div className="flex flex-col sm:flex-row gap-4 mb-4">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-300 mb-2">Card Count</label>
-              <Select value={cardCount} onValueChange={setCardCount}>
-                <SelectTrigger className="w-full bg-gray-800/50 border-gray-600 text-gray-200">
-                  <SelectValue placeholder="Select card count" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
-                  {cardCountOptions.map((option) => (
-                    <SelectItem
-                      key={option.value}
-                      value={option.value}
-                      className="text-gray-200 focus:bg-gray-700 focus:text-white"
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-300 mb-2">Style</label>
-              <Select value={style} onValueChange={setStyle}>
-                <SelectTrigger className="w-full bg-gray-800/50 border-gray-600 text-gray-200">
-                  <SelectValue placeholder="Select style" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
-                  {styleOptions.map((option) => (
-                    <SelectItem
-                      key={option.value}
-                      value={option.value}
-                      className="text-gray-200 focus:bg-gray-700 focus:text-white"
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 max-sm:flex-col max-sm:items-stretch max-sm:gap-3">
+          <div className="flex items-center gap-2 max-sm:flex-col max-sm:items-stretch max-sm:gap-3">
             {/* Main input area */}
             <div className="flex-1 relative min-w-0">
               <Input
@@ -195,13 +153,46 @@ export function DeckGenerator() {
               />
             </div>
 
-            {/* Right side controls */}
             <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-center">
+              {/* Card Count Dropdown - Compact */}
+              <Select value={cardCount} onValueChange={setCardCount}>
+                <SelectTrigger className="w-16 h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-2">
+                  <SelectValue placeholder="16" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 border-gray-600">
+                  <SelectItem value="8" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                    16
+                  </SelectItem>
+                  <SelectItem value="12" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                    24
+                  </SelectItem>
+                  <SelectItem value="16" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                    32
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Style Dropdown - Compact */}
+              <Select value={style} onValueChange={setStyle}>
+                <SelectTrigger className="w-20 h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-2">
+                  <SelectValue placeholder="Style" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 border-gray-600">
+                  <SelectItem value="realistic" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                    Realistic
+                  </SelectItem>
+                  <SelectItem value="cartoon" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                    Cartoon
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Generate Button */}
               <Button
                 onClick={handleGenerate}
                 disabled={!prompt.trim() || isGenerating}
                 size="sm"
-                className="h-10 w-10 max-sm:w-full max-sm:h-12 rounded-full max-sm:rounded-lg bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
+                className="h-8 w-8 max-sm:w-full max-sm:h-12 rounded-full max-sm:rounded-lg bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
               >
                 {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
               </Button>
