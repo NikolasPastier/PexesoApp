@@ -429,12 +429,9 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
               {gameStatus === "idle" ? (
                 <div className="flex items-center gap-4 flex-wrap max-sm:flex-col max-sm:gap-3">
                   <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-sm">{t("players")}</span>
-                    </div>
                     <Select value={players} onValueChange={(value: "solo" | "two" | "bot") => setPlayers(value)}>
                       <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px] max-sm:flex-1">
-                        <SelectValue />
+                        <SelectValue placeholder={t("players")} />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
@@ -452,9 +449,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                   </div>
 
                   <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-sm">{t("timer")}</span>
-                    </div>
                     <Select
                       value={timer === "unlimited" ? "unlimited" : "custom"}
                       onValueChange={(value) => {
@@ -466,7 +460,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                       }}
                     >
                       <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px] max-sm:flex-1">
-                        <SelectValue>{timer === "unlimited" ? "Unlimited" : `Custom (${timer} min)`}</SelectValue>
+                        <SelectValue placeholder={t("timer")} />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
@@ -501,9 +495,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                   </div>
 
                   <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-sm">{t("matches")}</span>
-                    </div>
                     <Select
                       value={matches === "unlimited" ? "unlimited" : "custom"}
                       onValueChange={(value) => {
@@ -515,7 +506,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                       }}
                     >
                       <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px] max-sm:flex-1">
-                        <SelectValue>{matches === "unlimited" ? "Unlimited" : `Custom (${matches})`}</SelectValue>
+                        <SelectValue placeholder={t("matches")} />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
@@ -550,15 +541,12 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                   </div>
 
                   <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-sm">{t("cards")}</span>
-                    </div>
                     <Select
                       value={cardCount.toString()}
                       onValueChange={(value) => handleCardCountChange(Number.parseInt(value))}
                     >
                       <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[100px] max-sm:flex-1">
-                        <SelectValue />
+                        <SelectValue placeholder={t("cards")} />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
