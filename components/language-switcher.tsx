@@ -5,13 +5,26 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useI18n } from "@/contexts/i18n-context"
 import { locales, localeNames, localeFlags, type Locale } from "@/lib/i18n/config"
 import { useTranslations } from "next-intl"
+import { usePathname, useRouter } from "next/navigation"
 
 export function LanguageSwitcher() {
   const { locale, setLocale } = useI18n()
   const t = useTranslations("language")
+  const pathname = usePathname()
+  const router = useRouter()
 
   const handleLanguageChange = (newLocale: Locale) => {
+    // pathname is like "/en/some/path" or "/es/some/path"
+    const segments = pathname.split("/").filter(Boolean)
+    // Replace the first segment (current locale) with the new locale
+    segments[0] = newLocale
+    const newPath = `/${segments.join("/")}`
+
+    // Update the locale in context (persists to localStorage)
     setLocale(newLocale)
+
+    // Navigate to the new locale path
+    router.push(newPath)
   }
 
   return (

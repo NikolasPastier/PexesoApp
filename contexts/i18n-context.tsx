@@ -26,7 +26,6 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale)
     saveLocale(newLocale)
-    window.location.reload()
   }
 
   return <I18nContext.Provider value={{ locale, setLocale, isLoading }}>{children}</I18nContext.Provider>
