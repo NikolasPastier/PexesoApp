@@ -175,9 +175,9 @@ export function DeckGenerator() {
                 />
               </div>
 
-              <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-center">
+              <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-center max-sm:gap-1.5">
                 <Select value={cardCount} onValueChange={setCardCount}>
-                  <SelectTrigger className="w-auto h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-1.5">
+                  <SelectTrigger className="w-auto h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-1.5 max-sm:px-1 max-sm:h-9">
                     <SelectValue placeholder="16" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-600">
@@ -194,7 +194,7 @@ export function DeckGenerator() {
                 </Select>
 
                 <Select value={style} onValueChange={setStyle}>
-                  <SelectTrigger className="w-auto h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-1.5">
+                  <SelectTrigger className="w-auto h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-1.5 max-sm:px-1 max-sm:h-9">
                     <SelectValue placeholder="Style" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-600">

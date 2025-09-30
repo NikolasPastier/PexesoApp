@@ -16,9 +16,10 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const { user, refreshUser } = useAuth()
+  const { user, refreshUser, signOut } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleteOption, setDeleteOption] = useState<"keep-decks" | "delete-decks">("keep-decks")
 
   // Form states
   const [username, setUsername] = useState("")
@@ -155,15 +156,17 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     try {
       const response = await fetch("/api/user/delete", {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deleteDecks: deleteOption === "delete-decks" }),
       })
 
       if (response.ok) {
         const event = new CustomEvent("showToast", {
-          detail: { message: "Account deleted successfully" },
+          detail: { message: "Your account has been deleted" },
         })
         window.dispatchEvent(event)
         onClose()
-        // User will be automatically signed out by the auth state change
+        await signOut()
       } else {
         const { error } = await response.json()
         throw new Error(error || "Failed to delete account")
@@ -295,15 +298,56 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               Delete Account
             </Button>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <p className="text-sm text-gray-300">
                 Are you sure you want to delete your account? This action cannot be undone.
               </p>
+
+              <div className="space-y-3 bg-gray-800/30 p-4 rounded-lg border border-gray-600/30">
+                <p className="text-sm font-medium text-gray-200 mb-2">What should happen to your decks?</p>
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="deleteOption"
+                    value="keep-decks"
+                    checked={deleteOption === "keep-decks"}
+                    onChange={(e) => setDeleteOption(e.target.value as "keep-decks")}
+                    className="mt-1 h-4 w-4 text-green-500 border-gray-600 focus:ring-green-500 focus:ring-offset-gray-900"
+                  />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-200 group-hover:text-white">
+                      Keep my decks in the gallery
+                    </p>
+                    <p className="text-xs text-gray-400 mt-0.5">Your decks will remain available for others to use</p>
+                  </div>
+                </label>
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="deleteOption"
+                    value="delete-decks"
+                    checked={deleteOption === "delete-decks"}
+                    onChange={(e) => setDeleteOption(e.target.value as "delete-decks")}
+                    className="mt-1 h-4 w-4 text-red-500 border-gray-600 focus:ring-red-500 focus:ring-offset-gray-900"
+                  />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-200 group-hover:text-white">Delete my decks too</p>
+                    <p className="text-xs text-gray-400 mt-0.5">All your created decks will be permanently removed</p>
+                  </div>
+                </label>
+              </div>
+
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  onClick={() => setShowDeleteConfirm(false)}
+                  onClick={() => {
+                    setShowDeleteConfirm(false)
+                    setDeleteOption("keep-decks")
+                  }}
                   className="flex-1 border-gray-600/30 text-gray-300 hover:bg-gray-700/50"
+                  disabled={isLoading}
                 >
                   Cancel
                 </Button>

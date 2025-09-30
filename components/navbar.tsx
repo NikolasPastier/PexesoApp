@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { LogOut, Heart, Settings, ChevronDown } from "lucide-react"
+import { LogOut, Heart, Settings, ChevronDown, Menu } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuth } from "@/contexts/auth-context"
 import { AuthModal } from "@/components/auth-modal"
@@ -26,17 +27,35 @@ export function Navbar() {
   const [authModalTab, setAuthModalTab] = useState<"login" | "signup">("login")
   const [showFavouritesModal, setShowFavouritesModal] = useState(false)
   const [showSettingsModal, setShowSettingsModal] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   const t = useTranslations("navbar")
 
   const handleShowLogin = () => {
     setAuthModalTab("login")
     setShowAuthModal(true)
+    setShowMobileMenu(false)
   }
 
   const handleShowSignup = () => {
     setAuthModalTab("signup")
     setShowAuthModal(true)
+    setShowMobileMenu(false)
+  }
+
+  const handleShowFavourites = () => {
+    setShowFavouritesModal(true)
+    setShowMobileMenu(false)
+  }
+
+  const handleShowSettings = () => {
+    setShowSettingsModal(true)
+    setShowMobileMenu(false)
+  }
+
+  const handleSignOut = () => {
+    signOut()
+    setShowMobileMenu(false)
   }
 
   const getUserDisplayName = () => {
@@ -68,7 +87,7 @@ export function Navbar() {
                 <span className="text-xl font-bold text-white">{t("title")}</span>
               </Link>
 
-              <div className="flex items-center space-x-2 max-sm:flex-wrap max-sm:justify-end max-sm:gap-2">
+              <div className="hidden md:flex items-center space-x-2">
                 <LanguageSwitcher />
 
                 {!loading && (
@@ -78,7 +97,7 @@ export function Navbar() {
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
-                            className="flex items-center gap-2 text-white hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-600/30 rounded-lg px-3 py-2 h-10 max-sm:px-3 max-sm:text-sm transition-all duration-200"
+                            className="flex items-center gap-2 text-white hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-600/30 rounded-lg px-3 py-2 h-10 transition-all duration-200"
                           >
                             <Avatar className="h-6 w-6">
                               <AvatarImage src={user.user_metadata?.avatar_url || "/placeholder.svg"} />
@@ -126,13 +145,13 @@ export function Navbar() {
                         <Button
                           variant="ghost"
                           onClick={handleShowLogin}
-                          className="text-white hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-600/30 rounded-lg px-4 py-2 h-10 max-sm:px-3 max-sm:text-sm transition-all duration-200"
+                          className="text-white hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-600/30 rounded-lg px-4 py-2 h-10 transition-all duration-200"
                         >
                           {t("login")}
                         </Button>
                         <Button
                           onClick={handleShowSignup}
-                          className="bg-green-500 hover:bg-green-600 text-white hover:text-white rounded-lg px-4 py-2 h-10 max-sm:px-3 max-sm:text-sm font-medium transition-all duration-200"
+                          className="bg-green-500 hover:bg-green-600 text-white hover:text-white rounded-lg px-4 py-2 h-10 font-medium transition-all duration-200"
                         >
                           {t("signup")}
                         </Button>
@@ -140,12 +159,110 @@ export function Navbar() {
                     )}
                   </>
                 )}
+              </div>
 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-white hover:bg-gray-700/50 rounded-full h-10 w-10 max-sm:hidden"
-                ></Button>
+              <div className="md:hidden">
+                <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
+                  <SheetTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-white hover:bg-gray-700/50 rounded-lg h-10 w-10"
+                    >
+                      <Menu className="h-6 w-6" />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent
+                    side="right"
+                    className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border-gray-700/30 text-white w-[280px] sm:w-[320px]"
+                  >
+                    <SheetHeader>
+                      <SheetTitle className="text-white text-lg font-semibold">Menu</SheetTitle>
+                    </SheetHeader>
+
+                    <div className="flex flex-col gap-4 mt-6">
+                      {/* Language Switcher */}
+                      <div className="flex items-center justify-between px-2 py-2">
+                        <span className="text-sm font-medium text-gray-300">Language</span>
+                        <LanguageSwitcher />
+                      </div>
+
+                      <div className="h-px bg-gray-700/50" />
+
+                      {!loading && (
+                        <>
+                          {user ? (
+                            <>
+                              {/* User Info */}
+                              <div className="flex items-center gap-3 px-2 py-2">
+                                <Avatar className="h-10 w-10">
+                                  <AvatarImage src={user.user_metadata?.avatar_url || "/placeholder.svg"} />
+                                  <AvatarFallback className="bg-primary text-primary-foreground">
+                                    {getUserInitials()}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div className="flex flex-col">
+                                  <span className="text-sm font-medium text-white">{getUserDisplayName()}</span>
+                                  <span className="text-xs text-gray-400">{user.email}</span>
+                                </div>
+                              </div>
+
+                              <div className="h-px bg-gray-700/50" />
+
+                              {/* Menu Items */}
+                              <Button
+                                variant="ghost"
+                                className="justify-start text-white hover:text-white hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
+                                onClick={handleShowFavourites}
+                              >
+                                <Heart className="mr-3 h-5 w-5" />
+                                <span className="text-base">{t("favourites")}</span>
+                              </Button>
+
+                              <Button
+                                variant="ghost"
+                                className="justify-start text-white hover:text-white hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
+                                onClick={handleShowSettings}
+                              >
+                                <Settings className="mr-3 h-5 w-5" />
+                                <span className="text-base">{t("settings")}</span>
+                              </Button>
+
+                              <div className="h-px bg-gray-700/50" />
+
+                              <Button
+                                variant="ghost"
+                                className="justify-start text-red-400 hover:text-white hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
+                                onClick={handleSignOut}
+                              >
+                                <LogOut className="mr-3 h-5 w-5" />
+                                <span className="text-base">{t("logout")}</span>
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              {/* Login/Signup Buttons */}
+                              <Button
+                                variant="ghost"
+                                onClick={handleShowLogin}
+                                className="justify-center text-white hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-600/30 rounded-lg px-4 py-3 h-auto text-base"
+                              >
+                                {t("login")}
+                              </Button>
+                              <Button
+                                onClick={handleShowSignup}
+                                className="justify-center bg-green-500 hover:bg-green-600 text-white hover:text-white rounded-lg px-4 py-3 h-auto text-base font-medium"
+                              >
+                                {t("signup")}
+                              </Button>
+                            </>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </SheetContent>
+                </Sheet>
               </div>
             </div>
           </div>

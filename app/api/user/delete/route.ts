@@ -17,6 +17,18 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const body = await request.json()
+    const { deleteDecks } = body
+
+    if (deleteDecks) {
+      const { error: decksDeleteError } = await supabase.from("decks").delete().eq("user_id", user.id)
+
+      if (decksDeleteError) {
+        console.error("Error deleting decks:", decksDeleteError)
+        return NextResponse.json({ error: "Failed to delete decks" }, { status: 400 })
+      }
+    }
+
     // Delete user account (this will cascade delete related data due to RLS policies)
     const { error: deleteError } = await supabase.rpc("delete_user")
 

@@ -512,10 +512,10 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
           <div className="flex justify-between items-center max-lg:flex-col max-lg:items-stretch max-lg:gap-4">
             <div className="flex-1">
               {gameStatus === "idle" ? (
-                <div className="flex items-center gap-4 flex-wrap max-sm:flex-col max-sm:gap-3">
+                <div className="flex items-center gap-4 flex-wrap max-sm:flex-col max-sm:gap-2">
                   <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
                     <Select value={players} onValueChange={(value: "solo" | "two" | "bot") => setPlayers(value)}>
-                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1">
+                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1 max-sm:px-1.5">
                         <SelectValue placeholder={t("players")} />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
@@ -544,7 +544,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                         }
                       }}
                     >
-                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1">
+                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1 max-sm:px-1.5">
                         <span>{t("timer")}</span>
                         <ChevronDown className="w-4 h-4 ml-2" />
                       </SelectTrigger>
@@ -590,7 +590,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                         }
                       }}
                     >
-                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1">
+                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1 max-sm:px-1.5">
                         <span>{t("matches")}</span>
                         <ChevronDown className="w-4 h-4 ml-2" />
                       </SelectTrigger>
@@ -630,7 +630,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                       value={cardCount.toString()}
                       onValueChange={(value) => handleCardCountChange(Number.parseInt(value))}
                     >
-                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1">
+                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1 max-sm:px-1.5">
                         <SelectValue placeholder={t("cards")} />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
