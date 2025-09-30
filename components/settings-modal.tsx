@@ -239,7 +239,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
               placeholder="Enter current password"
             />
           </div>
@@ -253,7 +253,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
               placeholder="Enter new password"
             />
           </div>
@@ -267,7 +267,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
               placeholder="Confirm new password"
             />
           </div>

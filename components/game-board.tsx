@@ -591,7 +591,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                       }}
                     >
                       <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1 max-sm:px-1.5">
-                        <span>{t("matches")}</span>
+                        <span>{t("moves")}</span>
                         <ChevronDown className="w-4 h-4 ml-2" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">

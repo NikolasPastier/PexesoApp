@@ -90,6 +90,7 @@
     "playWithDeck": "Play with this Deck",
     "official": "Official",
     "anonymous": "Anonymous",
+    "unknownUser": "Unknown User",
     "deckSelected": "Selected \"{title}\" deck for your next game!",
     "addedToFavorites": "Added \"{title}\" to favorites!",
     "removedFromFavorites": "Removed \"{title}\" from favorites!",
@@ -97,7 +98,12 @@
     "loadingDecks": "Loading decks...",
     "noDecks": "No decks found",
     "adjustFilters": "Try adjusting your filters",
-    "allCards": "All Cards"
+    "allCards": "All Cards",
+    "createdBy": "Created by",
+    "created": "Created",
+    "likes": "Likes",
+    "plays": "Plays",
+    "showAllDecks": "Show All Decks"
   },
   "deckGenerator": {
     "placeholder": "Ask PexesoAI to create a deck about...",

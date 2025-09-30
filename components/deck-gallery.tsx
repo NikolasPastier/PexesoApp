@@ -12,6 +12,7 @@ import { AuthModal } from "@/components/auth-modal"
 import { useAuth } from "@/contexts/auth-context"
 import Image from "next/image"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useTranslations } from "next-intl"
 
 const HeartIcon = ({ filled = false }: { filled?: boolean }) => (
   <svg
@@ -63,9 +64,12 @@ interface Deck {
   likes?: number
   plays?: number
   isFavorited?: boolean
+  description?: string
 }
 
 export function DeckGallery() {
+  const t = useTranslations("deckGallery")
+
   const [decks, setDecks] = useState<Deck[]>([])
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -132,9 +136,8 @@ export function DeckGallery() {
 
     window.scrollTo({ top: 0, behavior: "smooth" })
 
-    // Show feedback to user
     const event = new CustomEvent("showToast", {
-      detail: { message: `Selected "${deck.title}" deck for your next game!` },
+      detail: { message: t("deckSelected", { title: deck.title }) },
     })
     window.dispatchEvent(event)
   }
@@ -172,10 +175,11 @@ export function DeckGallery() {
           ),
         )
 
-        // Show feedback
         const event = new CustomEvent("showToast", {
           detail: {
-            message: favorited ? `Added "${deck.title}" to favorites!` : `Removed "${deck.title}" from favorites!`,
+            message: favorited
+              ? t("addedToFavorites", { title: deck.title })
+              : t("removedFromFavorites", { title: deck.title }),
           },
         })
         window.dispatchEvent(event)
@@ -183,7 +187,7 @@ export function DeckGallery() {
     } catch (error) {
       console.error("Error toggling favorite:", error)
       const event = new CustomEvent("showToast", {
-        detail: { message: "Failed to update favorite. Please try again." },
+        detail: { message: t("favoriteError") },
       })
       window.dispatchEvent(event)
     }
@@ -234,10 +238,8 @@ export function DeckGallery() {
           {/* Header */}
           <div className="flex items-center justify-between mb-8 max-lg:flex-col max-lg:items-start max-lg:gap-4">
             <div>
-              <h2 className="text-3xl font-bold text-white mb-2">Deck Gallery</h2>
-              <p className="text-gray-300">
-                Explore decks created by the community and choose your favorite to play with.
-              </p>
+              <h2 className="text-3xl font-bold text-white mb-2">{t("title")}</h2>
+              <p className="text-gray-300">{t("description")}</p>
             </div>
             <div className="flex items-center gap-3 max-lg:w-full max-lg:justify-start max-lg:flex-wrap">
               <UploadDeckModal onDeckUploaded={handleDeckUploaded} />
@@ -246,14 +248,14 @@ export function DeckGallery() {
                 className="bg-gray-800 hover:bg-gray-700 text-white hover:text-white border border-gray-600/30 max-lg:w-full"
                 onClick={handleBrowseAll}
               >
-                Browse All <ChevronRightIcon />
+                {t("browseAll")} <ChevronRightIcon />
               </Button>
             </div>
           </div>
 
           {/* Deck Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {decks.map((deck) => (
+            {decks.slice(0, 6).map((deck) => (
               <Card
                 key={deck.id}
                 className="group hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden bg-gray-800/50 border-gray-600/30 backdrop-blur-sm hover:bg-gray-700/50"
@@ -290,7 +292,7 @@ export function DeckGallery() {
                             className="bg-gray-700/80 hover:bg-gray-600/80 text-white border-gray-500/50"
                           >
                             <EyeIcon />
-                            <span className="ml-1">Preview</span>
+                            <span className="ml-1">{t("preview")}</span>
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 text-white">
@@ -312,6 +314,58 @@ export function DeckGallery() {
                               </div>
                             ))}
                           </div>
+                          <div className="px-4 pb-4 space-y-3">
+                            {/* Creator info */}
+                            <div className="flex items-center gap-2">
+                              {selectedDeck?.user?.avatar_url && (
+                                <Image
+                                  src={selectedDeck.user.avatar_url || "/placeholder.svg"}
+                                  alt={selectedDeck.user.username || "User"}
+                                  width={24}
+                                  height={24}
+                                  className="rounded-full"
+                                />
+                              )}
+                              <div>
+                                <p className="text-xs text-gray-400">{t("createdBy")}</p>
+                                <p className="text-sm font-medium text-white">
+                                  {selectedDeck?.user?.username || t("unknownUser")}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Stats grid */}
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                              <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                <p className="text-xs text-gray-400 mb-1">{t("cards")}</p>
+                                <p className="text-lg font-semibold text-white">{selectedDeck?.cards_count || 16}</p>
+                              </div>
+                              <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                <p className="text-xs text-gray-400 mb-1">{t("likes")}</p>
+                                <p className="text-lg font-semibold text-white">{selectedDeck?.likes || 0}</p>
+                              </div>
+                              <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                <p className="text-xs text-gray-400 mb-1">{t("plays")}</p>
+                                <p className="text-lg font-semibold text-white">{selectedDeck?.plays || 0}</p>
+                              </div>
+                              <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                <p className="text-xs text-gray-400 mb-1">{t("created")}</p>
+                                <p className="text-sm font-semibold text-white">
+                                  {selectedDeck?.created_at
+                                    ? new Date(selectedDeck.created_at).toLocaleDateString()
+                                    : "N/A"}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Description if available */}
+                            {selectedDeck?.description && (
+                              <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                <p className="text-xs text-gray-400 mb-1">{t("description")}</p>
+                                <p className="text-sm text-gray-200">{selectedDeck.description}</p>
+                              </div>
+                            )}
+                          </div>
                           <div className="flex justify-end gap-2 p-4 border-t border-gray-600/30">
                             <Button
                               onClick={() => {
@@ -320,7 +374,7 @@ export function DeckGallery() {
                               }}
                               className="bg-primary hover:bg-primary/90"
                             >
-                              Play with this Deck
+                              {t("playWithDeck")}
                             </Button>
                           </div>
                         </DialogContent>
@@ -331,7 +385,7 @@ export function DeckGallery() {
                         onClick={() => handleSelectDeck(deck)}
                         className="bg-primary hover:bg-primary/90"
                       >
-                        Play Now
+                        {t("playNow")}
                       </Button>
                     </div>
                   </div>
@@ -342,7 +396,9 @@ export function DeckGallery() {
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <h3 className="font-semibold text-lg text-white mb-1 line-clamp-1">{deck.title}</h3>
-                      <p className="text-sm text-gray-400 mb-2">{deck.cards_count || 16} cards</p>
+                      <p className="text-sm text-gray-400 mb-2">
+                        {deck.cards_count || 16} {t("cards")}
+                      </p>
                       <div className="flex items-center gap-2 text-sm text-gray-300">
                         <div className="flex items-center gap-1">
                           {deck.user?.avatar_url && (
@@ -354,13 +410,13 @@ export function DeckGallery() {
                               className="rounded-full"
                             />
                           )}
-                          <span>{deck.user?.username || "Anonymous"}</span>
+                          <span>{deck.user?.username || t("unknownUser")}</span>
                         </div>
                       </div>
                     </div>
                     {!deck.user_id && (
                       <Badge variant="secondary" className="text-xs bg-primary/20 text-primary border-primary/30">
-                        Official
+                        {t("official")}
                       </Badge>
                     )}
                   </div>
@@ -388,6 +444,18 @@ export function DeckGallery() {
               </Card>
             ))}
           </div>
+
+          {/* Show All Decks Button */}
+          {decks.length > 6 && (
+            <div className="flex justify-center mt-8">
+              <Button
+                onClick={handleBrowseAll}
+                className="bg-primary hover:bg-primary/90 text-white px-8 py-3 text-lg font-semibold"
+              >
+                {t("showAllDecks")}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -397,36 +465,36 @@ export function DeckGallery() {
           <div className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 shadow-2xl rounded-xl p-6 sm:p-8 h-full flex flex-col">
             <DialogHeader className="mb-8">
               <div className="flex items-center justify-between flex-wrap gap-4">
-                <DialogTitle className="text-2xl font-bold text-white">All Decks</DialogTitle>
+                <DialogTitle className="text-2xl font-bold text-white">{t("allDecks")}</DialogTitle>
                 <div className="flex items-center gap-4 flex-wrap">
                   {/* Sort Dropdown */}
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-300">Sort by:</span>
+                    <span className="text-sm text-gray-300">{t("sortBy")}:</span>
                     <Select value={sortBy} onValueChange={handleSortChange}>
                       <SelectTrigger className="w-auto bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
                         <SelectItem value="recent" className="text-white hover:bg-gray-700">
-                          Recently Added
+                          {t("recentlyAdded")}
                         </SelectItem>
                         <SelectItem value="popular" className="text-white hover:bg-gray-700">
-                          Most Popular
+                          {t("mostPopular")}
                         </SelectItem>
                         <SelectItem value="favorites_desc" className="text-white hover:bg-gray-700">
-                          Most Favorited
+                          {t("mostFavorited")}
                         </SelectItem>
                         <SelectItem value="favorites_asc" className="text-white hover:bg-gray-700">
-                          Least Favorited
+                          {t("leastFavorited")}
                         </SelectItem>
                         <SelectItem value="plays_desc" className="text-white hover:bg-gray-700">
-                          Most Played
+                          {t("mostPlayed")}
                         </SelectItem>
                         <SelectItem value="plays_asc" className="text-white hover:bg-gray-700">
-                          Least Played
+                          {t("leastPlayed")}
                         </SelectItem>
                         <SelectItem value="oldest" className="text-white hover:bg-gray-700">
-                          Oldest First
+                          {t("oldestFirst")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -434,23 +502,23 @@ export function DeckGallery() {
 
                   {/* Card Count Filter */}
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-300">Cards:</span>
+                    <span className="text-sm text-gray-300">{t("cards")}:</span>
                     <Select value={filterCardCount} onValueChange={handleCardCountChange}>
                       <SelectTrigger className="w-auto bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
                         <SelectItem value="all" className="text-white hover:bg-gray-700">
-                          All Cards
+                          {t("allCards")}
                         </SelectItem>
                         <SelectItem value="16" className="text-white hover:bg-gray-700">
-                          16 Cards
+                          16 {t("cards")}
                         </SelectItem>
                         <SelectItem value="24" className="text-white hover:bg-gray-700">
-                          24 Cards
+                          24 {t("cards")}
                         </SelectItem>
                         <SelectItem value="32" className="text-white hover:bg-gray-700">
-                          32 Cards
+                          32 {t("cards")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -463,13 +531,13 @@ export function DeckGallery() {
             <div className="flex-1 overflow-y-auto">
               {modalLoading ? (
                 <div className="flex items-center justify-center h-64">
-                  <div className="animate-pulse text-gray-300">Loading decks...</div>
+                  <div className="animate-pulse text-gray-300">{t("loadingDecks")}</div>
                 </div>
               ) : modalDecks.length === 0 ? (
                 <div className="flex items-center justify-center h-64">
                   <div className="text-center text-gray-400">
-                    <p className="text-lg mb-2">No decks found</p>
-                    <p className="text-sm">Try adjusting your filters</p>
+                    <p className="text-lg mb-2">{t("noDecks")}</p>
+                    <p className="text-sm">{t("adjustFilters")}</p>
                   </div>
                 </div>
               ) : (
@@ -511,7 +579,7 @@ export function DeckGallery() {
                                   className="bg-gray-700/80 hover:bg-gray-600/80 text-white border-gray-500/50"
                                 >
                                   <EyeIcon />
-                                  <span className="ml-1">Preview</span>
+                                  <span className="ml-1">{t("preview")}</span>
                                 </Button>
                               </DialogTrigger>
                               <DialogContent className="max-w-2xl bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 text-white">
@@ -533,6 +601,60 @@ export function DeckGallery() {
                                     </div>
                                   ))}
                                 </div>
+                                <div className="px-4 pb-4 space-y-3">
+                                  {/* Creator info */}
+                                  <div className="flex items-center gap-2">
+                                    {selectedDeck?.user?.avatar_url && (
+                                      <Image
+                                        src={selectedDeck.user.avatar_url || "/placeholder.svg"}
+                                        alt={selectedDeck.user.username || "User"}
+                                        width={24}
+                                        height={24}
+                                        className="rounded-full"
+                                      />
+                                    )}
+                                    <div>
+                                      <p className="text-xs text-gray-400">{t("createdBy")}</p>
+                                      <p className="text-sm font-medium text-white">
+                                        {selectedDeck?.user?.username || t("unknownUser")}
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  {/* Stats grid */}
+                                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                    <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                      <p className="text-xs text-gray-400 mb-1">{t("cards")}</p>
+                                      <p className="text-lg font-semibold text-white">
+                                        {selectedDeck?.cards_count || 16}
+                                      </p>
+                                    </div>
+                                    <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                      <p className="text-xs text-gray-400 mb-1">{t("likes")}</p>
+                                      <p className="text-lg font-semibold text-white">{selectedDeck?.likes || 0}</p>
+                                    </div>
+                                    <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                      <p className="text-xs text-gray-400 mb-1">{t("plays")}</p>
+                                      <p className="text-lg font-semibold text-white">{selectedDeck?.plays || 0}</p>
+                                    </div>
+                                    <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                      <p className="text-xs text-gray-400 mb-1">{t("created")}</p>
+                                      <p className="text-sm font-semibold text-white">
+                                        {selectedDeck?.created_at
+                                          ? new Date(selectedDeck.created_at).toLocaleDateString()
+                                          : "N/A"}
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  {/* Description if available */}
+                                  {selectedDeck?.description && (
+                                    <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/30">
+                                      <p className="text-xs text-gray-400 mb-1">{t("description")}</p>
+                                      <p className="text-sm text-gray-200">{selectedDeck.description}</p>
+                                    </div>
+                                  )}
+                                </div>
                                 <div className="flex justify-end gap-2 p-4 border-t border-gray-600/30">
                                   <Button
                                     onClick={() => {
@@ -542,7 +664,7 @@ export function DeckGallery() {
                                     }}
                                     className="bg-primary hover:bg-primary/90"
                                   >
-                                    Play with this Deck
+                                    {t("playWithDeck")}
                                   </Button>
                                 </div>
                               </DialogContent>
@@ -556,7 +678,7 @@ export function DeckGallery() {
                               }}
                               className="bg-primary hover:bg-primary/90"
                             >
-                              Play Now
+                              {t("playNow")}
                             </Button>
                           </div>
                         </div>
@@ -567,25 +689,27 @@ export function DeckGallery() {
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
                             <h3 className="font-semibold text-lg text-white mb-1 line-clamp-1">{deck.title}</h3>
-                            <p className="text-sm text-gray-400 mb-2">{deck.cards_count || 16} cards</p>
+                            <p className="text-sm text-gray-400 mb-2">
+                              {deck.cards_count || 16} {t("cards")}
+                            </p>
                             <div className="flex items-center gap-2 text-sm text-gray-300">
                               <div className="flex items-center gap-1">
                                 {deck.user?.avatar_url && (
                                   <Image
-                                    src={deck.user.avatar_url || "/placeholder.svg?height=16&width=16"}
+                                    src={deck.user.avatar_url || "/placeholder.svg"}
                                     alt={deck.user.username || "User"}
                                     width={16}
                                     height={16}
                                     className="rounded-full"
                                   />
                                 )}
-                                <span>{deck.user?.username || "Anonymous"}</span>
+                                <span>{deck.user?.username || t("unknownUser")}</span>
                               </div>
                             </div>
                           </div>
                           {!deck.user_id && (
                             <Badge variant="secondary" className="text-xs bg-primary/20 text-primary border-primary/30">
-                              Official
+                              {t("official")}
                             </Badge>
                           )}
                         </div>

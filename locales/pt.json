@@ -73,6 +73,7 @@
     "sortBy": "Ordenar por",
     "filterBy": "Filtrar por",
     "cardCount": "Número de Cartas",
+    "cards": "Cartas",
     "recentlyAdded": "Adicionados Recentemente",
     "mostPopular": "Mais Populares",
     "mostFavorited": "Mais Favoritos",
@@ -81,56 +82,109 @@
     "leastPlayed": "Menos Jogados",
     "newestFirst": "Mais Novos Primeiro",
     "oldestFirst": "Mais Antigos Primeiro",
-    "noDecksFound": "Nenhum baralho encontrado que corresponda aos seus critérios"
+    "noDecksFound": "Nenhum baralho encontrado que corresponda aos seus critérios",
+    "description": "Explore baralhos criados pela comunidade e escolha seu favorito para jogar.",
+    "uploadDeck": "Enviar Baralho",
+    "preview": "Visualizar",
+    "playNow": "Jogar Agora",
+    "playWithDeck": "Jogar com este Baralho",
+    "official": "Oficial",
+    "anonymous": "Anônimo",
+    "unknownUser": "Usuário Desconhecido",
+    "deckSelected": "Baralho \"{title}\" selecionado para seu próximo jogo!",
+    "addedToFavorites": "\"{title}\" adicionado aos favoritos!",
+    "removedFromFavorites": "\"{title}\" removido dos favoritos!",
+    "favoriteError": "Falha ao atualizar favorito. Tente novamente.",
+    "loadingDecks": "Carregando baralhos...",
+    "noDecks": "Nenhum baralho encontrado",
+    "adjustFilters": "Tente ajustar seus filtros",
+    "allCards": "Todas as Cartas",
+    "createdBy": "Criado por",
+    "created": "Criado",
+    "likes": "Curtidas",
+    "plays": "Jogadas",
+    "showAllDecks": "Mostrar Todos os Baralhos"
+  },
+  "deckGenerator": {
+    "placeholder": "Peça ao PexesoAI para criar um baralho sobre...",
+    "invalidCardCount": "Número de cartas inválido",
+    "invalidCardCountDesc": "Por favor, selecione uma opção válida de número de cartas.",
+    "generationSuccess": "Imagens geradas com sucesso!",
+    "generationSuccessDesc": "Geradas {count} imagens únicas para seu baralho.",
+    "generationFailed": "Geração falhou",
+    "generationFailedDesc": "A geração de imagens falhou. Tente novamente.",
+    "deckSaved": "Baralho salvo com sucesso!",
+    "deckSavedDesc": "Seu baralho \"{title}\" foi salvo com {count} cartas.",
+    "saveFailed": "Falha ao salvar",
+    "saveFailedDesc": "Falha ao salvar baralho. Tente novamente.",
+    "realistic": "Realista",
+    "cartoon": "Desenho Animado",
+    "style": "Estilo"
+  },
+  "uploadDeck": {
+    "title": "Envie seu Baralho",
+    "deckName": "Nome do Baralho",
+    "deckNamePlaceholder": "Digite o nome do baralho...",
+    "description": "Descrição (opcional)",
+    "descriptionPlaceholder": "Descreva seu baralho...",
+    "cardCount": "Número de Cartas de Jogo",
+    "selectCardCount": "Selecione o número de cartas...",
+    "16cards": "16 cartas (envie 8 imagens)",
+    "24cards": "24 cartas (envie 12 imagens)",
+    "32cards": "32 cartas (envie 16 imagens)",
+    "uploadInfo": "Você precisa enviar exatamente {count} imagens para {total} cartas.",
+    "images": "Imagens",
+    "dragDrop": "Arraste e solte imagens aqui, ou clique para selecionar",
+    "acceptedFormats": "Aceita: JPG, PNG, WebP",
+    "uploadCount": "Envie {count} imagens para {total} cartas",
+    "selectImages": "Selecionar Imagens",
+    "imagesSelected": "{count} imagem(ns) selecionada(s)",
+    "imagesRequired": "({required} necessárias)",
+    "cancel": "Cancelar",
+    "saveDeck": "Salvar Baralho",
+    "uploading": "Enviando...",
+    "deckNameRequired": "O nome do baralho é obrigatório",
+    "selectCardCountFirst": "Por favor, selecione primeiro o número de cartas de jogo",
+    "onlyImages": "Apenas arquivos de imagem são permitidos (jpg, png, webp)",
+    "maxImagesExceeded": "Você só pode enviar {max} imagens para {total} cartas.",
+    "atLeastOneImage": "Pelo menos uma imagem é necessária",
+    "exactImagesRequired": "Você precisa de exatamente {required} imagens para {total} cartas",
+    "uploadSuccess": "Baralho enviado com sucesso!",
+    "loginRequired": "Você deve estar logado para enviar baralhos"
+  },
+  "generatedImages": {
+    "title": "Imagens Geradas",
+    "generatedCount": "Geradas {count} imagens ({total} cartas no total)",
+    "promptInfo": "Prompt: \"{prompt}\" • Estilo: {style} • Cartas: {total}",
+    "regenerate": "Regenerar",
+    "regenerating": "Regenerando...",
+    "saveToGallery": "Salvar na Galeria",
+    "saving": "Salvando..."
+  },
+  "footer": {
+    "copyright": "© 2025 Pexeso.app Todos os direitos reservados",
+    "privacyPolicy": "Política de Privacidade",
+    "termsOfUse": "Termos de Uso"
+  },
+  "privacy": {
+    "title": "Política de Privacidade",
+    "paragraph1": "Respeitamos sua privacidade. Este site coleta apenas os dados necessários para operar o jogo Pexeso, como autenticação de usuário, progresso do jogo e imagens de cartas enviadas.",
+    "paragraph2": "Não vendemos ou compartilhamos seus dados pessoais com terceiros, exceto conforme necessário para fornecer funcionalidade básica (por exemplo, autenticação, armazenamento, hospedagem).",
+    "paragraph3": "Todos os dados são armazenados com segurança em nosso banco de dados (Supabase) e são acessíveis apenas para você e administradores autorizados.",
+    "paragraph4": "Ao usar este site, você consente com esta coleta e uso. Para perguntas, entre em contato com support@example.com."
+  },
+  "terms": {
+    "title": "Termos de Uso",
+    "intro": "Ao acessar e usar este site, você concorda em seguir estes termos:",
+    "term1": "Você pode jogar o jogo Pexeso e usar todos os recursos fornecidos para uso pessoal e não comercial.",
+    "term2": "Você é responsável pelo conteúdo que envia (por exemplo, imagens de cartas) e concorda em não enviar material prejudicial, ofensivo ou protegido por direitos autorais sem permissão.",
+    "term3": "Podemos atualizar ou alterar os recursos do jogo a qualquer momento sem aviso prévio.",
+    "term4": "Não somos responsáveis por quaisquer danos causados pelo uso do site.",
+    "term5": "Estes termos são regidos pelas leis de [Seu País].",
+    "outro": "Se você não concordar com estes termos, por favor, pare de usar o site."
   },
   "language": {
     "switchLanguage": "Trocar Idioma",
     "currentLanguage": "Idioma Atual"
-  },
-  "home": {
-    "hero": {
-      "title": "Jogo da Memória",
-      "subtitle": "Treine sua memória com o clássico jogo da memória",
-      "playNow": "Jogar Agora",
-      "browseDeck": "Ver Baralhos"
-    },
-    "features": {
-      "title": "Por que escolher nosso jogo da memória?",
-      "subtitle": "Descubra os recursos que tornam nosso jogo único",
-      "multipleDecks": {
-        "title": "Múltiplos Baralhos",
-        "description": "Escolha entre vários temas e dificuldades"
-      },
-      "aiOpponent": {
-        "title": "Oponente IA",
-        "description": "Jogue contra um bot inteligente"
-      },
-      "progress": {
-        "title": "Acompanhamento de Progresso",
-        "description": "Monitore seu desempenho e melhorias"
-      },
-      "multiplayer": {
-        "title": "Multijogador",
-        "description": "Jogue com amigos online"
-      }
-    },
-    "popularDecks": {
-      "title": "Baralhos Populares",
-      "subtitle": "Os baralhos mais jogados por nossos usuários",
-      "viewAll": "Ver Todos"
-    },
-    "cta": {
-      "title": "Pronto para começar?",
-      "subtitle": "Junte-se a milhares de jogadores e comece a treinar sua memória hoje",
-      "getStarted": "Começar Grátis"
-    }
-  },
-  "deckCard": {
-    "cards": "cartas",
-    "plays": "jogadas",
-    "favorites": "favoritos",
-    "playNow": "Jogar Agora",
-    "addToFavorites": "Adicionar aos Favoritos",
-    "removeFromFavorites": "Remover dos Favoritos"
   }
 }

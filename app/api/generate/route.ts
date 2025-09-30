@@ -8,10 +8,19 @@ fal.config({
 
 const STYLE_TEMPLATES = {
   realistic:
-    "High-quality, photorealistic illustration, single subject, full body, centered, clean soft background, consistent style across all images, sharp focus, no text, no numbers, no multiple characters, no collage.",
+    "High-quality, photorealistic illustration, single subject, full body, centered, sharp focus, professional photography style, consistent style across all images, no text, no numbers, no multiple characters, no collage.",
   cartoon:
-    "Cute flat vector cartoon illustration, pastel colors, single subject, full body, simple background, consistent illustration style across all images, no text, no numbers, no multiple characters, no collage.",
+    "Cute flat vector cartoon illustration, vibrant colors, single subject, full body, centered, consistent illustration style across all images, playful and friendly, no text, no numbers, no multiple characters, no collage.",
 }
+
+const QUALITY_PRESETS = {
+  fast: 4,
+  balanced: 12,
+  high: 28,
+}
+
+const DEFAULT_NEGATIVE_PROMPT =
+  "multiple subjects, duplicate characters, multiple people, multiple animals, text, watermarks, signatures, logos, numbers, letters, collage, split image, border, frame, low quality, blurry, distorted"
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,7 +34,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Authentication required to generate images" }, { status: 401 })
     }
 
-    const { prompt, cardCount = 8, style = "realistic" } = await request.json()
+    const {
+      prompt,
+      cardCount = 8,
+      style = "realistic",
+      quality = "high",
+      negativePrompt,
+      guidanceScale,
+      backgroundStyle,
+    } = await request.json()
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 })
@@ -38,18 +55,34 @@ export async function POST(request: NextRequest) {
     const validCounts = [8, 12, 16]
     const imageCount = validCounts.includes(cardCount) ? cardCount : 8
 
+    const inferenceSteps = QUALITY_PRESETS[quality as keyof typeof QUALITY_PRESETS] || QUALITY_PRESETS.high
+
+    const finalNegativePrompt = negativePrompt || DEFAULT_NEGATIVE_PROMPT
+
+    const finalGuidanceScale = guidanceScale || 7.5
+
     const styleTemplate = STYLE_TEMPLATES[style as keyof typeof STYLE_TEMPLATES]
+
+    const backgroundSuffix = backgroundStyle ? `, ${backgroundStyle}` : ""
 
     const imagePromises = Array.from({ length: imageCount }, async (_, i) => {
       try {
-        const finalPrompt = `${styleTemplate} ${prompt}, unique variation ${i + 1}`
+        const finalPrompt = `${styleTemplate} ${prompt}${backgroundSuffix}, unique variation ${i + 1}`
+
+        console.log("[v0] Generating image with settings:", {
+          inferenceSteps,
+          guidanceScale: finalGuidanceScale,
+          negativePrompt: finalNegativePrompt,
+        })
 
         const result = await fal.subscribe("fal-ai/flux/schnell", {
           input: {
             prompt: finalPrompt,
             image_size: "square_hd",
-            num_inference_steps: 4,
+            num_inference_steps: inferenceSteps,
             num_images: 1,
+            negative_prompt: finalNegativePrompt,
+            guidance_scale: finalGuidanceScale,
           },
         })
 

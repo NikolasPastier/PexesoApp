@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast"
 import { GeneratedImagesModal } from "@/components/generated-images-modal"
 import { useAuth } from "@/contexts/auth-context"
 import { AuthModal } from "@/components/auth-modal"
+import { useTranslations } from "next-intl"
 
 interface GeneratedImage {
   url: string
@@ -16,6 +17,7 @@ interface GeneratedImage {
 }
 
 export function DeckGenerator() {
+  const t = useTranslations("deckGenerator")
   const [prompt, setPrompt] = useState("")
   const [cardCount, setCardCount] = useState("12") // Default to 12 pictures (24 cards)
   const [style, setStyle] = useState("realistic")
@@ -56,8 +58,8 @@ export function DeckGenerator() {
     const validCounts = ["8", "12", "16"]
     if (!validCounts.includes(cardCount)) {
       toast({
-        title: "Invalid card count",
-        description: "Please select a valid card count option.",
+        title: t("invalidCardCount"),
+        description: t("invalidCardCountDesc"),
         variant: "destructive",
       })
       return
@@ -83,15 +85,15 @@ export function DeckGenerator() {
       if (data.images && data.images.length > 0) {
         setIsModalOpen(true)
         toast({
-          title: "Images generated successfully!",
-          description: `Generated ${data.images.length} unique images for your deck.`,
+          title: t("generationSuccess"),
+          description: t("generationSuccessDesc", { count: data.images.length }),
         })
       }
     } catch (error) {
       console.error("Error generating images:", error)
       toast({
-        title: "Generation failed",
-        description: "Image generation failed. Please try again.",
+        title: t("generationFailed"),
+        description: t("generationFailedDesc"),
         variant: "destructive",
       })
     } finally {
@@ -126,8 +128,8 @@ export function DeckGenerator() {
       }
 
       toast({
-        title: "Deck saved successfully!",
-        description: `Your deck "${prompt}" has been saved with ${getCardsCount(cardCount)} cards.`,
+        title: t("deckSaved"),
+        description: t("deckSavedDesc", { title: prompt, count: getCardsCount(cardCount) }),
       })
 
       setIsModalOpen(false)
@@ -138,8 +140,8 @@ export function DeckGenerator() {
     } catch (error) {
       console.error("Error saving deck:", error)
       toast({
-        title: "Save failed",
-        description: "Failed to save deck. Please try again.",
+        title: t("saveFailed"),
+        description: t("saveFailedDesc"),
         variant: "destructive",
       })
     } finally {
@@ -167,7 +169,7 @@ export function DeckGenerator() {
             <div className="flex items-center gap-2 max-sm:flex-col max-sm:items-stretch max-sm:gap-3">
               <div className="flex-1 relative min-w-0">
                 <Input
-                  placeholder="Ask PexesoAI to create a deck about..."
+                  placeholder={t("placeholder")}
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && !isGenerating && handleGenerate()}
@@ -195,14 +197,14 @@ export function DeckGenerator() {
 
                 <Select value={style} onValueChange={setStyle}>
                   <SelectTrigger className="w-auto h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-1.5 max-sm:px-1 max-sm:h-9">
-                    <SelectValue placeholder="Style" />
+                    <SelectValue placeholder={t("style")} />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-600">
                     <SelectItem value="realistic" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
-                      Realistic
+                      {t("realistic")}
                     </SelectItem>
                     <SelectItem value="cartoon" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
-                      Cartoon
+                      {t("cartoon")}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -211,7 +213,7 @@ export function DeckGenerator() {
                   onClick={handleGenerate}
                   disabled={!prompt.trim() || isGenerating}
                   size="sm"
-                  className="h-8 w-8 max-sm:w-full max-sm:h-12 rounded-full max-sm:rounded-lg bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
+                  className="h-8 w-8 max-sm:w-9 max-sm:h-9 rounded-full max-sm:rounded-lg bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
                 >
                   {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
                 </Button>

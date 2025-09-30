@@ -90,6 +90,7 @@
     "playWithDeck": "Jugar con este Mazo",
     "official": "Oficial",
     "anonymous": "Anónimo",
+    "unknownUser": "Usuario Desconocido",
     "deckSelected": "¡Mazo \"{title}\" seleccionado para tu próximo juego!",
     "addedToFavorites": "¡\"{title}\" añadido a favoritos!",
     "removedFromFavorites": "¡\"{title}\" eliminado de favoritos!",
@@ -97,7 +98,12 @@
     "loadingDecks": "Cargando mazos...",
     "noDecks": "No se encontraron mazos",
     "adjustFilters": "Intenta ajustar tus filtros",
-    "allCards": "Todas las Cartas"
+    "allCards": "Todas las Cartas",
+    "createdBy": "Creado por",
+    "created": "Creado",
+    "likes": "Me gusta",
+    "plays": "Jugadas",
+    "showAllDecks": "Mostrar Todos los Mazos"
   },
   "deckGenerator": {
     "placeholder": "Pide a PexesoAI que cree un mazo sobre...",

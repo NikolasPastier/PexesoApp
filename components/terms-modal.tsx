@@ -1,6 +1,7 @@
 "use client"
 
 import { Modal } from "./modal"
+import { useTranslations } from "next-intl"
 
 interface TermsModalProps {
   isOpen: boolean
@@ -8,21 +9,20 @@ interface TermsModalProps {
 }
 
 export function TermsModal({ isOpen, onClose }: TermsModalProps) {
+  const t = useTranslations("terms")
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Terms of Use">
+    <Modal isOpen={isOpen} onClose={onClose} title={t("title")}>
       <div className="space-y-4">
-        <p>By accessing and using this site, you agree to follow these terms:</p>
+        <p>{t("intro")}</p>
         <ol className="list-decimal list-inside space-y-2 ml-4">
-          <li>You may play the Pexeso game and use all features provided for personal, non-commercial use.</li>
-          <li>
-            You are responsible for the content you upload (e.g., card images) and agree not to upload harmful,
-            offensive, or copyrighted material without permission.
-          </li>
-          <li>We may update or change the game features at any time without prior notice.</li>
-          <li>We are not liable for any damages caused by use of the site.</li>
-          <li>These terms are governed by the laws of [Your Country].</li>
+          <li>{t("term1")}</li>
+          <li>{t("term2")}</li>
+          <li>{t("term3")}</li>
+          <li>{t("term4")}</li>
+          <li>{t("term5")}</li>
         </ol>
-        <p>If you do not agree with these terms, please discontinue using the site.</p>
+        <p>{t("outro")}</p>
       </div>
     </Modal>
   )

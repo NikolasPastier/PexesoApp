@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Loader2, Sparkles, Save, X } from "lucide-react"
 import Image from "next/image"
 import { useToast } from "@/hooks/use-toast"
+import { useTranslations } from "next-intl"
 
 interface GeneratedImage {
   url: string
@@ -36,6 +37,8 @@ export function GeneratedImagesModal({
   isSaving = false,
 }: GeneratedImagesModalProps) {
   const { toast } = useToast()
+  const t = useTranslations("generatedImages")
+  const tDeckGen = useTranslations("deckGenerator")
 
   const cardCountOptions = [
     { value: "8", label: "8 pictures (16 cards)", cards: 16 },
@@ -56,7 +59,7 @@ export function GeneratedImagesModal({
         <div className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 shadow-2xl rounded-xl p-6">
           <DialogHeader className="mb-6">
             <div className="flex items-center justify-between">
-              <DialogTitle className="text-2xl font-bold text-white">Generated Images</DialogTitle>
+              <DialogTitle className="text-2xl font-bold text-white">{t("title")}</DialogTitle>
               <Button
                 variant="ghost"
                 size="sm"
@@ -68,10 +71,14 @@ export function GeneratedImagesModal({
             </div>
             <div className="text-gray-300">
               <p className="text-sm">
-                Generated {images.length} images ({getCardsCount(cardCount)} cards total)
+                {t("generatedCount", { count: images.length, total: getCardsCount(cardCount) })}
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                Prompt: "{prompt}" • Style: {style} • Cards: {getCardsCount(cardCount)}
+                {t("promptInfo", {
+                  prompt,
+                  style: style === "realistic" ? tDeckGen("realistic") : tDeckGen("cartoon"),
+                  total: getCardsCount(cardCount),
+                })}
               </p>
             </div>
           </DialogHeader>
@@ -104,12 +111,12 @@ export function GeneratedImagesModal({
                 {isRegenerating ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Regenerating...
+                    {t("regenerating")}
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 mr-2" />
-                    Regenerate
+                    {t("regenerate")}
                   </>
                 )}
               </Button>
@@ -117,12 +124,12 @@ export function GeneratedImagesModal({
                 {isSaving ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Saving...
+                    {t("saving")}
                   </>
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />
-                    Save to Gallery
+                    {t("saveToGallery")}
                   </>
                 )}
               </Button>
