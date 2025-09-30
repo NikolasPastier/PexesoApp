@@ -106,6 +106,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
             setSelectedDeckId(classicAnimals.id)
             setSelectedDeck(classicAnimals)
             setDeckImages(classicAnimals.images)
+            setCardCount(classicAnimals.cards_count) // Auto-set card count based on selected deck
+            setGameCards([]) // Clear existing game cards
           }
         }
       } catch (error) {
@@ -121,6 +123,12 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
       const deck = event.detail
       setSelectedDeckId(deck.id)
       setSelectedDeck(deck)
+
+      if (deck.cards_count) {
+        setCardCount(deck.cards_count)
+        setGameCards([]) // Clear existing game cards
+      }
+
       if (deck.images) {
         setDeckImages(deck.images)
       }
@@ -437,20 +445,20 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
   }
 
   const getResponsiveGridCols = () => {
-    if (cardCount <= 16) {
-      return "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
-    } else if (cardCount <= 24) {
-      return "grid-cols-3 sm:grid-cols-4 md:grid-cols-6"
-    } else {
-      return "grid-cols-4 sm:grid-cols-6 md:grid-cols-8"
-    }
+    // This ensures cards stay close together regardless of count
+    return "grid-cols-4 sm:grid-cols-6 md:grid-cols-8"
   }
 
   const handleDeckChange = (deckId: string, deck: any) => {
     setSelectedDeckId(deckId)
     setSelectedDeck(deck)
 
-    if (deck && deck.images) {
+    if (deck.cards_count) {
+      setCardCount(deck.cards_count)
+      setGameCards([]) // Clear existing game cards
+    }
+
+    if (deck.images) {
       setDeckImages(deck.images)
     } else {
       setDeckImages([])
@@ -704,7 +712,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
       </div>
 
       <div className="relative">
-        <div className={`grid ${getResponsiveGridCols()} gap-4 justify-items-center`}>
+        <div className={`grid ${getResponsiveGridCols()} gap-3 justify-items-center`}>
           {gameStatus === "idle"
             ? Array.from({ length: cardCount }).map((_, index) => {
                 let previewImage

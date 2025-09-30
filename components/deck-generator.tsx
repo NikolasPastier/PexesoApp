@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, ArrowUp } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { GeneratedImagesModal } from "@/components/generated-images-modal"
+import { useAuth } from "@/contexts/auth-context"
+import { AuthModal } from "@/components/auth-modal"
 
 interface GeneratedImage {
   url: string
@@ -21,7 +23,10 @@ export function DeckGenerator() {
   const [isSaving, setIsSaving] = useState(false)
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [pendingAction, setPendingAction] = useState<"generate" | null>(null)
   const { toast } = useToast()
+  const { user } = useAuth()
 
   const cardCountOptions = [
     { value: "8", label: "8 pictures (16 cards)", cards: 16 },
@@ -41,6 +46,12 @@ export function DeckGenerator() {
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
+
+    if (!user) {
+      setPendingAction("generate")
+      setShowAuthModal(true)
+      return
+    }
 
     const validCounts = ["8", "12", "16"]
     if (!validCounts.includes(cardCount)) {
@@ -136,71 +147,78 @@ export function DeckGenerator() {
     }
   }
 
+  const handleAuthModalClose = () => {
+    setShowAuthModal(false)
+    if (user && pendingAction === "generate") {
+      setPendingAction(null)
+      setTimeout(() => {
+        handleGenerate()
+      }, 300)
+    } else {
+      setPendingAction(null)
+    }
+  }
+
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8">
-      <div className="relative">
-        {/* Main Prompt Container - Dark rounded design similar to the image */}
-        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900/20 rounded-3xl p-4 sm:p-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
-          <div className="flex items-center gap-2 max-sm:flex-col max-sm:items-stretch max-sm:gap-3">
-            {/* Main input area */}
-            <div className="flex-1 relative min-w-0">
-              <Input
-                placeholder="Ask PexesoAI to create a deck about..."
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && !isGenerating && handleGenerate()}
-                className="bg-transparent border-none text-gray-200 placeholder:text-gray-400 text-lg max-sm:text-base h-12 focus:ring-0 focus:outline-none px-0"
-              />
-            </div>
+    <>
+      <div className="w-full max-w-4xl mx-auto space-y-8">
+        <div className="relative">
+          <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900/20 rounded-3xl p-4 sm:p-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
+            <div className="flex items-center gap-2 max-sm:flex-col max-sm:items-stretch max-sm:gap-3">
+              <div className="flex-1 relative min-w-0">
+                <Input
+                  placeholder="Ask PexesoAI to create a deck about..."
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && !isGenerating && handleGenerate()}
+                  className="bg-transparent border-none text-gray-200 placeholder:text-gray-400 text-lg max-sm:text-base h-12 focus:ring-0 focus:outline-none px-0"
+                />
+              </div>
 
-            <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-center">
-              {/* Card Count Dropdown - Compact */}
-              <Select value={cardCount} onValueChange={setCardCount}>
-                <SelectTrigger className="w-16 h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-2">
-                  <SelectValue placeholder="16" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
-                  <SelectItem value="8" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
-                    16
-                  </SelectItem>
-                  <SelectItem value="12" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
-                    24
-                  </SelectItem>
-                  <SelectItem value="16" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
-                    32
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-center">
+                <Select value={cardCount} onValueChange={setCardCount}>
+                  <SelectTrigger className="w-16 h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-2">
+                    <SelectValue placeholder="16" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-600">
+                    <SelectItem value="8" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                      16
+                    </SelectItem>
+                    <SelectItem value="12" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                      24
+                    </SelectItem>
+                    <SelectItem value="16" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                      32
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
 
-              {/* Style Dropdown - Compact */}
-              <Select value={style} onValueChange={setStyle}>
-                <SelectTrigger className="w-20 h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-2">
-                  <SelectValue placeholder="Style" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
-                  <SelectItem value="realistic" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
-                    Realistic
-                  </SelectItem>
-                  <SelectItem value="cartoon" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
-                    Cartoon
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                <Select value={style} onValueChange={setStyle}>
+                  <SelectTrigger className="w-20 h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-2">
+                    <SelectValue placeholder="Style" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-600">
+                    <SelectItem value="realistic" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                      Realistic
+                    </SelectItem>
+                    <SelectItem value="cartoon" className="text-gray-200 focus:bg-gray-700 focus:text-white text-xs">
+                      Cartoon
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
 
-              {/* Generate Button */}
-              <Button
-                onClick={handleGenerate}
-                disabled={!prompt.trim() || isGenerating}
-                size="sm"
-                className="h-8 w-8 max-sm:w-full max-sm:h-12 rounded-full max-sm:rounded-lg bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
-              >
-                {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
-              </Button>
+                <Button
+                  onClick={handleGenerate}
+                  disabled={!prompt.trim() || isGenerating}
+                  size="sm"
+                  className="h-8 w-8 max-sm:w-full max-sm:h-12 rounded-full max-sm:rounded-lg bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
+                >
+                  {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Subtitle */}
       </div>
 
       <GeneratedImagesModal
@@ -215,6 +233,8 @@ export function DeckGenerator() {
         isRegenerating={isGenerating}
         isSaving={isSaving}
       />
-    </div>
+
+      <AuthModal isOpen={showAuthModal} onClose={handleAuthModalClose} defaultTab="login" />
+    </>
   )
 }

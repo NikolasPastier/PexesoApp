@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Upload, X, Plus } from "lucide-react"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
+import { useAuth } from "@/contexts/auth-context"
+import { AuthModal } from "@/components/auth-modal"
 
 interface UploadDeckModalProps {
   onDeckUploaded?: () => void
@@ -25,6 +27,23 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
   const [selectedImages, setSelectedImages] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const { user } = useAuth()
+
+  const handleOpenChange = (open: boolean) => {
+    if (open && !user) {
+      setShowAuthModal(true)
+      return
+    }
+    setIsOpen(open)
+  }
+
+  useEffect(() => {
+    if (user && showAuthModal) {
+      setShowAuthModal(false)
+      setIsOpen(true)
+    }
+  }, [user, showAuthModal])
 
   const getMaxImages = (cards: number) => cards / 2
 
@@ -157,176 +176,182 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-primary hover:bg-primary/90 text-white" onClick={() => setIsOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Upload Deck
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-gray-800/95 border-gray-600/30 backdrop-blur-sm">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-lg"></div>
-        <div className="relative">
-          <DialogHeader>
-            <DialogTitle className="text-2xl text-white">Upload Your Deck</DialogTitle>
-          </DialogHeader>
+    <>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>
+          <Button className="bg-primary hover:bg-primary/90 text-white">
+            <Plus className="w-4 h-4 mr-2" />
+            Upload Deck
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-gray-800/95 border-gray-600/30 backdrop-blur-sm">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-lg"></div>
+          <div className="relative">
+            <DialogHeader>
+              <DialogTitle className="text-2xl text-white">Upload Your Deck</DialogTitle>
+            </DialogHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Deck Name */}
-            <div className="space-y-2">
-              <Label htmlFor="deck-name" className="text-gray-200">
-                Deck Name *
-              </Label>
-              <Input
-                id="deck-name"
-                placeholder="Enter deck name..."
-                value={deckTitle}
-                onChange={(e) => setDeckTitle(e.target.value)}
-                required
-                className="bg-gray-700/50 border-gray-600/30 text-white placeholder:text-gray-400 focus:border-primary/50"
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Deck Name */}
+              <div className="space-y-2">
+                <Label htmlFor="deck-name" className="text-gray-200">
+                  Deck Name *
+                </Label>
+                <Input
+                  id="deck-name"
+                  placeholder="Enter deck name..."
+                  value={deckTitle}
+                  onChange={(e) => setDeckTitle(e.target.value)}
+                  required
+                  className="bg-gray-700/50 border-gray-600/30 text-white placeholder:text-gray-400 focus:border-primary/50"
+                />
+              </div>
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description" className="text-gray-200">
-                Description (optional)
-              </Label>
-              <Textarea
-                id="description"
-                placeholder="Describe your deck..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                className="bg-gray-700/50 border-gray-600/30 text-white placeholder:text-gray-400 focus:border-primary/50"
-              />
-            </div>
+              {/* Description */}
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-gray-200">
+                  Description (optional)
+                </Label>
+                <Textarea
+                  id="description"
+                  placeholder="Describe your deck..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={3}
+                  className="bg-gray-700/50 border-gray-600/30 text-white placeholder:text-gray-400 focus:border-primary/50"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label className="text-gray-200">Number of Playing Cards *</Label>
-              <Select value={cardCount?.toString()} onValueChange={(value) => setCardCount(Number(value))}>
-                <SelectTrigger className="bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
-                  <SelectValue placeholder="Select card count..." />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600/30">
-                  <SelectItem value="16" className="text-white hover:bg-gray-700">
-                    16 cards (upload 8 images)
-                  </SelectItem>
-                  <SelectItem value="24" className="text-white hover:bg-gray-700">
-                    24 cards (upload 12 images)
-                  </SelectItem>
-                  <SelectItem value="32" className="text-white hover:bg-gray-700">
-                    32 cards (upload 16 images)
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              {cardCount && (
-                <p className="text-sm text-gray-400">
-                  You need to upload exactly {getMaxImages(cardCount)} images for {cardCount} cards.
-                </p>
-              )}
-            </div>
-
-            {/* Image Upload */}
-            <div className="space-y-4">
-              <Label className="text-gray-200">Images *</Label>
-              <div className="border-2 border-dashed border-gray-600/50 rounded-2xl p-6 text-center bg-gray-700/20">
-                <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                <p className="text-gray-300 mb-4">Drag and drop images here, or click to select</p>
-                <p className="text-sm text-gray-400 mb-4">Accepts: JPG, PNG, WebP</p>
+              <div className="space-y-2">
+                <Label className="text-gray-200">Number of Playing Cards *</Label>
+                <Select value={cardCount?.toString()} onValueChange={(value) => setCardCount(Number(value))}>
+                  <SelectTrigger className="bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
+                    <SelectValue placeholder="Select card count..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-600/30">
+                    <SelectItem value="16" className="text-white hover:bg-gray-700">
+                      16 cards (upload 8 images)
+                    </SelectItem>
+                    <SelectItem value="24" className="text-white hover:bg-gray-700">
+                      24 cards (upload 12 images)
+                    </SelectItem>
+                    <SelectItem value="32" className="text-white hover:bg-gray-700">
+                      32 cards (upload 16 images)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
                 {cardCount && (
-                  <p className="text-sm text-primary mb-4">
-                    Upload {getMaxImages(cardCount)} images for {cardCount} cards
+                  <p className="text-sm text-gray-400">
+                    You need to upload exactly {getMaxImages(cardCount)} images for {cardCount} cards.
                   </p>
                 )}
-                <Input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  id="image-upload"
-                  disabled={!cardCount}
-                />
+              </div>
+
+              {/* Image Upload */}
+              <div className="space-y-4">
+                <Label className="text-gray-200">Images *</Label>
+                <div className="border-2 border-dashed border-gray-600/50 rounded-2xl p-6 text-center bg-gray-700/20">
+                  <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                  <p className="text-gray-300 mb-4">Drag and drop images here, or click to select</p>
+                  <p className="text-sm text-gray-400 mb-4">Accepts: JPG, PNG, WebP</p>
+                  {cardCount && (
+                    <p className="text-sm text-primary mb-4">
+                      Upload {getMaxImages(cardCount)} images for {cardCount} cards
+                    </p>
+                  )}
+                  <Input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="image-upload"
+                    disabled={!cardCount}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    asChild
+                    className="bg-gray-700/50 border-gray-600/30 text-gray-200 hover:bg-gray-600/50"
+                    disabled={!cardCount}
+                  >
+                    <label htmlFor="image-upload" className="cursor-pointer">
+                      Select Images
+                    </label>
+                  </Button>
+                </div>
+
+                {/* Image Preview */}
+                {selectedImages.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-gray-200">
+                      {selectedImages.length} image(s) selected
+                      {cardCount && ` (${getMaxImages(cardCount)} required)`}
+                    </p>
+                    <div className="grid grid-cols-4 gap-3 max-h-48 overflow-y-auto">
+                      {selectedImages.map((image, index) => (
+                        <div key={index} className="relative group">
+                          <div className="aspect-square relative bg-gray-700/50 rounded-lg overflow-hidden border border-gray-600/30">
+                            <Image
+                              src={URL.createObjectURL(image) || "/placeholder.svg"}
+                              alt={`Preview ${index + 1}`}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            className="absolute -top-2 -right-2 w-6 h-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-red-600/90 hover:bg-red-700/90"
+                            onClick={() => removeImage(index)}
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="text-sm text-red-400 bg-red-900/30 border border-red-700/30 p-3 rounded-lg">
+                  {error}
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-600/30">
                 <Button
                   type="button"
                   variant="outline"
-                  asChild
+                  onClick={() => setIsOpen(false)}
+                  disabled={isUploading}
                   className="bg-gray-700/50 border-gray-600/30 text-gray-200 hover:bg-gray-600/50"
-                  disabled={!cardCount}
                 >
-                  <label htmlFor="image-upload" className="cursor-pointer">
-                    Select Images
-                  </label>
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={
+                    isUploading ||
+                    !deckTitle.trim() ||
+                    !cardCount ||
+                    selectedImages.length !== getMaxImages(cardCount || 0)
+                  }
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  {isUploading ? "Uploading..." : "Save Deck"}
                 </Button>
               </div>
+            </form>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-              {/* Image Preview */}
-              {selectedImages.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-200">
-                    {selectedImages.length} image(s) selected
-                    {cardCount && ` (${getMaxImages(cardCount)} required)`}
-                  </p>
-                  <div className="grid grid-cols-4 gap-3 max-h-48 overflow-y-auto">
-                    {selectedImages.map((image, index) => (
-                      <div key={index} className="relative group">
-                        <div className="aspect-square relative bg-gray-700/50 rounded-lg overflow-hidden border border-gray-600/30">
-                          <Image
-                            src={URL.createObjectURL(image) || "/placeholder.svg"}
-                            alt={`Preview ${index + 1}`}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="sm"
-                          className="absolute -top-2 -right-2 w-6 h-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-red-600/90 hover:bg-red-700/90"
-                          onClick={() => removeImage(index)}
-                        >
-                          <X className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Error Message */}
-            {error && (
-              <div className="text-sm text-red-400 bg-red-900/30 border border-red-700/30 p-3 rounded-lg">{error}</div>
-            )}
-
-            {/* Submit Button */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-600/30">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsOpen(false)}
-                disabled={isUploading}
-                className="bg-gray-700/50 border-gray-600/30 text-gray-200 hover:bg-gray-600/50"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={
-                  isUploading ||
-                  !deckTitle.trim() ||
-                  !cardCount ||
-                  selectedImages.length !== getMaxImages(cardCount || 0)
-                }
-                className="bg-primary hover:bg-primary/90"
-              >
-                {isUploading ? "Uploading..." : "Save Deck"}
-              </Button>
-            </div>
-          </form>
-        </div>
-      </DialogContent>
-    </Dialog>
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} defaultTab="signup" />
+    </>
   )
 }
