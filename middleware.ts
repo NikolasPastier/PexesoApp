@@ -6,7 +6,7 @@ import { locales, defaultLocale } from "@/lib/i18n/config"
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
-  localePrefix: "never", // Don't add locale prefix to URLs
+  localePrefix: "always", // Always add locale prefix to URLs
 })
 
 export async function middleware(request: NextRequest) {
