@@ -461,7 +461,7 @@ export function DeckGallery() {
 
       {/* Browse All Modal */}
       <Dialog open={showBrowseModal} onOpenChange={setShowBrowseModal}>
-        <DialogContent className="w-[95vw] sm:w-[90vw] lg:w-[80vw] xl:w-[75vw] max-w-7xl max-h-[85vh] overflow-hidden bg-black/50 backdrop-blur-sm border-none p-0">
+        <DialogContent className="w-[95vw] sm:w-[90vw] lg:w-[85vw] xl:w-[80vw] max-w-[1600px] max-h-[90vh] overflow-hidden bg-black/50 backdrop-blur-sm border-none p-0">
           <div className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 shadow-2xl rounded-xl p-6 sm:p-8 h-full flex flex-col">
             <DialogHeader className="mb-8">
               <div className="flex items-center justify-between flex-wrap gap-4">
@@ -541,7 +541,7 @@ export function DeckGallery() {
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 pb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 xl:gap-10 pb-4">
                   {modalDecks.map((deck) => (
                     <Card
                       key={deck.id}
@@ -549,7 +549,7 @@ export function DeckGallery() {
                     >
                       <div className="relative">
                         {/* Deck Preview Image */}
-                        <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/10 p-4">
+                        <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/10 p-5">
                           <div className="grid grid-cols-4 gap-2 h-full">
                             {deck.images.slice(0, 8).map((image, index) => (
                               <div key={index} className="relative bg-white rounded-lg shadow-sm overflow-hidden">
@@ -684,7 +684,7 @@ export function DeckGallery() {
                         </div>
                       </div>
 
-                      <CardContent className="p-4">
+                      <CardContent className="p-5">
                         {/* Deck Info */}
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">

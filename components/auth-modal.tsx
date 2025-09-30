@@ -155,11 +155,11 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
               <Alert
                 className={`mb-4 ${
                   message.type === "error"
-                    ? "border-red-500/50 bg-red-500/10 text-white"
-                    : "border-emerald-500/50 bg-emerald-500/10 text-white"
+                    ? "border-red-500/50 bg-red-500/20 text-white"
+                    : "border-emerald-500/50 bg-emerald-500/20 text-white"
                 }`}
               >
-                <AlertDescription>{message.text}</AlertDescription>
+                <AlertDescription className="text-white font-medium">{message.text}</AlertDescription>
               </Alert>
             )}
 
@@ -193,7 +193,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setLoginData((prev) => ({ ...prev, email: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white/70 focus:border-gray-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -208,7 +208,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setLoginData((prev) => ({ ...prev, password: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white/70 focus:border-gray-500"
                     />
                   </div>
                   <Button
@@ -236,7 +236,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setSignupData((prev) => ({ ...prev, username: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white/70 focus:border-gray-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -251,7 +251,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setSignupData((prev) => ({ ...prev, email: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white/70 focus:border-gray-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -266,7 +266,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setSignupData((prev) => ({ ...prev, password: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white/70 focus:border-gray-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -281,7 +281,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                       onChange={(e) => setSignupData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
                       required
                       disabled={loading}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white focus:border-gray-500"
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder:text-white/70 focus:border-gray-500"
                     />
                   </div>
                   <Button

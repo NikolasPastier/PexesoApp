@@ -198,7 +198,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
               placeholder="Enter your username"
             />
           </div>
@@ -212,7 +212,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white"
+              className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
               placeholder="Enter your email"
             />
           </div>
