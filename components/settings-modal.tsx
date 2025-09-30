@@ -289,7 +289,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <Button
               variant="outline"
               onClick={() => setShowDeleteConfirm(true)}
-              className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500"
+              className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500 hover:text-white"
             >
               <Trash2 className="mr-2 h-4 w-4" />
               Delete Account

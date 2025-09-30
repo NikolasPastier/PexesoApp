@@ -545,8 +545,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                       }}
                     >
                       <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px] max-sm:flex-1">
-                        <SelectValue placeholder={t("timer")} />
-                        <ChevronDown className="w-4 h-4" />
+                        <span>{t("timer")}</span>
+                        <ChevronDown className="w-4 h-4 ml-2" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
                         <SelectItem value="unlimited" className="text-white hover:bg-gray-700">
@@ -591,8 +591,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                       }}
                     >
                       <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[120px] max-sm:flex-1">
-                        <SelectValue placeholder={t("matches")} />
-                        <ChevronDown className="w-4 h-4" />
+                        <span>{t("matches")}</span>
+                        <ChevronDown className="w-4 h-4 ml-2" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
                         <SelectItem value="unlimited" className="text-white hover:bg-gray-700">

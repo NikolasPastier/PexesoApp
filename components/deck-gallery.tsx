@@ -241,7 +241,7 @@ export function DeckGallery() {
               <UploadDeckModal onDeckUploaded={handleDeckUploaded} />
               <Button
                 variant="ghost"
-                className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-600/30 max-lg:w-full"
+                className="bg-gray-800 hover:bg-gray-700 text-white hover:text-white border border-gray-600/30 max-lg:w-full"
                 onClick={handleBrowseAll}
               >
                 Browse All <ChevronRightIcon />

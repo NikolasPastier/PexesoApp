@@ -103,9 +103,7 @@ export function AuthForm() {
           <Alert
             className={`mb-4 ${message.type === "error" ? "border-red-200 bg-red-50" : "border-emerald-200 bg-emerald-50"}`}
           >
-            <AlertDescription className={message.type === "error" ? "text-red-800" : "text-emerald-800"}>
-              {message.text}
-            </AlertDescription>
+            <AlertDescription className="text-white">{message.text}</AlertDescription>
           </Alert>
         )}
 

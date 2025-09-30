@@ -155,8 +155,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
               <Alert
                 className={`mb-4 ${
                   message.type === "error"
-                    ? "border-red-500/50 bg-red-500/10 text-red-300"
-                    : "border-emerald-500/50 bg-emerald-500/10 text-emerald-300"
+                    ? "border-red-500/50 bg-red-500/10 text-white"
+                    : "border-emerald-500/50 bg-emerald-500/10 text-white"
                 }`}
               >
                 <AlertDescription>{message.text}</AlertDescription>

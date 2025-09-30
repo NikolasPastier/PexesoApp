@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ChevronDown, ImageIcon, Lock, Globe, Heart } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
+import { ChevronDown, Lock, Globe, Heart } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 
 interface Deck {
@@ -80,106 +80,95 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2">
-        <ImageIcon className="w-4 h-4 text-white" />
-        <span className="text-white text-sm">Deck Style:</span>
-        <div className="rounded-lg px-3 py-2 bg-gray-800 text-white border-gray-600/30 min-w-[150px] animate-pulse">
-          Loading...
-        </div>
+      <div className="rounded-lg px-3 py-2 bg-gray-800 text-white border-gray-600/30 min-w-[150px] animate-pulse">
+        Loading...
       </div>
     )
   }
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <ImageIcon className="w-4 h-4 text-white" />
-      <span className="text-white text-sm">Deck Style:</span>
-      <Select value={selectedDeckId} onValueChange={handleDeckChange}>
-        <SelectTrigger className="rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[150px]">
-          <SelectValue />
-          <ChevronDown className="w-4 h-4" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-600/30 max-h-60">
-          {user && (
-            <>
-              {favoriteDecks.length > 0 ? (
-                <>
-                  <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
-                  {favoriteDecks.map((deck) => (
-                    <SelectItem key={deck.id} value={deck.id} className="text-white hover:bg-gray-700">
-                      <div className="flex items-center gap-2 w-full">
-                        <Heart className="w-3 h-3 text-red-400 fill-current" />
-                        <span className="truncate">{getDeckDisplayName(deck)}</span>
-                        <span className="text-xs text-gray-400 ml-auto">{deck.cards_count}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                  <div className="h-px bg-gray-600/30 my-1" />
-                </>
-              ) : (
-                <>
-                  <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
-                  <div className="px-2 py-2 text-xs text-gray-500">No favorited decks with {cardCount} cards</div>
-                  <div className="h-px bg-gray-600/30 my-1" />
-                </>
-              )}
-            </>
-          )}
+    <Select value={selectedDeckId} onValueChange={handleDeckChange}>
+      <SelectTrigger
+        className={`rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[150px] ${className}`}
+      >
+        <span>Deck Style</span>
+        <ChevronDown className="w-4 h-4 ml-2" />
+      </SelectTrigger>
+      <SelectContent className="bg-gray-800 border-gray-600/30 max-h-60">
+        {user && (
+          <>
+            {favoriteDecks.length > 0 ? (
+              <>
+                <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
+                {favoriteDecks.map((deck) => (
+                  <SelectItem key={deck.id} value={deck.id} className="text-white hover:bg-gray-700">
+                    <div className="flex items-center gap-2 w-full">
+                      <Heart className="w-3 h-3 text-red-400 fill-current" />
+                      <span className="truncate">{getDeckDisplayName(deck)}</span>
+                      <span className="text-xs text-gray-400 ml-auto">{deck.cards_count}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+                <div className="h-px bg-gray-600/30 my-1" />
+              </>
+            ) : (
+              <>
+                <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
+                <div className="px-2 py-2 text-xs text-gray-500">No favorited decks with {cardCount} cards</div>
+                <div className="h-px bg-gray-600/30 my-1" />
+              </>
+            )}
+          </>
+        )}
 
-          {!user && (
-            <>
-              <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
-              <div className="px-2 py-2 text-xs text-gray-500">Log in to save and play with favorited decks</div>
-              <div className="h-px bg-gray-600/30 my-1" />
-            </>
-          )}
+        {!user && (
+          <>
+            <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
+            <div className="px-2 py-2 text-xs text-gray-500">Log in to save and play with favorited decks</div>
+            <div className="h-px bg-gray-600/30 my-1" />
+          </>
+        )}
 
-          {/* Compatible decks */}
-          {compatibleDecks.length > 0 && (
-            <>
-              {compatibleDecks.map((deck) => (
-                <SelectItem key={deck.id} value={deck.id} className="text-white hover:bg-gray-700">
-                  <div className="flex items-center gap-2 w-full">
-                    {getDeckIcon(deck)}
-                    <span className="truncate">{getDeckDisplayName(deck)}</span>
-                    <span className="text-xs text-gray-400 ml-auto">{deck.cards_count}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </>
-          )}
+        {/* Compatible decks */}
+        {compatibleDecks.length > 0 && (
+          <>
+            {compatibleDecks.map((deck) => (
+              <SelectItem key={deck.id} value={deck.id} className="text-white hover:bg-gray-700">
+                <div className="flex items-center gap-2 w-full">
+                  {getDeckIcon(deck)}
+                  <span className="truncate">{getDeckDisplayName(deck)}</span>
+                  <span className="text-xs text-gray-400 ml-auto">{deck.cards_count}</span>
+                </div>
+              </SelectItem>
+            ))}
+          </>
+        )}
 
-          {/* Incompatible decks (disabled) */}
-          {(compatibleDecks.length > 0 || favoriteDecks.length > 0) && incompatibleDecks.length > 0 && (
-            <>
-              <div className="h-px bg-gray-600/30 my-1" />
-              <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">
-                Other Card Counts
-              </div>
-              {incompatibleDecks.map((deck) => (
-                <SelectItem
-                  key={deck.id}
-                  value={deck.id}
-                  disabled
-                  className="text-gray-500 hover:bg-gray-800 opacity-50"
-                >
-                  <div className="flex items-center gap-2 w-full">
-                    {getDeckIcon(deck)}
-                    <span className="truncate">{getDeckDisplayName(deck)}</span>
-                    <span className="text-xs text-gray-500 ml-auto">{deck.cards_count}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </>
-          )}
+        {/* Incompatible decks (disabled) */}
+        {(compatibleDecks.length > 0 || favoriteDecks.length > 0) && incompatibleDecks.length > 0 && (
+          <>
+            <div className="h-px bg-gray-600/30 my-1" />
+            <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">
+              Other Card Counts
+            </div>
+            {incompatibleDecks.map((deck) => (
+              <SelectItem key={deck.id} value={deck.id} disabled className="text-gray-500 hover:bg-gray-800 opacity-50">
+                <div className="flex items-center gap-2 w-full">
+                  {getDeckIcon(deck)}
+                  <span className="truncate">{getDeckDisplayName(deck)}</span>
+                  <span className="text-xs text-gray-500 ml-auto">{deck.cards_count}</span>
+                </div>
+              </SelectItem>
+            ))}
+          </>
+        )}
 
-          {compatibleDecks.length === 0 && favoriteDecks.length === 0 && (
-            <SelectItem value="no-compatible-decks" disabled className="text-gray-500">
-              No decks available for {cardCount} cards
-            </SelectItem>
-          )}
-        </SelectContent>
-      </Select>
-    </div>
+        {compatibleDecks.length === 0 && favoriteDecks.length === 0 && (
+          <SelectItem value="no-compatible-decks" disabled className="text-gray-500">
+            No decks available for {cardCount} cards
+          </SelectItem>
+        )}
+      </SelectContent>
+    </Select>
   )
 }
