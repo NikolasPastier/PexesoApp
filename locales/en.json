@@ -152,7 +152,15 @@
     "atLeastOneImage": "At least one image is required",
     "exactImagesRequired": "You need exactly {required} images for {total} cards",
     "uploadSuccess": "Deck uploaded successfully!",
-    "loginRequired": "You must be logged in to upload decks"
+    "loginRequired": "You must be logged in to upload decks",
+    "deckCount": "Decks uploaded",
+    "freePlan": "Free Plan (5 decks max)",
+    "proPlan": "Pro Plan (25 decks max)",
+    "upgradeToPro": "Upgrade to Pro",
+    "freeLimitReached": "Free plan limit reached",
+    "freeLimitMessage": "You've reached the maximum of 5 decks. Upgrade to Pro to upload up to 25 decks.",
+    "proLimitReached": "Pro plan limit reached",
+    "proLimitMessage": "You've reached the maximum of 25 decks. Delete a deck to upload a new one."
   },
   "generatedImages": {
     "title": "Generated Images",
@@ -184,6 +192,12 @@
     "term4": "We are not liable for any damages caused by use of the site.",
     "term5": "These terms are governed by the laws of [Your Country].",
     "outro": "If you do not agree with these terms, please discontinue using the site."
+  },
+  "cookies": {
+    "message": "We use cookies to personalize content and ads, to provide social media features and to analyze our traffic. You can accept or reject cookies.",
+    "accept": "Accept",
+    "reject": "Reject",
+    "privacyPolicy": "Privacy Policy"
   },
   "language": {
     "switchLanguage": "Switch Language",

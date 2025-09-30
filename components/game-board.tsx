@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronDown } from "lucide-react"
 import { DeckSelector } from "./deck-selector"
 import { useTranslations } from "next-intl"
+import { AdBanner } from "@/components/ad-banner"
 
 interface GameCard {
   id: string
@@ -748,6 +749,10 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                 />
               ))}
         </div>
+      </div>
+
+      <div className="mt-8">
+        <AdBanner adSlot="1234567890" adFormat="auto" className="flex justify-center" />
       </div>
 
       <Dialog open={showEndModal} onOpenChange={setShowEndModal}>

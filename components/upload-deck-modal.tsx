@@ -9,15 +9,21 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Upload, X, Plus } from "lucide-react"
+import { Upload, X, Plus, AlertCircle } from "lucide-react"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/contexts/auth-context"
 import { AuthModal } from "@/components/auth-modal"
 import { useTranslations } from "next-intl"
+import Link from "next/link"
 
 interface UploadDeckModalProps {
   onDeckUploaded?: () => void
+}
+
+const DECK_LIMITS = {
+  free: 5,
+  pro: 25,
 }
 
 export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
@@ -31,6 +37,9 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
   const [error, setError] = useState<string | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const { user } = useAuth()
+  const [deckCount, setDeckCount] = useState<number>(0)
+  const [userPlan, setUserPlan] = useState<"free" | "pro">("free")
+  const [isLoadingLimits, setIsLoadingLimits] = useState(false)
 
   const handleOpenChange = (open: boolean) => {
     if (open && !user) {
@@ -47,7 +56,52 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
     }
   }, [user, showAuthModal])
 
+  useEffect(() => {
+    if (isOpen && user) {
+      fetchDeckLimits()
+    }
+  }, [isOpen, user])
+
+  const fetchDeckLimits = async () => {
+    setIsLoadingLimits(true)
+    try {
+      const supabase = createClient()
+
+      // Get user's plan
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("plan")
+        .eq("id", user!.id)
+        .single()
+
+      if (userError) {
+        console.error("[v0] Failed to fetch user plan:", userError)
+      } else {
+        setUserPlan((userData?.plan || "free") as "free" | "pro")
+      }
+
+      // Count user's decks
+      const { count, error: countError } = await supabase
+        .from("decks")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user!.id)
+
+      if (countError) {
+        console.error("[v0] Failed to count decks:", countError)
+      } else {
+        setDeckCount(count || 0)
+      }
+    } catch (error) {
+      console.error("[v0] Error fetching deck limits:", error)
+    } finally {
+      setIsLoadingLimits(false)
+    }
+  }
+
   const getMaxImages = (cards: number) => cards / 2
+
+  const hasReachedLimit = deckCount >= DECK_LIMITS[userPlan]
+  const deckLimit = DECK_LIMITS[userPlan]
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || [])
@@ -107,48 +161,24 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
     setError(null)
 
     try {
-      const supabase = createClient()
-
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser()
-      if (userError || !user) {
-        throw new Error(t("loginRequired"))
-      }
-
-      const imageUrls: string[] = []
+      const formData = new FormData()
+      formData.append("title", deckTitle.trim())
+      formData.append("description", description.trim())
+      formData.append("cards_count", cardCount.toString())
 
       for (const image of selectedImages) {
-        const fileExt = image.name.split(".").pop()
-        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
-
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("deck-images")
-          .upload(fileName, image)
-
-        if (uploadError) {
-          throw new Error(`Failed to upload image: ${uploadError.message}`)
-        }
-
-        const {
-          data: { publicUrl },
-        } = supabase.storage.from("deck-images").getPublicUrl(uploadData.path)
-
-        imageUrls.push(publicUrl)
+        formData.append("images", image)
       }
 
-      const { error: dbError } = await supabase.from("decks").insert({
-        user_id: user.id,
-        title: deckTitle.trim(),
-        description: description.trim() || null,
-        images: imageUrls,
-        cards_count: cardCount,
-        is_public: true,
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       })
 
-      if (dbError) {
-        throw new Error(`Failed to save deck: ${dbError.message}`)
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to upload deck")
       }
 
       const event = new CustomEvent("showToast", {
@@ -187,6 +217,41 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
               <DialogTitle className="text-2xl text-white">{t("title")}</DialogTitle>
             </DialogHeader>
 
+            <div className="mb-4 p-4 bg-gray-700/30 border border-gray-600/30 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-300">
+                    {t("deckCount")}:{" "}
+                    <span className="font-semibold text-white">
+                      {deckCount}/{deckLimit}
+                    </span>
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">{userPlan === "free" ? t("freePlan") : t("proPlan")}</p>
+                </div>
+                {hasReachedLimit && userPlan === "free" && (
+                  <Link href="/pricing">
+                    <Button size="sm" className="bg-primary hover:bg-primary/90">
+                      {t("upgradeToPro")}
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </div>
+
+            {hasReachedLimit && (
+              <div className="mb-4 p-4 bg-red-900/30 border border-red-700/30 rounded-lg flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm text-red-200 font-medium">
+                    {userPlan === "free" ? t("freeLimitReached") : t("proLimitReached")}
+                  </p>
+                  <p className="text-xs text-red-300 mt-1">
+                    {userPlan === "free" ? t("freeLimitMessage") : t("proLimitMessage")}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="deck-name" className="text-gray-200">
@@ -198,7 +263,8 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
                   value={deckTitle}
                   onChange={(e) => setDeckTitle(e.target.value)}
                   required
-                  className="bg-gray-700/50 border-gray-600/30 text-white placeholder:text-gray-400 focus:border-primary/50"
+                  disabled={hasReachedLimit}
+                  className="bg-gray-700/50 border-gray-600/30 text-white placeholder:text-gray-400 focus:border-primary/50 disabled:opacity-50"
                 />
               </div>
 
@@ -212,14 +278,19 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
-                  className="bg-gray-700/50 border-gray-600/30 text-white placeholder:text-gray-400 focus:border-primary/50"
+                  disabled={hasReachedLimit}
+                  className="bg-gray-700/50 border-gray-600/30 text-white placeholder:text-gray-400 focus:border-primary/50 disabled:opacity-50"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label className="text-gray-200">{t("cardCount")} *</Label>
-                <Select value={cardCount?.toString()} onValueChange={(value) => setCardCount(Number(value))}>
-                  <SelectTrigger className="bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
+                <Select
+                  value={cardCount?.toString()}
+                  onValueChange={(value) => setCardCount(Number(value))}
+                  disabled={hasReachedLimit}
+                >
+                  <SelectTrigger className="bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50 disabled:opacity-50">
                     <SelectValue placeholder={t("selectCardCount")} />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-600/30">
@@ -259,14 +330,14 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
                     onChange={handleImageUpload}
                     className="hidden"
                     id="image-upload"
-                    disabled={!cardCount}
+                    disabled={!cardCount || hasReachedLimit}
                   />
                   <Button
                     type="button"
                     variant="outline"
                     asChild
                     className="bg-gray-700/50 border-gray-600/30 text-gray-200 hover:bg-gray-600/50"
-                    disabled={!cardCount}
+                    disabled={!cardCount || hasReachedLimit}
                   >
                     <label htmlFor="image-upload" className="cursor-pointer">
                       {t("selectImages")}
@@ -327,11 +398,12 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
                   type="submit"
                   disabled={
                     isUploading ||
+                    hasReachedLimit ||
                     !deckTitle.trim() ||
                     !cardCount ||
                     selectedImages.length !== getMaxImages(cardCount || 0)
                   }
-                  className="bg-primary hover:bg-primary/90"
+                  className="bg-primary hover:bg-primary/90 disabled:opacity-50"
                 >
                   {isUploading ? t("uploading") : t("saveDeck")}
                 </Button>

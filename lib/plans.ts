@@ -6,6 +6,7 @@ export interface Plan {
   features: string[]
   generationsPerMonth: number
   dailyGenerations: number
+  deckUploadLimit: number
 }
 
 // This is the source of truth for all subscription plans.
@@ -16,9 +17,15 @@ export const PLANS: Plan[] = [
     name: "Free",
     description: "Perfect for casual users",
     priceInCents: 0,
-    features: ["1 AI deck generation per day", "Upload custom decks", "Play all game modes", "Track your scores"],
+    features: [
+      "1 AI deck generation per day",
+      "Upload up to 5 custom decks",
+      "Play all game modes",
+      "Track your scores",
+    ],
     generationsPerMonth: 0,
     dailyGenerations: 1,
+    deckUploadLimit: 5, // Added deck limit for free plan
   },
   {
     id: "pro",
@@ -28,7 +35,7 @@ export const PLANS: Plan[] = [
     features: [
       "100 AI deck generations per month",
       "1 generation per day included",
-      "Upload unlimited custom decks",
+      "Upload up to 25 custom decks", // Updated from "unlimited" to 25
       "Play all game modes",
       "Track your scores",
       "Ad-free experience",
@@ -36,6 +43,7 @@ export const PLANS: Plan[] = [
     ],
     generationsPerMonth: 100,
     dailyGenerations: 1,
+    deckUploadLimit: 25, // Added deck limit for pro plan
   },
 ]
 

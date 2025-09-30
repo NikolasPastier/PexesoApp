@@ -3,6 +3,11 @@ import { createClient } from "@/lib/supabase/server"
 
 export const dynamic = "force-dynamic"
 
+const DECK_LIMITS = {
+  free: 5,
+  pro: 25,
+}
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
@@ -14,6 +19,41 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser()
     if (userError || !user) {
       return NextResponse.json({ error: "Authentication required" }, { status: 401 })
+    }
+
+    const { data: userData, error: userDataError } = await supabase
+      .from("users")
+      .select("plan")
+      .eq("id", user.id)
+      .single()
+
+    if (userDataError) {
+      console.error("[v0] Failed to fetch user data:", userDataError)
+      return NextResponse.json({ error: "Failed to fetch user data" }, { status: 500 })
+    }
+
+    const userPlan = (userData?.plan || "free") as "free" | "pro"
+    const deckLimit = DECK_LIMITS[userPlan]
+
+    // Count user's existing decks
+    const { count: deckCount, error: countError } = await supabase
+      .from("decks")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+
+    if (countError) {
+      console.error("[v0] Failed to count decks:", countError)
+      return NextResponse.json({ error: "Failed to count decks" }, { status: 500 })
+    }
+
+    // Check if user has reached their limit
+    if (deckCount !== null && deckCount >= deckLimit) {
+      const message =
+        userPlan === "free"
+          ? `Free plan limit reached (${deckLimit} decks). Upgrade to Pro to upload more.`
+          : `Pro plan limit reached (${deckLimit} decks). Delete a deck or wait until next reset.`
+
+      return NextResponse.json({ error: message, limitReached: true, plan: userPlan }, { status: 403 })
     }
 
     const formData = await request.formData()

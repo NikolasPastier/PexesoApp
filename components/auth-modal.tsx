@@ -15,6 +15,7 @@ import { X } from "lucide-react"
 import { PrivacyPolicyModal } from "@/components/privacy-policy-modal"
 import { TermsModal } from "@/components/terms-modal"
 import { useTranslations } from "next-intl"
+import { AdBanner } from "@/components/ad-banner"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -314,6 +315,15 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                   Privacy Policy
                 </button>
               </p>
+            </div>
+
+            <div className="mt-4">
+              <AdBanner
+                adSlot="1234567890"
+                adFormat="auto"
+                style={{ minHeight: "50px" }}
+                className="flex justify-center"
+              />
             </div>
           </div>
         </div>

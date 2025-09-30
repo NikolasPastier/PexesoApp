@@ -7,6 +7,7 @@ import { I18nProvider } from "@/contexts/i18n-context"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
 import { locales } from "@/lib/i18n/config"
+import { CookieConsent } from "@/components/cookie-consent"
 
 export const metadata: Metadata = {
   title: "Pexeso - Memory Card Game",
@@ -34,6 +35,7 @@ export default async function LocaleLayout({
           <I18nProvider>
             <AuthProvider>
               <Suspense fallback={null}>{children}</Suspense>
+              <CookieConsent />
             </AuthProvider>
           </I18nProvider>
         </NextIntlClientProvider>
