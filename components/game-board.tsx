@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { MemoryCard } from "./memory-card"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -53,6 +53,12 @@ interface Deck {
   }
 }
 
+interface BotMemory {
+  cardId: string
+  image: string
+  remembered: boolean
+}
+
 export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
   const [gameStatus, setGameStatus] = useState<"idle" | "running">("idle")
   const [players, setPlayers] = useState<"solo" | "two" | "bot">("solo")
@@ -64,8 +70,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
   const [stats, setStats] = useState<PlayerStats[]>([])
   const [showEndModal, setShowEndModal] = useState(false)
   const [currentPlayer, setCurrentPlayer] = useState(0)
-  const [isUserTurn, setIsUserTurn] = useState(true)
-  const [isBotThinking, setIsBotThinking] = useState(false)
 
   const [gameCards, setGameCards] = useState<GameCard[]>([])
   const [flippedCards, setFlippedCards] = useState<string[]>([])
@@ -80,6 +84,10 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null)
   const [deckImages, setDeckImages] = useState<string[]>([])
   const [defaultDecks, setDefaultDecks] = useState<Deck[]>([])
+
+  const botMemoryRef = useRef<Map<string, string>>(new Map())
+  const botMemoryRetentionRate = useRef<number>(0.3 + Math.random() * 0.2) // 30-50% retention
+  const maxBotMemorySize = useRef<number>(8 + Math.floor(Math.random() * 5)) // 8-12 cards max
 
   const t = useTranslations("game")
   const tCommon = useTranslations("common")
@@ -139,9 +147,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
 
   useEffect(() => {
     if (gameStatus === "running" && players === "bot" && currentPlayer === 1 && !gameComplete && !gameOver) {
-      setIsUserTurn(false)
-      setIsBotThinking(true)
-
       const botDelay = setTimeout(
         () => {
           const availableCards = gameCards.filter(
@@ -149,17 +154,70 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
           )
 
           if (availableCards.length > 0 && flippedCards.length < 2) {
-            const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)]
-            handleCardClick(randomCard.id)
+            // Bot's first card flip
+            if (flippedCards.length === 0) {
+              // Check if bot remembers any pairs
+              const rememberedPairs: { card1: string; card2: string }[] = []
+              const memoryEntries = Array.from(botMemoryRef.current.entries())
+
+              for (let i = 0; i < memoryEntries.length; i++) {
+                for (let j = i + 1; j < memoryEntries.length; j++) {
+                  if (memoryEntries[i][1] === memoryEntries[j][1]) {
+                    const card1 = memoryEntries[i][0]
+                    const card2 = memoryEntries[j][0]
+                    if (!matchedCards.includes(card1) && !matchedCards.includes(card2)) {
+                      rememberedPairs.push({ card1, card2 })
+                    }
+                  }
+                }
+              }
+
+              // If bot remembers a pair, use it (80% of the time to simulate imperfect recall)
+              if (rememberedPairs.length > 0 && Math.random() > 0.2) {
+                const pair = rememberedPairs[Math.floor(Math.random() * rememberedPairs.length)]
+                handleCardClick(pair.card1)
+              } else {
+                // Otherwise, flip a random card
+                const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)]
+                handleCardClick(randomCard.id)
+              }
+            }
+            // Bot's second card flip (after 1-2 second delay)
+            else if (flippedCards.length === 1) {
+              const firstFlippedId = flippedCards[0]
+              const firstFlippedCard = gameCards.find((card) => card.id === firstFlippedId)
+
+              if (firstFlippedCard) {
+                // Check if bot remembers the match for this card
+                const rememberedMatch = Array.from(botMemoryRef.current.entries()).find(
+                  ([cardId, image]) =>
+                    cardId !== firstFlippedId &&
+                    image === firstFlippedCard.image &&
+                    !matchedCards.includes(cardId) &&
+                    !flippedCards.includes(cardId),
+                )
+
+                // If bot remembers the match, flip it (70% of the time to simulate forgetting)
+                if (rememberedMatch && Math.random() > 0.3) {
+                  handleCardClick(rememberedMatch[0])
+                } else {
+                  // Otherwise, flip a random unseen card
+                  const unseenCards = availableCards.filter((card) => !botMemoryRef.current.has(card.id))
+                  const cardToFlip =
+                    unseenCards.length > 0
+                      ? unseenCards[Math.floor(Math.random() * unseenCards.length)]
+                      : availableCards[Math.floor(Math.random() * availableCards.length)]
+
+                  handleCardClick(cardToFlip.id)
+                }
+              }
+            }
           }
         },
-        1000 + Math.random() * 1000,
+        flippedCards.length === 0 ? 800 + Math.random() * 400 : 1000 + Math.random() * 1000, // Natural delay
       )
 
       return () => clearTimeout(botDelay)
-    } else if (gameStatus === "running" && players === "bot" && currentPlayer === 0) {
-      setIsUserTurn(true)
-      setIsBotThinking(false)
     }
   }, [currentPlayer, gameStatus, players, flippedCards, matchedCards, gameComplete, gameOver, gameCards])
 
@@ -169,14 +227,33 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
       flippedCards.length === 2 ||
       flippedCards.includes(cardId) ||
       matchedCards.includes(cardId) ||
-      gameOver ||
-      (players === "bot" && !isUserTurn)
+      gameOver
     ) {
       return
     }
 
     const newFlippedCards = [...flippedCards, cardId]
     setFlippedCards(newFlippedCards)
+
+    if (players === "bot" && currentPlayer === 1) {
+      const card = gameCards.find((c) => c.id === cardId)
+      if (card) {
+        if (Math.random() < botMemoryRetentionRate.current) {
+          botMemoryRef.current.set(cardId, card.image)
+
+          if (botMemoryRef.current.size > maxBotMemorySize.current) {
+            const firstKey = botMemoryRef.current.keys().next().value
+            botMemoryRef.current.delete(firstKey)
+          }
+
+          if (Math.random() < 0.1 && botMemoryRef.current.size > 2) {
+            const keys = Array.from(botMemoryRef.current.keys())
+            const randomKey = keys[Math.floor(Math.random() * keys.length)]
+            botMemoryRef.current.delete(randomKey)
+          }
+        }
+      }
+    }
 
     if (newFlippedCards.length === 2) {
       setMoves((prev) => prev + 1)
@@ -189,7 +266,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
         setTimeout(() => {
           setMatchedCards((prev) => [...prev, firstCard, secondCard])
           setFlippedCards([])
-          setIsBotThinking(false)
 
           updatePlayerStats(true)
 
@@ -200,7 +276,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
       } else {
         setTimeout(() => {
           setFlippedCards([])
-          setIsBotThinking(false)
           updatePlayerStats(false)
 
           if (players === "two") {
@@ -264,8 +339,10 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
     setGameOver(false)
     setCurrentPlayer(0)
     setGameStartTime(Date.now())
-    setIsUserTurn(true)
-    setIsBotThinking(false)
+
+    botMemoryRef.current.clear()
+    botMemoryRetentionRate.current = 0.3 + Math.random() * 0.2
+    maxBotMemorySize.current = 8 + Math.floor(Math.random() * 5)
 
     const newGameCards = generateGameCards()
     setGameCards(newGameCards)
@@ -322,8 +399,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
     setTimeLeft(0)
     setCurrentPlayer(0)
     setGameCards([])
-    setIsUserTurn(true)
-    setIsBotThinking(false)
+
+    botMemoryRef.current.clear()
 
     const classicAnimals = defaultDecks.find((deck) => deck.title === "Classic Animals")
     if (classicAnimals) {
@@ -573,12 +650,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                 </div>
               ) : (
                 <div>
-                  {players === "bot" && isBotThinking && (
-                    <div className="mb-4 flex items-center justify-center gap-2 text-blue-400">
-                      <span className="text-sm font-medium">{t("botThinking")}</span>
-                    </div>
-                  )}
-
                   <div className={`grid ${players === "solo" ? "grid-cols-1" : "grid-cols-2"} gap-4`}>
                     {stats.map((playerStat, index) => (
                       <Card
@@ -632,20 +703,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
         </div>
       </div>
 
-      <div className={`relative ${players === "bot" && !isUserTurn ? "pointer-events-none" : ""}`}>
-        {players === "bot" && !isUserTurn && (
-          <div className="absolute inset-0 bg-gray-900/20 rounded-lg z-10 flex items-center justify-center">
-            <div className="bg-gray-800/90 px-4 py-2 rounded-lg border border-gray-600/30">
-              <div className="flex items-center gap-2 text-blue-400">
-                <span className="text-sm font-medium">{t("botTurn")}</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div
-          className={`grid ${getResponsiveGridCols()} gap-4 justify-items-center ${players === "bot" && !isUserTurn ? "opacity-75" : ""}`}
-        >
+      <div className="relative">
+        <div className={`grid ${getResponsiveGridCols()} gap-4 justify-items-center`}>
           {gameStatus === "idle"
             ? Array.from({ length: cardCount }).map((_, index) => {
                 let previewImage
@@ -666,7 +725,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                     frontImage={previewImage}
                     isFlipped={false}
                     isMatched={false}
-                    onClick={() => {}} // No-op in preview mode
+                    onClick={() => {}}
                   />
                 )
               })
