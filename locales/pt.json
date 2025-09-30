@@ -113,6 +113,8 @@
     "generationSuccessDesc": "Geradas {count} imagens únicas para seu baralho.",
     "generationFailed": "Geração falhou",
     "generationFailedDesc": "A geração de imagens falhou. Tente novamente.",
+    "dailyLimitReached": "Limite diário atingido",
+    "dailyLimitReachedDesc": "Você pode gerar 1 baralho IA por dia. Tente novamente em {hours} hora(s).",
     "deckSaved": "Baralho salvo com sucesso!",
     "deckSavedDesc": "Seu baralho \"{title}\" foi salvo com {count} cartas.",
     "saveFailed": "Falha ao salvar",

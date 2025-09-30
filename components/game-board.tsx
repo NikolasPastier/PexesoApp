@@ -469,14 +469,14 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
     setCardCount(newCardCount)
     setGameCards([])
 
-    if (newCardCount === 16) {
-      const classicAnimals = defaultDecks.find((deck) => deck.title === "Classic Animals")
-      if (classicAnimals) {
-        setSelectedDeckId(classicAnimals.id)
-        setSelectedDeck(classicAnimals)
-        setDeckImages(classicAnimals.images)
-      }
+    const systemDeck = defaultDecks.find((deck) => !deck.user && deck.cards_count === newCardCount)
+
+    if (systemDeck) {
+      setSelectedDeckId(systemDeck.id)
+      setSelectedDeck(systemDeck)
+      setDeckImages(systemDeck.images)
     } else {
+      // Fallback: clear deck selection if no system deck found
       setSelectedDeckId("")
       setSelectedDeck(null)
       setDeckImages([])

@@ -113,6 +113,8 @@
     "generationSuccessDesc": "Se generaron {count} imágenes únicas para tu mazo.",
     "generationFailed": "Generación fallida",
     "generationFailedDesc": "La generación de imágenes falló. Inténtalo de nuevo.",
+    "dailyLimitReached": "Límite diario alcanzado",
+    "dailyLimitReachedDesc": "Puedes generar 1 mazo IA por día. Inténtalo de nuevo en {hours} hora(s).",
     "deckSaved": "¡Mazo guardado con éxito!",
     "deckSavedDesc": "Tu mazo \"{title}\" ha sido guardado con {count} cartas.",
     "saveFailed": "Error al guardar",

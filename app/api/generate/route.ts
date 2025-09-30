@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import * as fal from "@fal-ai/serverless-client"
 import { createClient } from "@/lib/supabase/server"
+import { PLANS } from "@/lib/plans"
 
 fal.config({
   credentials: process.env.FAL_KEY,
@@ -32,6 +33,97 @@ export async function POST(request: NextRequest) {
 
     if (userError || !user) {
       return NextResponse.json({ error: "Authentication required to generate images" }, { status: 401 })
+    }
+
+    const { data: userData, error: userDataError } = await supabase
+      .from("users")
+      .select("plan, monthly_generations_used, last_reset")
+      .eq("id", user.id)
+      .single()
+
+    if (userDataError) {
+      console.error("[v0] Error fetching user data:", userDataError)
+      return NextResponse.json({ error: "Failed to fetch user data" }, { status: 500 })
+    }
+
+    const userPlan = userData.plan || "free"
+    const planConfig = PLANS.find((p) => p.id === userPlan)
+
+    if (!planConfig) {
+      return NextResponse.json({ error: "Invalid plan configuration" }, { status: 500 })
+    }
+
+    const now = new Date()
+    const lastReset = userData.last_reset ? new Date(userData.last_reset) : null
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+    if (userPlan === "pro" && lastReset && lastReset < thirtyDaysAgo) {
+      // Reset monthly counter
+      const { error: resetError } = await supabase
+        .from("users")
+        .update({
+          monthly_generations_used: 0,
+          last_reset: now.toISOString(),
+        })
+        .eq("id", user.id)
+
+      if (resetError) {
+        console.error("[v0] Error resetting monthly counter:", resetError)
+      } else {
+        userData.monthly_generations_used = 0
+      }
+    }
+
+    if (userPlan === "free") {
+      // Free plan: 1 generation per day
+      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+
+      const { data: recentGenerations, error: generationCheckError } = await supabase
+        .from("deck_generations")
+        .select("generated_at")
+        .eq("user_id", user.id)
+        .gte("generated_at", twentyFourHoursAgo)
+        .order("generated_at", { ascending: false })
+        .limit(1)
+
+      if (generationCheckError) {
+        console.error("[v0] Error checking generation limit:", generationCheckError)
+        return NextResponse.json({ error: "Failed to check generation limit" }, { status: 500 })
+      }
+
+      if (recentGenerations && recentGenerations.length > 0) {
+        const lastGeneration = new Date(recentGenerations[0].generated_at)
+        const timeUntilReset = new Date(lastGeneration.getTime() + 24 * 60 * 60 * 1000)
+        const hoursRemaining = Math.ceil((timeUntilReset.getTime() - Date.now()) / (1000 * 60 * 60))
+
+        return NextResponse.json(
+          {
+            error: "Daily AI deck generation limit reached",
+            limitReached: true,
+            hoursRemaining,
+            resetTime: timeUntilReset.toISOString(),
+            plan: "free",
+            upgradeAvailable: true,
+          },
+          { status: 429 },
+        )
+      }
+    } else if (userPlan === "pro") {
+      // Pro plan: 100 generations per month
+      const monthlyUsed = userData.monthly_generations_used || 0
+
+      if (monthlyUsed >= planConfig.generationsPerMonth) {
+        return NextResponse.json(
+          {
+            error: "Monthly AI deck generation limit reached",
+            limitReached: true,
+            plan: "pro",
+            monthlyLimit: planConfig.generationsPerMonth,
+            monthlyUsed,
+          },
+          { status: 429 },
+        )
+      }
     }
 
     const {
@@ -107,9 +199,31 @@ export async function POST(request: NextRequest) {
 
     const images = await Promise.all(imagePromises)
 
+    const { error: logError } = await supabase.from("deck_generations").insert({
+      user_id: user.id,
+      generated_at: new Date().toISOString(),
+    })
+
+    if (logError) {
+      console.error("[v0] Error logging generation:", logError)
+    }
+
+    if (userPlan === "pro") {
+      const { error: updateError } = await supabase
+        .from("users")
+        .update({
+          monthly_generations_used: (userData.monthly_generations_used || 0) + 1,
+        })
+        .eq("id", user.id)
+
+      if (updateError) {
+        console.error("[v0] Error updating monthly counter:", updateError)
+      }
+    }
+
     return NextResponse.json({ images })
   } catch (error) {
-    console.error("Error generating images:", error)
+    console.error("[v0] Error generating images:", error)
     return NextResponse.json({ error: "Failed to generate images" }, { status: 500 })
   }
 }

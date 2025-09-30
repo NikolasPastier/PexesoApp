@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { LogOut, Heart, Settings, ChevronDown, Menu } from "lucide-react"
+import { LogOut, Heart, Settings, ChevronDown, Menu, Sparkles, Crown } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,8 +18,9 @@ import { AuthModal } from "@/components/auth-modal"
 import { FavouritesModal } from "@/components/favourites-modal"
 import { SettingsModal } from "@/components/settings-modal"
 import { LanguageSwitcher } from "@/components/language-switcher"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
+import { UpgradeModal } from "@/components/upgrade-modal"
 
 export function Navbar() {
   const { user, loading, signOut } = useAuth()
@@ -28,8 +29,31 @@ export function Navbar() {
   const [showFavouritesModal, setShowFavouritesModal] = useState(false)
   const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [userPlan, setUserPlan] = useState<{
+    plan: "free" | "pro"
+    monthlyGenerationsUsed: number
+    dailyGenerationsUsed: number
+  } | null>(null)
 
   const t = useTranslations("navbar")
+
+  useEffect(() => {
+    if (user) {
+      fetch("/api/user/plan")
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.error) {
+            setUserPlan(data)
+          }
+        })
+        .catch((error) => {
+          console.error("[v0] Failed to fetch user plan:", error)
+        })
+    } else {
+      setUserPlan(null)
+    }
+  }, [user])
 
   const handleShowLogin = () => {
     setAuthModalTab("login")
@@ -55,6 +79,11 @@ export function Navbar() {
 
   const handleSignOut = () => {
     signOut()
+    setShowMobileMenu(false)
+  }
+
+  const handleShowUpgrade = () => {
+    setShowUpgradeModal(true)
     setShowMobileMenu(false)
   }
 
@@ -106,6 +135,7 @@ export function Navbar() {
                               </AvatarFallback>
                             </Avatar>
                             <span className="text-sm font-medium max-w-24 truncate">{getUserDisplayName()}</span>
+                            {userPlan?.plan === "pro" && <Crown className="h-4 w-4 text-yellow-500" />}
                             <ChevronDown className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -113,6 +143,42 @@ export function Navbar() {
                           align="end"
                           className="w-56 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 text-white"
                         >
+                          {userPlan && (
+                            <>
+                              <div className="px-2 py-2 text-xs text-gray-400">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="font-medium text-gray-300">
+                                    {userPlan.plan === "free" ? "Free Plan" : "Pro Plan"}
+                                  </span>
+                                  {userPlan.plan === "pro" && <Crown className="h-3 w-3 text-yellow-500" />}
+                                </div>
+                                {userPlan.plan === "free" ? (
+                                  <div className="text-gray-400">
+                                    Daily: {userPlan.dailyGenerationsUsed}/1 generations
+                                  </div>
+                                ) : (
+                                  <div className="text-gray-400">
+                                    Monthly: {userPlan.monthlyGenerationsUsed}/100 generations
+                                  </div>
+                                )}
+                              </div>
+                              <DropdownMenuSeparator className="bg-gray-600/30" />
+                            </>
+                          )}
+
+                          {userPlan?.plan === "free" && (
+                            <>
+                              <DropdownMenuItem
+                                className="cursor-pointer bg-gradient-to-r from-green-500/10 to-emerald-600/10 hover:from-green-500/20 hover:to-emerald-600/20 border border-green-500/30 hover:text-white focus:bg-green-500/20 focus:text-white mb-1"
+                                onClick={() => setShowUpgradeModal(true)}
+                              >
+                                <Sparkles className="mr-2 h-4 w-4 text-green-500" />
+                                <span className="font-medium text-green-400">Upgrade to Pro</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator className="bg-gray-600/30" />
+                            </>
+                          )}
+
                           <DropdownMenuItem
                             className="cursor-pointer hover:bg-gray-700/50 hover:text-white focus:bg-gray-700/50 focus:text-white"
                             onClick={() => setShowFavouritesModal(true)}
@@ -202,13 +268,52 @@ export function Navbar() {
                                     {getUserInitials()}
                                   </AvatarFallback>
                                 </Avatar>
-                                <div className="flex flex-col">
-                                  <span className="text-sm font-medium text-white">{getUserDisplayName()}</span>
+                                <div className="flex flex-col flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm font-medium text-white">{getUserDisplayName()}</span>
+                                    {userPlan?.plan === "pro" && <Crown className="h-3 w-3 text-yellow-500" />}
+                                  </div>
                                   <span className="text-xs text-gray-400">{user.email}</span>
                                 </div>
                               </div>
 
+                              {/* Generation Count */}
+                              {userPlan && (
+                                <>
+                                  <div className="px-2 py-2 bg-gray-800/30 rounded-lg border border-gray-600/30">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-xs font-medium text-gray-300">
+                                        {userPlan.plan === "free" ? "Free Plan" : "Pro Plan"}
+                                      </span>
+                                    </div>
+                                    {userPlan.plan === "free" ? (
+                                      <div className="text-xs text-gray-400">
+                                        Daily: {userPlan.dailyGenerationsUsed}/1 generations
+                                      </div>
+                                    ) : (
+                                      <div className="text-xs text-gray-400">
+                                        Monthly: {userPlan.monthlyGenerationsUsed}/100 generations
+                                      </div>
+                                    )}
+                                  </div>
+                                </>
+                              )}
+
                               <div className="h-px bg-gray-700/50" />
+
+                              {/* Upgrade Button */}
+                              {userPlan?.plan === "free" && (
+                                <>
+                                  <Button
+                                    className="justify-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white hover:text-white rounded-lg px-4 py-3 h-auto text-base font-semibold"
+                                    onClick={handleShowUpgrade}
+                                  >
+                                    <Sparkles className="mr-2 h-5 w-5" />
+                                    Upgrade to Pro
+                                  </Button>
+                                  <div className="h-px bg-gray-700/50" />
+                                </>
+                              )}
 
                               {/* Menu Items */}
                               <Button
@@ -241,8 +346,7 @@ export function Navbar() {
                               </Button>
                             </>
                           ) : (
-                            <>
-                              {/* Login/Signup Buttons */}
+                            <div className="flex items-center space-x-3">
                               <Button
                                 variant="ghost"
                                 onClick={handleShowLogin}
@@ -256,7 +360,7 @@ export function Navbar() {
                               >
                                 {t("signup")}
                               </Button>
-                            </>
+                            </div>
                           )}
                         </>
                       )}
@@ -273,6 +377,7 @@ export function Navbar() {
 
       <FavouritesModal isOpen={showFavouritesModal} onClose={() => setShowFavouritesModal(false)} />
       <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
+      <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
     </>
   )
 }

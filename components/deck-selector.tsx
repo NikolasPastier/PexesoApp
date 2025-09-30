@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
-import { ChevronDown, Lock, Globe, Heart } from "lucide-react"
+import { ChevronDown, Lock, Globe, Heart, Star } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 
 interface Deck {
@@ -17,6 +17,7 @@ interface Deck {
     username: string
     avatar_url?: string
   }
+  user_id?: string // Added user_id to Deck interface
 }
 
 interface DeckSelectorProps {
@@ -69,6 +70,9 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
   }
 
   const getDeckIcon = (deck: Deck) => {
+    if (!deck.user_id) {
+      return <Star className="w-3 h-3 text-blue-400 fill-current" />
+    }
     if (deck.isOwned && !deck.is_public) {
       return <Lock className="w-3 h-3 text-gray-400" />
     }

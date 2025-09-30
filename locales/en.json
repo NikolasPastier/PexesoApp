@@ -113,6 +113,8 @@
     "generationSuccessDesc": "Generated {count} unique images for your deck.",
     "generationFailed": "Generation failed",
     "generationFailedDesc": "Image generation failed. Please try again.",
+    "dailyLimitReached": "Daily limit reached",
+    "dailyLimitReachedDesc": "You can generate 1 AI deck per day. Try again in {hours} hour(s).",
     "deckSaved": "Deck saved successfully!",
     "deckSavedDesc": "Your deck \"{title}\" has been saved with {count} cards.",
     "saveFailed": "Save failed",

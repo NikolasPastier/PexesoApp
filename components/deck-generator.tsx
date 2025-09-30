@@ -75,6 +75,16 @@ export function DeckGenerator() {
         body: JSON.stringify({ prompt, cardCount: Number.parseInt(cardCount), style }),
       })
 
+      if (response.status === 429) {
+        const data = await response.json()
+        toast({
+          title: t("dailyLimitReached"),
+          description: t("dailyLimitReachedDesc", { hours: data.hoursRemaining || 24 }),
+          variant: "destructive",
+        })
+        return
+      }
+
       if (!response.ok) {
         throw new Error("Failed to generate images")
       }
