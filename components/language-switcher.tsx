@@ -47,7 +47,7 @@ export function LanguageSwitcher() {
         {locales.map((lang) => (
           <DropdownMenuItem
             key={lang}
-            className="cursor-pointer hover:bg-gray-700/50 focus:bg-gray-700/50 flex items-center gap-3"
+            className="cursor-pointer hover:bg-gray-700/50 hover:text-white focus:bg-gray-700/50 focus:text-white flex items-center gap-3"
             onClick={() => handleLanguageChange(lang)}
           >
             <span className="text-base">{localeFlags[lang]}</span>

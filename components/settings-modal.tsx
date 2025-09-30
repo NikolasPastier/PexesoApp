@@ -40,6 +40,26 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Validate username is not empty
+    if (!username || username.trim().length === 0) {
+      const event = new CustomEvent("showToast", {
+        detail: { message: "Username cannot be empty" },
+      })
+      window.dispatchEvent(event)
+      return
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email || !emailRegex.test(email)) {
+      const event = new CustomEvent("showToast", {
+        detail: { message: "Please enter a valid email address" },
+      })
+      window.dispatchEvent(event)
+      return
+    }
+
     setIsLoading(true)
 
     try {
@@ -62,7 +82,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     } catch (error) {
       console.error("Error updating profile:", error)
       const event = new CustomEvent("showToast", {
-        detail: { message: error instanceof Error ? error.message : "Failed to update profile" },
+        detail: { message: error instanceof Error ? error.message : "Could not update profile, please try again" },
       })
       window.dispatchEvent(event)
     } finally {
@@ -72,6 +92,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      const event = new CustomEvent("showToast", {
+        detail: { message: "All password fields are required" },
+      })
+      window.dispatchEvent(event)
+      return
+    }
 
     if (newPassword !== confirmPassword) {
       const event = new CustomEvent("showToast", {
@@ -113,7 +141,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     } catch (error) {
       console.error("Error updating password:", error)
       const event = new CustomEvent("showToast", {
-        detail: { message: error instanceof Error ? error.message : "Failed to update password" },
+        detail: { message: error instanceof Error ? error.message : "Could not update password, please try again" },
       })
       window.dispatchEvent(event)
     } finally {

@@ -95,7 +95,7 @@ export function Navbar() {
                           className="w-56 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 text-white"
                         >
                           <DropdownMenuItem
-                            className="cursor-pointer hover:bg-gray-700/50 focus:bg-gray-700/50"
+                            className="cursor-pointer hover:bg-gray-700/50 hover:text-white focus:bg-gray-700/50 focus:text-white"
                             onClick={() => setShowFavouritesModal(true)}
                           >
                             <Heart className="mr-2 h-4 w-4 text-white" />
@@ -103,7 +103,7 @@ export function Navbar() {
                           </DropdownMenuItem>
 
                           <DropdownMenuItem
-                            className="cursor-pointer hover:bg-gray-700/50 focus:bg-gray-700/50"
+                            className="cursor-pointer hover:bg-gray-700/50 hover:text-white focus:bg-gray-700/50 focus:text-white"
                             onClick={() => setShowSettingsModal(true)}
                           >
                             <Settings className="mr-2 h-4 w-4 text-white" />
@@ -113,7 +113,7 @@ export function Navbar() {
                           <DropdownMenuSeparator className="bg-gray-600/30" />
 
                           <DropdownMenuItem
-                            className="cursor-pointer text-red-400 hover:bg-gray-700/50 focus:bg-gray-700/50"
+                            className="cursor-pointer text-red-400 hover:bg-gray-700/50 hover:text-white focus:bg-gray-700/50 focus:text-white"
                             onClick={signOut}
                           >
                             <LogOut className="mr-2 h-4 w-4 text-white" />
