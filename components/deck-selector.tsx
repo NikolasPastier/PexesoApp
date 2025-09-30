@@ -89,7 +89,7 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
   return (
     <Select value={selectedDeckId} onValueChange={handleDeckChange}>
       <SelectTrigger
-        className={`rounded-lg px-3 py-2 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 min-w-[150px] ${className}`}
+        className={`rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto ${className}`}
       >
         <span>Deck Style</span>
         <ChevronDown className="w-4 h-4 ml-2" />

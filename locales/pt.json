@@ -86,5 +86,51 @@
   "language": {
     "switchLanguage": "Trocar Idioma",
     "currentLanguage": "Idioma Atual"
+  },
+  "home": {
+    "hero": {
+      "title": "Jogo da Memória",
+      "subtitle": "Treine sua memória com o clássico jogo da memória",
+      "playNow": "Jogar Agora",
+      "browseDeck": "Ver Baralhos"
+    },
+    "features": {
+      "title": "Por que escolher nosso jogo da memória?",
+      "subtitle": "Descubra os recursos que tornam nosso jogo único",
+      "multipleDecks": {
+        "title": "Múltiplos Baralhos",
+        "description": "Escolha entre vários temas e dificuldades"
+      },
+      "aiOpponent": {
+        "title": "Oponente IA",
+        "description": "Jogue contra um bot inteligente"
+      },
+      "progress": {
+        "title": "Acompanhamento de Progresso",
+        "description": "Monitore seu desempenho e melhorias"
+      },
+      "multiplayer": {
+        "title": "Multijogador",
+        "description": "Jogue com amigos online"
+      }
+    },
+    "popularDecks": {
+      "title": "Baralhos Populares",
+      "subtitle": "Os baralhos mais jogados por nossos usuários",
+      "viewAll": "Ver Todos"
+    },
+    "cta": {
+      "title": "Pronto para começar?",
+      "subtitle": "Junte-se a milhares de jogadores e comece a treinar sua memória hoje",
+      "getStarted": "Começar Grátis"
+    }
+  },
+  "deckCard": {
+    "cards": "cartas",
+    "plays": "jogadas",
+    "favorites": "favoritos",
+    "playNow": "Jogar Agora",
+    "addToFavorites": "Adicionar aos Favoritos",
+    "removeFromFavorites": "Remover dos Favoritos"
   }
 }

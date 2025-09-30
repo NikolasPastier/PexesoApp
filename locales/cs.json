@@ -86,5 +86,51 @@
   "language": {
     "switchLanguage": "Přepnout jazyk",
     "currentLanguage": "Aktuální jazyk"
+  },
+  "home": {
+    "hero": {
+      "title": "Pexeso",
+      "subtitle": "Trénujte svou paměť s klasickou hrou pexeso",
+      "playNow": "Hrát nyní",
+      "browseDeck": "Procházet balíčky"
+    },
+    "features": {
+      "title": "Proč si vybrat naše pexeso?",
+      "subtitle": "Objevte funkce, které dělají naši hru jedinečnou",
+      "multipleDecks": {
+        "title": "Více balíčků",
+        "description": "Vyberte si z různých témat a obtížností"
+      },
+      "aiOpponent": {
+        "title": "AI protivník",
+        "description": "Hrajte proti inteligentnímu botovi"
+      },
+      "progress": {
+        "title": "Sledování pokroku",
+        "description": "Sledujte své výkony a zlepšení"
+      },
+      "multiplayer": {
+        "title": "Hra pro více hráčů",
+        "description": "Hrajte s přáteli online"
+      }
+    },
+    "popularDecks": {
+      "title": "Populární balíčky",
+      "subtitle": "Nejhranější balíčky našimi uživateli",
+      "viewAll": "Zobrazit vše"
+    },
+    "cta": {
+      "title": "Připraveni začít?",
+      "subtitle": "Připojte se k tisícům hráčů a začněte trénovat svou paměť ještě dnes",
+      "getStarted": "Začít zdarma"
+    }
+  },
+  "deckCard": {
+    "cards": "karty",
+    "plays": "hraní",
+    "favorites": "oblíbené",
+    "playNow": "Hrát nyní",
+    "addToFavorites": "Přidat do oblíbených",
+    "removeFromFavorites": "Odebrat z oblíbených"
   }
 }

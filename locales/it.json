@@ -86,5 +86,51 @@
   "language": {
     "switchLanguage": "Cambia Lingua",
     "currentLanguage": "Lingua Attuale"
+  },
+  "home": {
+    "hero": {
+      "title": "Gioco della Memoria",
+      "subtitle": "Allena la tua memoria con il classico gioco di memoria",
+      "playNow": "Gioca Ora",
+      "browseDeck": "Sfoglia Mazzi"
+    },
+    "features": {
+      "title": "Perché scegliere il nostro gioco della memoria?",
+      "subtitle": "Scopri le funzionalità che rendono unico il nostro gioco",
+      "multipleDecks": {
+        "title": "Mazzi Multipli",
+        "description": "Scegli tra vari temi e difficoltà"
+      },
+      "aiOpponent": {
+        "title": "Avversario AI",
+        "description": "Gioca contro un bot intelligente"
+      },
+      "progress": {
+        "title": "Tracciamento Progressi",
+        "description": "Monitora le tue prestazioni e i miglioramenti"
+      },
+      "multiplayer": {
+        "title": "Multigiocatore",
+        "description": "Gioca con gli amici online"
+      }
+    },
+    "popularDecks": {
+      "title": "Mazzi Popolari",
+      "subtitle": "I mazzi più giocati dai nostri utenti",
+      "viewAll": "Vedi Tutti"
+    },
+    "cta": {
+      "title": "Pronto per iniziare?",
+      "subtitle": "Unisciti a migliaia di giocatori e inizia ad allenare la tua memoria oggi",
+      "getStarted": "Inizia Gratis"
+    }
+  },
+  "deckCard": {
+    "cards": "carte",
+    "plays": "partite",
+    "favorites": "preferiti",
+    "playNow": "Gioca Ora",
+    "addToFavorites": "Aggiungi ai Preferiti",
+    "removeFromFavorites": "Rimuovi dai Preferiti"
   }
 }

@@ -71,6 +71,8 @@ export function DeckGallery() {
   const [isLoading, setIsLoading] = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showBrowseModal, setShowBrowseModal] = useState(false)
+  const [showPreviewModal, setShowPreviewModal] = useState(false)
+  const [showBrowsePreviewModal, setShowBrowsePreviewModal] = useState(false)
   const [modalDecks, setModalDecks] = useState<Deck[]>([])
   const [modalLoading, setModalLoading] = useState(false)
   const [sortBy, setSortBy] = useState("recent")
@@ -276,12 +278,15 @@ export function DeckGallery() {
                   {/* Overlay with actions */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                      <Dialog>
+                      <Dialog open={showPreviewModal} onOpenChange={setShowPreviewModal}>
                         <DialogTrigger asChild>
                           <Button
                             size="sm"
                             variant="secondary"
-                            onClick={() => setSelectedDeck(deck)}
+                            onClick={() => {
+                              setSelectedDeck(deck)
+                              setShowPreviewModal(true)
+                            }}
                             className="bg-gray-700/80 hover:bg-gray-600/80 text-white border-gray-500/50"
                           >
                             <EyeIcon />
@@ -309,7 +314,10 @@ export function DeckGallery() {
                           </div>
                           <div className="flex justify-end gap-2 p-4 border-t border-gray-600/30">
                             <Button
-                              onClick={() => handleSelectDeck(selectedDeck!)}
+                              onClick={() => {
+                                setShowPreviewModal(false)
+                                handleSelectDeck(selectedDeck!)
+                              }}
                               className="bg-primary hover:bg-primary/90"
                             >
                               Play with this Deck
@@ -385,17 +393,17 @@ export function DeckGallery() {
 
       {/* Browse All Modal */}
       <Dialog open={showBrowseModal} onOpenChange={setShowBrowseModal}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden bg-black/50 backdrop-blur-sm border-none p-0">
-          <div className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 shadow-2xl rounded-xl p-6 h-full flex flex-col">
-            <DialogHeader className="mb-6">
-              <div className="flex items-center justify-between">
+        <DialogContent className="w-[95vw] sm:w-[90vw] lg:w-[80vw] xl:w-[75vw] max-w-7xl max-h-[85vh] overflow-hidden bg-black/50 backdrop-blur-sm border-none p-0">
+          <div className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border border-gray-700/30 shadow-2xl rounded-xl p-6 sm:p-8 h-full flex flex-col">
+            <DialogHeader className="mb-8">
+              <div className="flex items-center justify-between flex-wrap gap-4">
                 <DialogTitle className="text-2xl font-bold text-white">All Decks</DialogTitle>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-wrap">
                   {/* Sort Dropdown */}
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-300">Sort by:</span>
                     <Select value={sortBy} onValueChange={handleSortChange}>
-                      <SelectTrigger className="w-48 bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
+                      <SelectTrigger className="w-auto bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
@@ -428,7 +436,7 @@ export function DeckGallery() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-300">Cards:</span>
                     <Select value={filterCardCount} onValueChange={handleCardCountChange}>
-                      <SelectTrigger className="w-32 bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
+                      <SelectTrigger className="w-auto bg-gray-700/50 border-gray-600/30 text-white focus:border-primary/50">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
@@ -465,7 +473,7 @@ export function DeckGallery() {
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 pb-4">
                   {modalDecks.map((deck) => (
                     <Card
                       key={deck.id}
@@ -491,12 +499,15 @@ export function DeckGallery() {
                         {/* Overlay with actions */}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
                           <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <Dialog>
+                            <Dialog open={showBrowsePreviewModal} onOpenChange={setShowBrowsePreviewModal}>
                               <DialogTrigger asChild>
                                 <Button
                                   size="sm"
                                   variant="secondary"
-                                  onClick={() => setSelectedDeck(deck)}
+                                  onClick={() => {
+                                    setSelectedDeck(deck)
+                                    setShowBrowsePreviewModal(true)
+                                  }}
                                   className="bg-gray-700/80 hover:bg-gray-600/80 text-white border-gray-500/50"
                                 >
                                   <EyeIcon />
@@ -525,8 +536,9 @@ export function DeckGallery() {
                                 <div className="flex justify-end gap-2 p-4 border-t border-gray-600/30">
                                   <Button
                                     onClick={() => {
-                                      handleSelectDeck(selectedDeck!)
+                                      setShowBrowsePreviewModal(false)
                                       setShowBrowseModal(false)
+                                      handleSelectDeck(selectedDeck!)
                                     }}
                                     className="bg-primary hover:bg-primary/90"
                                   >
