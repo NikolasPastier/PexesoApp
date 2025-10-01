@@ -513,10 +513,10 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
           <div className="flex justify-between items-center max-lg:flex-col max-lg:items-stretch max-lg:gap-4">
             <div className="flex-1">
               {gameStatus === "idle" ? (
-                <div className="flex items-center gap-4 flex-wrap max-sm:flex-col max-sm:gap-2">
-                  <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
+                <div className="flex items-center gap-4 flex-wrap max-md:grid max-md:grid-cols-2 max-md:gap-2">
+                  <div className="flex items-center gap-2 max-md:w-full max-md:justify-stretch">
                     <Select value={players} onValueChange={(value: "solo" | "two" | "bot") => setPlayers(value)}>
-                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1 max-sm:px-1.5">
+                      <SelectTrigger className="rounded-lg px-1.5 py-1 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-md:flex-1 max-md:text-sm">
                         <SelectValue placeholder={t("players")} />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
@@ -534,7 +534,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                     </Select>
                   </div>
 
-                  <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
+                  <div className="flex items-center gap-2 max-md:w-full max-md:justify-stretch">
                     <Select
                       value={timer === "unlimited" ? "unlimited" : "custom"}
                       onValueChange={(value) => {
@@ -545,7 +545,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                         }
                       }}
                     >
-                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1 max-sm:px-1.5">
+                      <SelectTrigger className="rounded-lg px-1.5 py-1 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-md:flex-1 max-md:text-sm">
                         <span>{t("timer")}</span>
                         <ChevronDown className="w-4 h-4 ml-2" />
                       </SelectTrigger>
@@ -580,7 +580,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                     </Select>
                   </div>
 
-                  <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
+                  <div className="flex items-center gap-2 max-md:w-full max-md:justify-stretch">
                     <Select
                       value={matches === "unlimited" ? "unlimited" : "custom"}
                       onValueChange={(value) => {
@@ -591,7 +591,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                         }
                       }}
                     >
-                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1 max-sm:px-1.5">
+                      <SelectTrigger className="rounded-lg px-1.5 py-1 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-md:flex-1 max-md:text-sm">
                         <span>{t("moves")}</span>
                         <ChevronDown className="w-4 h-4 ml-2" />
                       </SelectTrigger>
@@ -626,12 +626,12 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                     </Select>
                   </div>
 
-                  <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-between">
+                  <div className="flex items-center gap-2 max-md:w-full max-md:justify-stretch">
                     <Select
                       value={cardCount.toString()}
                       onValueChange={(value) => handleCardCountChange(Number.parseInt(value))}
                     >
-                      <SelectTrigger className="rounded-lg px-2 py-1.5 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-sm:flex-1 max-sm:px-1.5">
+                      <SelectTrigger className="rounded-lg px-1.5 py-1 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto max-md:flex-1 max-md:text-sm">
                         <SelectValue placeholder={t("cards")} />
                         <ChevronDown className="w-4 h-4" />
                       </SelectTrigger>
@@ -649,11 +649,12 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                     </Select>
                   </div>
 
-                  <div className="max-sm:w-full">
+                  <div className="max-md:w-full max-md:col-span-2">
                     <DeckSelector
                       selectedDeckId={selectedDeckId}
                       onDeckChange={handleDeckChange}
                       cardCount={cardCount}
+                      className="max-md:w-full max-md:text-sm"
                     />
                   </div>
                 </div>

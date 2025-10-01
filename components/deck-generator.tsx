@@ -176,20 +176,20 @@ export function DeckGenerator() {
       <div className="w-full max-w-4xl mx-auto space-y-8">
         <div className="relative">
           <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900/20 rounded-3xl p-4 sm:p-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
-            <div className="flex items-center gap-2 max-sm:flex-col max-sm:items-stretch max-sm:gap-3">
+            <div className="flex items-center gap-2 max-md:gap-1.5">
               <div className="flex-1 relative min-w-0">
                 <Input
                   placeholder={t("placeholder")}
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && !isGenerating && handleGenerate()}
-                  className="bg-transparent border-none text-gray-200 placeholder:text-gray-400 text-lg max-sm:text-base h-12 focus:ring-0 focus:outline-none px-0"
+                  className="bg-transparent border-none text-gray-200 placeholder:text-gray-400 text-lg max-md:text-sm h-12 max-md:h-10 focus:ring-0 focus:outline-none px-0"
                 />
               </div>
 
-              <div className="flex items-center gap-2 max-sm:w-full max-sm:justify-center max-sm:gap-1.5">
+              <div className="flex items-center gap-2 max-md:gap-1">
                 <Select value={cardCount} onValueChange={setCardCount}>
-                  <SelectTrigger className="w-auto h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-1.5 max-sm:px-1 max-sm:h-9">
+                  <SelectTrigger className="w-auto h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-1.5 max-md:w-12 max-md:h-8 max-md:px-1">
                     <SelectValue placeholder="16" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-600">
@@ -206,7 +206,7 @@ export function DeckGenerator() {
                 </Select>
 
                 <Select value={style} onValueChange={setStyle}>
-                  <SelectTrigger className="w-auto h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-1.5 max-sm:px-1 max-sm:h-9">
+                  <SelectTrigger className="w-auto h-8 bg-gray-800/50 border-gray-600 text-gray-200 text-xs px-1.5 max-md:w-16 max-md:h-8 max-md:px-1">
                     <SelectValue placeholder={t("style")} />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-600">
@@ -223,7 +223,7 @@ export function DeckGenerator() {
                   onClick={handleGenerate}
                   disabled={!prompt.trim() || isGenerating}
                   size="sm"
-                  className="h-8 w-8 max-sm:w-9 max-sm:h-9 rounded-full max-sm:rounded-lg bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
+                  className="h-8 w-8 max-md:h-8 max-md:w-8 rounded-full bg-white hover:bg-gray-100 text-gray-900 shadow-lg shrink-0"
                 >
                   {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
                 </Button>

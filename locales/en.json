@@ -103,10 +103,11 @@
     "created": "Created",
     "likes": "Likes",
     "plays": "Plays",
-    "showAllDecks": "Show All Decks"
+    "showAllDecks": "Show All Decks",
+    "showMore": "Show More"
   },
   "deckGenerator": {
-    "placeholder": "Ask PexesoAI to create a deck about...",
+    "placeholder": "Generate custom decks",
     "invalidCardCount": "Invalid card count",
     "invalidCardCountDesc": "Please select a valid card count option.",
     "generationSuccess": "Images generated successfully!",
