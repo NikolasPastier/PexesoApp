@@ -361,7 +361,13 @@ export function DeckGallery() {
                                   <p className="text-xs text-gray-400 mb-1">{t("created")}</p>
                                   <p className="text-sm font-semibold text-white">
                                     {selectedDeck?.created_at
-                                      ? new Date(selectedDeck.created_at).toLocaleDateString()
+                                      ? (() => {
+                                          try {
+                                            return new Date(selectedDeck.created_at).toLocaleDateString()
+                                          } catch {
+                                            return "N/A"
+                                          }
+                                        })()
                                       : "N/A"}
                                   </p>
                                 </div>
@@ -440,7 +446,17 @@ export function DeckGallery() {
                           <span>{deck.plays}</span>
                         </div>
                       </div>
-                      <span className="text-xs">{new Date(deck.created_at).toLocaleDateString()}</span>
+                      <span className="text-xs">
+                        {deck.created_at
+                          ? (() => {
+                              try {
+                                return new Date(deck.created_at).toLocaleDateString()
+                              } catch {
+                                return "N/A"
+                              }
+                            })()
+                          : "N/A"}
+                      </span>
                     </div>
                   </CardContent>
                 </Card>

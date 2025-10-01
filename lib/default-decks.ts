@@ -12,6 +12,7 @@ export interface DefaultDeck {
   isFavorited: boolean
   likes: number
   isOwned: boolean
+  created_at: string
 }
 
 export const DEFAULT_DECKS: DefaultDeck[] = [
@@ -36,6 +37,7 @@ export const DEFAULT_DECKS: DefaultDeck[] = [
     isFavorited: false,
     likes: 0,
     isOwned: false,
+    created_at: "2024-01-15T10:00:00Z",
   },
   {
     id: "default-space-adventure-16",
@@ -57,6 +59,7 @@ export const DEFAULT_DECKS: DefaultDeck[] = [
     isFavorited: false,
     likes: 0,
     isOwned: false,
+    created_at: "2024-01-16T10:00:00Z",
   },
   {
     id: "default-ocean-life-16",
@@ -78,6 +81,7 @@ export const DEFAULT_DECKS: DefaultDeck[] = [
     isFavorited: false,
     likes: 0,
     isOwned: false,
+    created_at: "2024-01-17T10:00:00Z",
   },
 
   // 24-card decks (12 pairs)
@@ -105,6 +109,7 @@ export const DEFAULT_DECKS: DefaultDeck[] = [
     isFavorited: false,
     likes: 0,
     isOwned: false,
+    created_at: "2024-01-18T10:00:00Z",
   },
   {
     id: "default-space-adventure-extended-24",
@@ -130,6 +135,7 @@ export const DEFAULT_DECKS: DefaultDeck[] = [
     isFavorited: false,
     likes: 0,
     isOwned: false,
+    created_at: "2024-01-19T10:00:00Z",
   },
   {
     id: "default-ocean-life-extended-24",
@@ -155,6 +161,7 @@ export const DEFAULT_DECKS: DefaultDeck[] = [
     isFavorited: false,
     likes: 0,
     isOwned: false,
+    created_at: "2024-01-20T10:00:00Z",
   },
 
   // 32-card decks (16 pairs)
@@ -186,6 +193,7 @@ export const DEFAULT_DECKS: DefaultDeck[] = [
     isFavorited: false,
     likes: 0,
     isOwned: false,
+    created_at: "2024-01-21T10:00:00Z",
   },
   {
     id: "default-ultimate-space-32",
@@ -215,6 +223,7 @@ export const DEFAULT_DECKS: DefaultDeck[] = [
     isFavorited: false,
     likes: 0,
     isOwned: false,
+    created_at: "2024-01-22T10:00:00Z",
   },
   {
     id: "default-ultimate-ocean-32",
@@ -244,5 +253,6 @@ export const DEFAULT_DECKS: DefaultDeck[] = [
     isFavorited: false,
     likes: 0,
     isOwned: false,
+    created_at: "2024-01-23T10:00:00Z",
   },
 ]

@@ -73,14 +73,14 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
       if (error) {
         setMessage({ type: "error", text: error.message })
       } else {
-        setMessage({ type: "success", text: "Login successful!" })
+        setMessage({ type: "success", text: t("loginSuccess") })
         await refreshUser()
         setTimeout(() => {
           onClose()
         }, 1000)
       }
     } catch (error) {
-      setMessage({ type: "error", text: "An unexpected error occurred" })
+      setMessage({ type: "error", text: t("unexpectedError") })
     } finally {
       setLoading(false)
     }
@@ -92,13 +92,13 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
     setMessage(null)
 
     if (signupData.password !== signupData.confirmPassword) {
-      setMessage({ type: "error", text: "Passwords do not match" })
+      setMessage({ type: "error", text: t("passwordsDoNotMatch") })
       setLoading(false)
       return
     }
 
     if (signupData.password.length < 6) {
-      setMessage({ type: "error", text: "Password must be at least 6 characters" })
+      setMessage({ type: "error", text: t("passwordTooShort") })
       setLoading(false)
       return
     }
@@ -120,11 +120,11 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
       } else {
         setMessage({
           type: "success",
-          text: "Account created! Please check your email to verify your account.",
+          text: t("accountCreated"),
         })
       }
     } catch (error) {
-      setMessage({ type: "error", text: "An unexpected error occurred" })
+      setMessage({ type: "error", text: t("unexpectedError") })
     } finally {
       setLoading(false)
     }
@@ -189,7 +189,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     <Input
                       id="login-email"
                       type="email"
-                      placeholder={t("email")}
+                      placeholder={t("emailPlaceholder")}
                       value={loginData.email}
                       onChange={(e) => setLoginData((prev) => ({ ...prev, email: e.target.value }))}
                       required
@@ -204,7 +204,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     <Input
                       id="login-password"
                       type="password"
-                      placeholder={t("password")}
+                      placeholder={t("passwordPlaceholder")}
                       value={loginData.password}
                       onChange={(e) => setLoginData((prev) => ({ ...prev, password: e.target.value }))}
                       required
@@ -217,7 +217,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
                     disabled={loading}
                   >
-                    {loading ? "Signing in..." : t("login")}
+                    {loading ? t("signingIn") : t("login")}
                   </Button>
                 </form>
 
@@ -228,11 +228,11 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                 <form onSubmit={handleSignup} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="signup-username" className="text-gray-300">
-                      Username
+                      {t("username")}
                     </Label>
                     <Input
                       id="signup-username"
-                      placeholder="Username"
+                      placeholder={t("usernamePlaceholder")}
                       value={signupData.username}
                       onChange={(e) => setSignupData((prev) => ({ ...prev, username: e.target.value }))}
                       required
@@ -247,7 +247,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     <Input
                       id="signup-email"
                       type="email"
-                      placeholder={t("email")}
+                      placeholder={t("emailPlaceholder")}
                       value={signupData.email}
                       onChange={(e) => setSignupData((prev) => ({ ...prev, email: e.target.value }))}
                       required
@@ -262,7 +262,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     <Input
                       id="signup-password"
                       type="password"
-                      placeholder={t("password")}
+                      placeholder={t("passwordPlaceholder")}
                       value={signupData.password}
                       onChange={(e) => setSignupData((prev) => ({ ...prev, password: e.target.value }))}
                       required
@@ -277,7 +277,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     <Input
                       id="signup-confirm"
                       type="password"
-                      placeholder={t("confirmPassword")}
+                      placeholder={t("confirmPasswordPlaceholder")}
                       value={signupData.confirmPassword}
                       onChange={(e) => setSignupData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
                       required
@@ -290,7 +290,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
                     disabled={loading}
                   >
-                    {loading ? "Creating account..." : t("signup")}
+                    {loading ? t("creatingAccount") : t("signup")}
                   </Button>
                 </form>
 
@@ -300,20 +300,24 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
 
             <div className="mt-6 pt-4 border-t border-gray-600/30">
               <p className="text-xs text-gray-400 text-center">
-                By continuing, you agree to the{" "}
-                <button
-                  onClick={() => setShowTermsModal(true)}
-                  className="text-primary hover:text-primary/80 underline"
-                >
-                  Terms of Service
-                </button>{" "}
-                and{" "}
-                <button
-                  onClick={() => setShowPrivacyModal(true)}
-                  className="text-primary hover:text-primary/80 underline"
-                >
-                  Privacy Policy
-                </button>
+                {t("legalConsent", {
+                  terms: (
+                    <button
+                      onClick={() => setShowTermsModal(true)}
+                      className="text-primary hover:text-primary/80 underline"
+                    >
+                      {t("termsOfService")}
+                    </button>
+                  ),
+                  privacy: (
+                    <button
+                      onClick={() => setShowPrivacyModal(true)}
+                      className="text-primary hover:text-primary/80 underline"
+                    >
+                      {t("privacyPolicy")}
+                    </button>
+                  ),
+                })}
               </p>
             </div>
 

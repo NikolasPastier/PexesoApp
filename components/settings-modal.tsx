@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuth } from "@/contexts/auth-context"
 import { AlertTriangle, Trash2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -20,6 +21,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteOption, setDeleteOption] = useState<"keep-decks" | "delete-decks">("keep-decks")
+
+  const t = useTranslations("settings")
 
   // Form states
   const [username, setUsername] = useState("")
@@ -42,20 +45,18 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Validate username is not empty
     if (!username || username.trim().length === 0) {
       const event = new CustomEvent("showToast", {
-        detail: { message: "Username cannot be empty" },
+        detail: { message: t("usernameRequired") },
       })
       window.dispatchEvent(event)
       return
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!email || !emailRegex.test(email)) {
       const event = new CustomEvent("showToast", {
-        detail: { message: "Please enter a valid email address" },
+        detail: { message: t("invalidEmail") },
       })
       window.dispatchEvent(event)
       return
@@ -73,7 +74,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       if (response.ok) {
         await refreshUser()
         const event = new CustomEvent("showToast", {
-          detail: { message: "Profile updated successfully!" },
+          detail: { message: t("profileUpdated") },
         })
         window.dispatchEvent(event)
       } else {
@@ -83,7 +84,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     } catch (error) {
       console.error("Error updating profile:", error)
       const event = new CustomEvent("showToast", {
-        detail: { message: error instanceof Error ? error.message : "Could not update profile, please try again" },
+        detail: { message: error instanceof Error ? error.message : t("updateProfileError") },
       })
       window.dispatchEvent(event)
     } finally {
@@ -96,7 +97,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
     if (!currentPassword || !newPassword || !confirmPassword) {
       const event = new CustomEvent("showToast", {
-        detail: { message: "All password fields are required" },
+        detail: { message: t("allPasswordFieldsRequired") },
       })
       window.dispatchEvent(event)
       return
@@ -104,7 +105,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
     if (newPassword !== confirmPassword) {
       const event = new CustomEvent("showToast", {
-        detail: { message: "New passwords don't match" },
+        detail: { message: t("passwordsDoNotMatch") },
       })
       window.dispatchEvent(event)
       return
@@ -112,7 +113,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
     if (newPassword.length < 6) {
       const event = new CustomEvent("showToast", {
-        detail: { message: "Password must be at least 6 characters" },
+        detail: { message: t("passwordTooShort") },
       })
       window.dispatchEvent(event)
       return
@@ -132,7 +133,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         setNewPassword("")
         setConfirmPassword("")
         const event = new CustomEvent("showToast", {
-          detail: { message: "Password updated successfully!" },
+          detail: { message: t("passwordUpdated") },
         })
         window.dispatchEvent(event)
       } else {
@@ -142,7 +143,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     } catch (error) {
       console.error("Error updating password:", error)
       const event = new CustomEvent("showToast", {
-        detail: { message: error instanceof Error ? error.message : "Could not update password, please try again" },
+        detail: { message: error instanceof Error ? error.message : t("updatePasswordError") },
       })
       window.dispatchEvent(event)
     } finally {
@@ -162,7 +163,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
       if (response.ok) {
         const event = new CustomEvent("showToast", {
-          detail: { message: "Your account has been deleted" },
+          detail: { message: t("accountDeleted") },
         })
         window.dispatchEvent(event)
         onClose()
@@ -174,7 +175,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     } catch (error) {
       console.error("Error deleting account:", error)
       const event = new CustomEvent("showToast", {
-        detail: { message: error instanceof Error ? error.message : "Failed to delete account" },
+        detail: { message: error instanceof Error ? error.message : t("deleteAccountError") },
       })
       window.dispatchEvent(event)
     } finally {
@@ -183,15 +184,15 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Account Settings" size="large">
+    <Modal isOpen={isOpen} onClose={onClose} title={t("title")} size="large">
       <div className="space-y-8">
         {/* Profile Settings */}
         <form onSubmit={handleUpdateProfile} className="space-y-5">
-          <h3 className="text-lg font-semibold text-white">Profile Information</h3>
+          <h3 className="text-lg font-semibold text-white">{t("profileSection")}</h3>
 
           <div className="space-y-2">
             <Label htmlFor="username" className="text-gray-300">
-              Username
+              {t("username")}
             </Label>
             <Input
               id="username"
@@ -199,13 +200,13 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
-              placeholder="Enter your username"
+              placeholder={t("usernamePlaceholder")}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email" className="text-gray-300">
-              Email
+              {t("email")}
             </Label>
             <Input
               id="email"
@@ -213,7 +214,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
-              placeholder="Enter your email"
+              placeholder={t("emailPlaceholder")}
             />
           </div>
 
@@ -222,17 +223,17 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             disabled={isLoading}
             className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
           >
-            {isLoading ? "Updating..." : "Update Profile"}
+            {isLoading ? t("updating") : t("updateProfile")}
           </Button>
         </form>
 
         {/* Password Settings */}
         <form onSubmit={handleUpdatePassword} className="space-y-5">
-          <h3 className="text-lg font-semibold text-white">Change Password</h3>
+          <h3 className="text-lg font-semibold text-white">{t("passwordSection")}</h3>
 
           <div className="space-y-2">
             <Label htmlFor="currentPassword" className="text-gray-300">
-              Current Password
+              {t("currentPassword")}
             </Label>
             <Input
               id="currentPassword"
@@ -240,13 +241,13 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
-              placeholder="Enter current password"
+              placeholder={t("currentPasswordPlaceholder")}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="newPassword" className="text-gray-300">
-              New Password
+              {t("newPassword")}
             </Label>
             <Input
               id="newPassword"
@@ -254,13 +255,13 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
-              placeholder="Enter new password"
+              placeholder={t("newPasswordPlaceholder")}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="confirmPassword" className="text-gray-300">
-              Confirm New Password
+              {t("confirmPassword")}
             </Label>
             <Input
               id="confirmPassword"
@@ -268,7 +269,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="bg-gray-800/50 border-gray-600/30 text-white placeholder:text-white/70"
-              placeholder="Confirm new password"
+              placeholder={t("confirmPasswordPlaceholder")}
             />
           </div>
 
@@ -277,7 +278,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             disabled={isLoading || !currentPassword || !newPassword || !confirmPassword}
             className="w-full bg-green-500 hover:bg-green-600 text-white hover:text-white"
           >
-            {isLoading ? "Updating..." : "Update Password"}
+            {isLoading ? t("updating") : t("updatePassword")}
           </Button>
         </form>
 
@@ -285,7 +286,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         <div className="border-t border-gray-600/30 pt-8">
           <h3 className="text-lg font-semibold text-red-400 mb-4 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5" />
-            Danger Zone
+            {t("dangerZone")}
           </h3>
 
           {!showDeleteConfirm ? (
@@ -295,16 +296,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500 hover:text-white"
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete Account
+              {t("deleteAccount")}
             </Button>
           ) : (
             <div className="space-y-4">
-              <p className="text-sm text-gray-300">
-                Are you sure you want to delete your account? This action cannot be undone.
-              </p>
+              <p className="text-sm text-gray-300">{t("deleteConfirmTitle")}</p>
 
               <div className="space-y-3 bg-gray-800/30 p-4 rounded-lg border border-gray-600/30">
-                <p className="text-sm font-medium text-gray-200 mb-2">What should happen to your decks?</p>
+                <p className="text-sm font-medium text-gray-200 mb-2">{t("deleteOptionTitle")}</p>
 
                 <label className="flex items-start gap-3 cursor-pointer group">
                   <input
@@ -316,10 +315,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     className="mt-1 h-4 w-4 text-green-500 border-gray-600 focus:ring-green-500 focus:ring-offset-gray-900"
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-200 group-hover:text-white">
-                      Keep my decks in the gallery
-                    </p>
-                    <p className="text-xs text-gray-400 mt-0.5">Your decks will remain available for others to use</p>
+                    <p className="text-sm font-medium text-gray-200 group-hover:text-white">{t("keepDecks")}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{t("keepDecksDesc")}</p>
                   </div>
                 </label>
 
@@ -333,8 +330,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     className="mt-1 h-4 w-4 text-red-500 border-gray-600 focus:ring-red-500 focus:ring-offset-gray-900"
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-200 group-hover:text-white">Delete my decks too</p>
-                    <p className="text-xs text-gray-400 mt-0.5">All your created decks will be permanently removed</p>
+                    <p className="text-sm font-medium text-gray-200 group-hover:text-white">{t("deleteDecks")}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{t("deleteDecksDesc")}</p>
                   </div>
                 </label>
               </div>
@@ -356,7 +353,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   disabled={isLoading}
                   className="flex-1 bg-red-600 hover:bg-red-700 text-white hover:text-white"
                 >
-                  {isLoading ? "Deleting..." : "Delete Account"}
+                  {isLoading ? t("deleting") : t("deleteAccount")}
                 </Button>
               </div>
             </div>

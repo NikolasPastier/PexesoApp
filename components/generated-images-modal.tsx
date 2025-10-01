@@ -41,9 +41,9 @@ export function GeneratedImagesModal({
   const tDeckGen = useTranslations("deckGenerator")
 
   const cardCountOptions = [
-    { value: "8", label: "8 pictures (16 cards)", cards: 16 },
-    { value: "12", label: "12 pictures (24 cards)", cards: 24 },
-    { value: "16", label: "16 pictures (32 cards)", cards: 32 },
+    { value: "8", label: t("cardCount.8"), cards: 16 },
+    { value: "12", label: t("cardCount.12"), cards: 24 },
+    { value: "16", label: t("cardCount.16"), cards: 32 },
   ]
 
   const getCardsCount = (pictureCount: string) => {
@@ -93,7 +93,7 @@ export function GeneratedImagesModal({
                 >
                   <Image
                     src={image.url || "/placeholder.svg"}
-                    alt={`Generated image ${index + 1}`}
+                    alt={t("alt", { index: index + 1 })}
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-300"
                   />

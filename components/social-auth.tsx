@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
 import { useState } from "react"
+import { useTranslations } from "next-intl"
 
 export function SocialAuth() {
   const [loading, setLoading] = useState<string | null>(null)
   const supabase = createClient()
+  const t = useTranslations("auth")
 
   const handleSocialLogin = async (provider: "google") => {
     try {
@@ -35,7 +37,7 @@ export function SocialAuth() {
           <span className="w-full border-t border-gray-600/30" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-transparent px-2 text-gray-400">Or continue with</span>
+          <span className="bg-transparent px-2 text-gray-400">{t("orContinueWith")}</span>
         </div>
       </div>
 
@@ -64,7 +66,7 @@ export function SocialAuth() {
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-          {loading === "google" ? "Connecting..." : "Continue with Google"}
+          {loading === "google" ? t("connecting") : t("continueWithGoogle")}
         </Button>
       </div>
     </div>

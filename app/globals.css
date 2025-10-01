@@ -122,8 +122,18 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
+
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [role="button"]:focus-visible,
+  [role="combobox"]:focus-visible {
+    @apply outline-none ring-2 ring-primary/20;
+  }
+
   body {
     @apply bg-background text-foreground;
     /* Updated to use new background image URL */
