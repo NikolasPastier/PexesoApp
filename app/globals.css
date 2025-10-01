@@ -23,7 +23,8 @@
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.85 0.08 142); /* Mint borders */
   --input: oklch(1 0 0); /* White inputs */
-  --ring: oklch(0.85 0.12 88); /* Lime focus ring */
+  /* Changed ring from lime/yellow (88) to emerald green (142) to remove yellow outline */
+  --ring: oklch(0.65 0.15 142); /* Emerald focus ring - matches primary */
   --chart-1: oklch(0.65 0.15 142);
   --chart-2: oklch(0.85 0.08 142);
   --chart-3: oklch(0.85 0.12 88);
@@ -37,7 +38,8 @@
   --sidebar-accent: oklch(0.85 0.08 142);
   --sidebar-accent-foreground: oklch(0.35 0 0);
   --sidebar-border: oklch(0.85 0.08 142);
-  --sidebar-ring: oklch(0.85 0.12 88);
+  /* Changed sidebar ring to match new emerald ring color */
+  --sidebar-ring: oklch(0.65 0.15 142);
 }
 
 .dark {
@@ -60,7 +62,8 @@
   --destructive-foreground: oklch(0.637 0.237 25.331);
   --border: oklch(0.25 0.05 142); /* Dark green borders */
   --input: oklch(0.25 0.05 142); /* Dark inputs */
-  --ring: oklch(0.75 0.12 142); /* Bright focus ring */
+  /* Changed ring from bright lime (142) to softer emerald to remove yellow tint */
+  --ring: oklch(0.55 0.12 142); /* Softer emerald focus ring for dark mode */
   --chart-1: oklch(0.75 0.12 142);
   --chart-2: oklch(0.65 0.1 142);
   --chart-3: oklch(0.85 0.12 88);
@@ -73,7 +76,8 @@
   --sidebar-accent: oklch(0.25 0.05 142);
   --sidebar-accent-foreground: oklch(0.95 0.02 142);
   --sidebar-border: oklch(0.25 0.05 142);
-  --sidebar-ring: oklch(0.75 0.12 142);
+  /* Changed sidebar ring to match new softer emerald ring color */
+  --sidebar-ring: oklch(0.55 0.12 142);
 }
 
 @theme inline {
