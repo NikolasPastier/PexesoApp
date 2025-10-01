@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
+import { DEFAULT_DECKS } from "@/lib/default-decks"
 
 export const dynamic = "force-dynamic"
 
@@ -30,6 +31,10 @@ export async function GET() {
     if (error) {
       console.error("Database error:", error)
       return NextResponse.json({ error: "Failed to fetch decks" }, { status: 500 })
+    }
+
+    if (!decks || decks.length === 0) {
+      return NextResponse.json({ decks: DEFAULT_DECKS })
     }
 
     const decksWithStats = await Promise.all(

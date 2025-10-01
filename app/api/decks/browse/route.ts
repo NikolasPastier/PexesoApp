@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
+import { DEFAULT_DECKS } from "@/lib/default-decks"
 
 export const dynamic = "force-dynamic"
 
@@ -67,6 +68,47 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error("Database error:", error)
       return NextResponse.json({ error: "Failed to fetch decks" }, { status: 500 })
+    }
+
+    if (!decks || decks.length === 0) {
+      let filteredDefaultDecks = [...DEFAULT_DECKS]
+
+      // Apply card count filter to default decks
+      if (cardCount && cardCount !== "all") {
+        filteredDefaultDecks = filteredDefaultDecks.filter((deck) => deck.cards_count === Number.parseInt(cardCount))
+      }
+
+      // Apply sorting to default decks
+      switch (sort) {
+        case "oldest":
+          // Default decks don't have created_at, so we keep the original order
+          break
+        case "favorites_desc":
+          filteredDefaultDecks.sort((a, b) => b.likes - a.likes)
+          break
+        case "favorites_asc":
+          filteredDefaultDecks.sort((a, b) => a.likes - b.likes)
+          break
+        case "plays_desc":
+          filteredDefaultDecks.sort((a, b) => b.plays - a.plays)
+          break
+        case "plays_asc":
+          filteredDefaultDecks.sort((a, b) => a.plays - b.plays)
+          break
+        case "popular":
+          filteredDefaultDecks.sort((a, b) => {
+            const aScore = a.likes * 2 + a.plays
+            const bScore = b.likes * 2 + b.plays
+            return bScore - aScore
+          })
+          break
+        case "recent":
+        default:
+          // Keep original order for default decks
+          break
+      }
+
+      return NextResponse.json({ decks: filteredDefaultDecks })
     }
 
     const decksWithStats = await Promise.all(
