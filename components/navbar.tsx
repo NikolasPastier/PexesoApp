@@ -113,13 +113,7 @@ export function Navbar() {
           <div className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm rounded-2xl border border-gray-700/30 shadow-2xl">
             <div className="flex h-16 items-center justify-between px-2.5 max-sm:px-3">
               <Link href="/" className="flex items-center space-x-3">
-                <Image
-                  src="/images/pexeso-logo.png"
-                  alt="Pexeso Logo"
-                  width={32}
-                  height={32}
-                  className="w-10 h-10 sm:w-16 sm:h-16"
-                />
+                <Image src="/pexeso-logo.png" alt="Pexeso Logo" width={40} height={40} className="w-10 h-10" />
                 <span className="text-xl font-bold text-white">{t("title")}</span>
               </Link>
 

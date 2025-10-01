@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "Pexeso - Memory Card Game",
   description: "Train your memory with the classic Pexeso card matching game. Play solo, multiplayer, or against AI.",
   generator: "v0.app",
+  icons: {
+    icon: "/pexeso-logo.png",
+  },
 }
 
 export function generateStaticParams() {
