@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAuth } from "@/contexts/auth-context"
 import Image from "next/image"
+import { useTranslations } from "next-intl"
 
 const HeartIcon = ({ filled = false }: { filled?: boolean }) => (
   <svg
@@ -60,6 +61,7 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCardCount, setSelectedCardCount] = useState<string>("all")
   const { user } = useAuth()
+  const t = useTranslations("favouritesModal")
 
   useEffect(() => {
     if (isOpen && user) {
@@ -94,18 +96,14 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
   const availableCardCounts = [...new Set(favouriteDecks.map((deck) => deck.cards_count || 16))].sort()
 
   const handleSelectDeck = (deck: Deck) => {
-    // Store selected deck in localStorage for the game to use
     localStorage.setItem("selectedDeck", JSON.stringify(deck))
-    // Dispatch event to notify other components
     window.dispatchEvent(new CustomEvent("deckSelected", { detail: deck }))
 
-    // Close modal and scroll to top
     onClose()
     window.scrollTo({ top: 0, behavior: "smooth" })
 
-    // Show feedback to user
     const event = new CustomEvent("showToast", {
-      detail: { message: `Selected "${deck.title}" deck for your next game!` },
+      detail: { message: t("selectedDeck", { title: deck.title }) },
     })
     window.dispatchEvent(event)
   }
@@ -119,41 +117,39 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
       })
 
       if (response.ok) {
-        // Remove from favourites list
         setFavouriteDecks((prev) => prev.filter((d) => d.id !== deck.id))
 
-        // Show feedback
         const event = new CustomEvent("showToast", {
-          detail: { message: `Removed "${deck.title}" from favourites!` },
+          detail: { message: t("removedFromFavourites", { title: deck.title }) },
         })
         window.dispatchEvent(event)
       }
     } catch (error) {
       console.error("Error removing favourite:", error)
       const event = new CustomEvent("showToast", {
-        detail: { message: "Failed to remove favourite. Please try again." },
+        detail: { message: t("failedToRemove") },
       })
       window.dispatchEvent(event)
     }
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Your Favourite Decks" size="large">
+    <Modal isOpen={isOpen} onClose={onClose} title={t("title")} size="large">
       <div className="space-y-6">
         {!isLoading && favouriteDecks.length > 0 && (
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm text-gray-300">Filter by cards:</span>
+            <span className="text-sm text-gray-300">{t("filterLabel")}</span>
             <Select value={selectedCardCount} onValueChange={setSelectedCardCount}>
               <SelectTrigger className="w-32 bg-gray-800 border-gray-600/30 text-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-gray-800 border-gray-600/30">
                 <SelectItem value="all" className="text-white hover:bg-gray-700">
-                  All
+                  {t("all")}
                 </SelectItem>
                 {availableCardCounts.map((count) => (
                   <SelectItem key={count} value={count.toString()} className="text-white hover:bg-gray-700">
-                    {count} cards
+                    {t("cards", { count })}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -170,16 +166,14 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
         ) : favouriteDecks.length === 0 ? (
           <div className="text-center py-8">
             <HeartIcon />
-            <p className="text-gray-400 mt-2">No favourite decks yet</p>
-            <p className="text-sm text-gray-500 mt-1">Browse the deck gallery and heart the decks you love!</p>
+            <p className="text-gray-400 mt-2">{t("noFavourites")}</p>
+            <p className="text-sm text-gray-500 mt-1">{t("noFavouritesDesc")}</p>
           </div>
         ) : filteredDecks.length === 0 ? (
           <div className="text-center py-8">
             <HeartIcon />
-            <p className="text-gray-400 mt-2">No favourite decks with {selectedCardCount} cards</p>
-            <p className="text-sm text-gray-500 mt-1">
-              Try selecting a different card count or browse the gallery for more decks!
-            </p>
+            <p className="text-gray-400 mt-2">{t("noMatchingCards", { count: selectedCardCount })}</p>
+            <p className="text-sm text-gray-500 mt-1">{t("noMatchingCardsDesc")}</p>
           </div>
         ) : (
           <div className="grid gap-5 max-h-[600px] overflow-y-auto pr-2">
@@ -191,14 +185,13 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
               >
                 <CardContent className="p-5">
                   <div className="flex gap-4">
-                    {/* Deck Preview */}
                     <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg p-2 flex-shrink-0">
                       <div className="grid grid-cols-2 gap-1 h-full">
                         {deck.images.slice(0, 4).map((image, index) => (
                           <div key={index} className="relative bg-white rounded-sm overflow-hidden">
                             <Image
                               src={image || "/placeholder.svg?height=30&width=30"}
-                              alt={`${deck.title} card ${index + 1}`}
+                              alt={t("imageAlt", { deckName: deck.title, index: index + 1 })}
                               fill
                               className="object-cover"
                             />
@@ -207,17 +200,16 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
                       </div>
                     </div>
 
-                    {/* Deck Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-white truncate">{deck.title}</h3>
-                          <p className="text-sm text-gray-400">{deck.cards_count || 16} cards</p>
+                          <p className="text-sm text-gray-400">{t("cards", { count: deck.cards_count || 16 })}</p>
                         </div>
                         <div className="flex items-center gap-2 ml-2">
                           {!deck.user_id && (
                             <Badge variant="secondary" className="text-xs bg-primary/20 text-primary border-primary/30">
-                              Official
+                              {t("official")}
                             </Badge>
                           )}
                           <button
@@ -229,7 +221,6 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
                         </div>
                       </div>
 
-                      {/* Stats */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4 text-sm text-gray-300">
                           <div className="flex items-center gap-1">
@@ -249,7 +240,7 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
                           }}
                           className="bg-primary hover:bg-primary/90 text-xs"
                         >
-                          Play Now
+                          {t("playNow")}
                         </Button>
                       </div>
                     </div>

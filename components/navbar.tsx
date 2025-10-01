@@ -155,17 +155,17 @@ export function Navbar() {
                               <div className="px-2 py-2 text-xs text-gray-400">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="font-medium text-gray-300">
-                                    {userPlan.plan === "free" ? "Free Plan" : "Pro Plan"}
+                                    {userPlan.plan === "free" ? t("freePlan") : t("proPlan")}
                                   </span>
                                   {userPlan.plan === "pro" && <Crown className="h-3 w-3 text-yellow-500" />}
                                 </div>
                                 {userPlan.plan === "free" ? (
                                   <div className="text-gray-400">
-                                    Daily: {userPlan.dailyGenerationsUsed}/1 generations
+                                    {t("dailyGenerations", { used: userPlan.dailyGenerationsUsed, limit: 1 })}
                                   </div>
                                 ) : (
                                   <div className="text-gray-400">
-                                    Monthly: {userPlan.monthlyGenerationsUsed}/100 generations
+                                    {t("monthlyGenerations", { used: userPlan.monthlyGenerationsUsed, limit: 100 })}
                                   </div>
                                 )}
                               </div>
@@ -180,7 +180,7 @@ export function Navbar() {
                                 onClick={() => setShowUpgradeModal(true)}
                               >
                                 <Sparkles className="mr-2 h-4 w-4 text-green-500" />
-                                <span className="font-medium text-green-400">Upgrade to Pro</span>
+                                <span className="font-medium text-green-400">{t("upgradeToPro")}</span>
                               </DropdownMenuItem>
                               <DropdownMenuSeparator className="bg-gray-600/30" />
                             </>
@@ -191,7 +191,7 @@ export function Navbar() {
                             onClick={() => setShowMyDecksModal(true)}
                           >
                             <FolderOpen className="mr-2 h-4 w-4 text-white" />
-                            My Decks
+                            {t("myDecks")}
                           </DropdownMenuItem>
 
                           <DropdownMenuItem
@@ -216,7 +216,7 @@ export function Navbar() {
                             className="cursor-pointer text-red-400 hover:bg-gray-700/50 hover:text-red-400 focus:bg-gray-700/50 focus:text-red-400"
                             onClick={signOut}
                           >
-                            <LogOut className="mr-2 h-4 w-4 text-white" />
+                            <LogOut className="mr-2 h-4 w-4 text-red-400" />
                             {t("logout")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -251,7 +251,7 @@ export function Navbar() {
                       className="text-white hover:bg-gray-700/50 rounded-lg h-10 w-10"
                     >
                       <Menu className="h-6 w-6" />
-                      <span className="sr-only">Open menu</span>
+                      <span className="sr-only">{t("menu")}</span>
                     </Button>
                   </SheetTrigger>
                   <SheetContent
@@ -259,13 +259,12 @@ export function Navbar() {
                     className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 backdrop-blur-sm border-gray-700/30 text-white w-[280px] sm:w-[320px]"
                   >
                     <SheetHeader>
-                      <SheetTitle className="text-white text-lg font-semibold">Menu</SheetTitle>
+                      <SheetTitle className="text-white text-lg font-semibold">{t("menu")}</SheetTitle>
                     </SheetHeader>
 
                     <div className="flex flex-col gap-4 mt-6">
-                      {/* Language Switcher */}
                       <div className="flex items-center justify-between px-2 py-2">
-                        <span className="text-sm font-medium text-gray-300">Language</span>
+                        <span className="text-sm font-medium text-gray-300">{t("language")}</span>
                         <LanguageSwitcher />
                       </div>
 
@@ -275,7 +274,6 @@ export function Navbar() {
                         <>
                           {user ? (
                             <>
-                              {/* User Info */}
                               <div className="flex items-center gap-3 px-2 py-2">
                                 <Avatar className="h-10 w-10">
                                   <AvatarImage src={user.user_metadata?.avatar_url || "/placeholder.svg"} />
@@ -292,22 +290,21 @@ export function Navbar() {
                                 </div>
                               </div>
 
-                              {/* Generation Count */}
                               {userPlan && (
                                 <>
                                   <div className="px-2 py-2 bg-gray-800/30 rounded-lg border border-gray-600/30">
                                     <div className="flex items-center justify-between mb-1">
                                       <span className="text-xs font-medium text-gray-300">
-                                        {userPlan.plan === "free" ? "Free Plan" : "Pro Plan"}
+                                        {userPlan.plan === "free" ? t("freePlan") : t("proPlan")}
                                       </span>
                                     </div>
                                     {userPlan.plan === "free" ? (
                                       <div className="text-xs text-gray-400">
-                                        Daily: {userPlan.dailyGenerationsUsed}/1 generations
+                                        {t("dailyGenerations", { used: userPlan.dailyGenerationsUsed, limit: 1 })}
                                       </div>
                                     ) : (
                                       <div className="text-xs text-gray-400">
-                                        Monthly: {userPlan.monthlyGenerationsUsed}/100 generations
+                                        {t("monthlyGenerations", { used: userPlan.monthlyGenerationsUsed, limit: 100 })}
                                       </div>
                                     )}
                                   </div>
@@ -316,7 +313,6 @@ export function Navbar() {
 
                               <div className="h-px bg-gray-700/50" />
 
-                              {/* Upgrade Button */}
                               {userPlan?.plan === "free" && (
                                 <>
                                   <Button
@@ -324,20 +320,19 @@ export function Navbar() {
                                     onClick={handleShowUpgrade}
                                   >
                                     <Sparkles className="mr-2 h-5 w-5" />
-                                    Upgrade to Pro
+                                    {t("upgradeToPro")}
                                   </Button>
                                   <div className="h-px bg-gray-700/50" />
                                 </>
                               )}
 
-                              {/* Menu Items */}
                               <Button
                                 variant="ghost"
                                 className="justify-start text-white hover:text-white hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
                                 onClick={handleShowMyDecks}
                               >
                                 <FolderOpen className="mr-3 h-5 w-5" />
-                                <span className="text-base">My Decks</span>
+                                <span className="text-base">{t("myDecks")}</span>
                               </Button>
 
                               <Button
@@ -365,7 +360,7 @@ export function Navbar() {
                                 className="justify-start text-red-400 hover:text-red-400 hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
                                 onClick={handleSignOut}
                               >
-                                <LogOut className="mr-3 h-5 w-5" />
+                                <LogOut className="mr-3 h-5 w-5 text-red-400" />
                                 <span className="text-base">{t("logout")}</span>
                               </Button>
                             </>

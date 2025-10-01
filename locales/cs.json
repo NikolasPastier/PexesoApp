@@ -25,7 +25,15 @@
     "signup": "Registrovat se",
     "logout": "Odhlásit se",
     "favourites": "Oblíbené",
-    "settings": "Nastavení"
+    "settings": "Nastavení",
+    "freePlan": "Bezplatný plán",
+    "proPlan": "Pro plán",
+    "dailyGenerations": "Denně: {used}/{limit} generování",
+    "monthlyGenerations": "Měsíčně: {used}/{limit} generování",
+    "upgradeToPro": "Upgradovat na Pro",
+    "myDecks": "Moje balíčky",
+    "menu": "Menu",
+    "language": "Jazyk"
   },
   "auth": {
     "login": "Přihlásit se",
@@ -167,7 +175,19 @@
     "difficulty": "Obtížnost",
     "easy": "Lehká",
     "medium": "Střední",
-    "hard": "Těžká"
+    "hard": "Těžká",
+    "solo": "Sólo",
+    "twoPlayers": "2 hráči",
+    "vsBot": "vs Bot",
+    "endGame": "Ukončit hru",
+    "draw": "Remíza!",
+    "finalStats": "Konečné statistiky:",
+    "playerStats": "Statistiky hráčů:",
+    "totalMatches": "Celkem párů: {completed}/{total}",
+    "totalMoves": "Celkem tahů: {moves}",
+    "timeUsed": "Použitý čas: {time}",
+    "unlimited": "Neomezeno",
+    "custom": "Vlastní"
   },
   "deckGallery": {
     "title": "Galerie balíčků",
@@ -235,5 +255,32 @@
     "playNow": "Hrát nyní",
     "addToFavorites": "Přidat do oblíbených",
     "removeFromFavorites": "Odebrat z oblíbených"
+  },
+  "favouritesModal": {
+    "title": "Vaše oblíbené balíčky",
+    "filterLabel": "Filtrovat podle karet:",
+    "all": "Vše",
+    "cards": "{count} karet",
+    "noFavourites": "Zatím žádné oblíbené balíčky",
+    "noFavouritesDesc": "Procházejte galerii balíčků a označte si balíčky, které máte rádi!",
+    "noMatchingCards": "Žádné oblíbené balíčky s {count} kartami",
+    "noMatchingCardsDesc": "Zkuste vybrat jiný počet karet nebo procházejte galerii pro více balíčků!",
+    "selectedDeck": "Vybrán balíček \"{title}\" pro vaši další hru!",
+    "removedFromFavourites": "Odstraněn \"{title}\" z oblíbených!",
+    "failedToRemove": "Nepodařilo se odebrat oblíbený. Zkuste to prosím znovu.",
+    "playNow": "Hrát nyní",
+    "official": "Oficiální",
+    "imageAlt": "{deckName} karta {index}"
+  },
+  "deckSelector": {
+    "deckStyle": "Styl balíčku",
+    "loading": "Načítání...",
+    "favorites": "Oblíbené",
+    "noFavoritedDecks": "Žádné oblíbené balíčky s {count} kartami",
+    "loginToSaveFavorites": "Přihlaste se pro uložení a hraní s oblíbenými balíčky",
+    "otherCardCounts": "Jiné počty karet",
+    "noDecksAvailable": "Žádné balíčky dostupné pro {count} karet",
+    "myPrefix": "Můj: ",
+    "privateSuffix": " (Soukromý)"
   }
 }

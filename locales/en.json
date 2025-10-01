@@ -25,7 +25,15 @@
     "signup": "Sign Up",
     "logout": "Sign Out",
     "favourites": "Favourites",
-    "settings": "Settings"
+    "settings": "Settings",
+    "freePlan": "Free Plan",
+    "proPlan": "Pro Plan",
+    "dailyGenerations": "Daily: {used}/{limit} generations",
+    "monthlyGenerations": "Monthly: {used}/{limit} generations",
+    "upgradeToPro": "Upgrade to Pro",
+    "myDecks": "My Decks",
+    "menu": "Menu",
+    "language": "Language"
   },
   "auth": {
     "login": "Log in",
@@ -167,7 +175,19 @@
     "difficulty": "Difficulty",
     "easy": "Easy",
     "medium": "Medium",
-    "hard": "Hard"
+    "hard": "Hard",
+    "solo": "Solo",
+    "twoPlayers": "2 Players",
+    "vsBot": "vs Bot",
+    "endGame": "End Game",
+    "draw": "It's a Draw!",
+    "finalStats": "Final Stats:",
+    "playerStats": "Player Stats:",
+    "totalMatches": "Total Matches: {completed}/{total}",
+    "totalMoves": "Total Moves: {moves}",
+    "timeUsed": "Time Used: {time}",
+    "unlimited": "Unlimited",
+    "custom": "Custom"
   },
   "deckGallery": {
     "title": "Deck Gallery",
@@ -324,5 +344,32 @@
   "language": {
     "switchLanguage": "Switch Language",
     "currentLanguage": "Current Language"
+  },
+  "favouritesModal": {
+    "title": "Your Favourite Decks",
+    "filterLabel": "Filter by cards:",
+    "all": "All",
+    "cards": "{count} cards",
+    "noFavourites": "No favourite decks yet",
+    "noFavouritesDesc": "Browse the deck gallery and heart the decks you love!",
+    "noMatchingCards": "No favourite decks with {count} cards",
+    "noMatchingCardsDesc": "Try selecting a different card count or browse the gallery for more decks!",
+    "selectedDeck": "Selected \"{title}\" deck for your next game!",
+    "removedFromFavourites": "Removed \"{title}\" from favourites!",
+    "failedToRemove": "Failed to remove favourite. Please try again.",
+    "playNow": "Play Now",
+    "official": "Official",
+    "imageAlt": "{deckName} card {index}"
+  },
+  "deckSelector": {
+    "deckStyle": "Deck Style",
+    "loading": "Loading...",
+    "favorites": "Favorites",
+    "noFavoritedDecks": "No favorited decks with {count} cards",
+    "loginToSaveFavorites": "Log in to save and play with favorited decks",
+    "otherCardCounts": "Other Card Counts",
+    "noDecksAvailable": "No decks available for {count} cards",
+    "myPrefix": "My: ",
+    "privateSuffix": " (Private)"
   }
 }

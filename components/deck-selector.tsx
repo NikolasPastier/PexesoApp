@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { ChevronDown, Lock, Globe, Heart, Star } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { useTranslations } from "next-intl"
 
 interface Deck {
   id: string
@@ -31,6 +32,7 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
   const [decks, setDecks] = useState<Deck[]>([])
   const [loading, setLoading] = useState(true)
   const { user } = useAuth()
+  const t = useTranslations("deckSelector")
 
   useEffect(() => {
     fetchDecks()
@@ -64,8 +66,8 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
   }
 
   const getDeckDisplayName = (deck: Deck) => {
-    const prefix = deck.isOwned ? "My: " : ""
-    const suffix = deck.is_public ? "" : " (Private)"
+    const prefix = deck.isOwned ? t("myPrefix") : ""
+    const suffix = deck.is_public ? "" : t("privateSuffix")
     return `${prefix}${deck.title}${suffix}`
   }
 
@@ -85,7 +87,7 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
   if (loading) {
     return (
       <div className="rounded-lg px-3 py-2 bg-gray-800 text-white border-gray-600/30 min-w-[150px] animate-pulse">
-        Loading...
+        {t("loading")}
       </div>
     )
   }
@@ -95,7 +97,7 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
       <SelectTrigger
         className={`rounded-lg px-1.5 py-1 bg-gray-800 text-white hover:bg-gray-700 border-gray-600/30 w-auto ${className}`}
       >
-        <span>Deck Style</span>
+        <span>{t("deckStyle")}</span>
         <ChevronDown className="w-4 h-4 ml-2" />
       </SelectTrigger>
       <SelectContent className="bg-gray-800 border-gray-600/30 max-h-60">
@@ -103,7 +105,9 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
           <>
             {favoriteDecks.length > 0 ? (
               <>
-                <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
+                <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                  {t("favorites")}
+                </div>
                 {favoriteDecks.map((deck) => (
                   <SelectItem key={deck.id} value={deck.id} className="text-white hover:bg-gray-700">
                     <div className="flex items-center gap-2 w-full">
@@ -117,8 +121,10 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
               </>
             ) : (
               <>
-                <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
-                <div className="px-2 py-2 text-xs text-gray-500">No favorited decks with {cardCount} cards</div>
+                <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                  {t("favorites")}
+                </div>
+                <div className="px-2 py-2 text-xs text-gray-500">{t("noFavoritedDecks", { count: cardCount })}</div>
                 <div className="h-px bg-gray-600/30 my-1" />
               </>
             )}
@@ -127,13 +133,14 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
 
         {!user && (
           <>
-            <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Favorites</div>
-            <div className="px-2 py-2 text-xs text-gray-500">Log in to save and play with favorited decks</div>
+            <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">
+              {t("favorites")}
+            </div>
+            <div className="px-2 py-2 text-xs text-gray-500">{t("loginToSaveFavorites")}</div>
             <div className="h-px bg-gray-600/30 my-1" />
           </>
         )}
 
-        {/* Compatible decks */}
         {compatibleDecks.length > 0 && (
           <>
             {compatibleDecks.map((deck) => (
@@ -148,12 +155,11 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
           </>
         )}
 
-        {/* Incompatible decks (disabled) */}
         {(compatibleDecks.length > 0 || favoriteDecks.length > 0) && incompatibleDecks.length > 0 && (
           <>
             <div className="h-px bg-gray-600/30 my-1" />
             <div className="px-2 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">
-              Other Card Counts
+              {t("otherCardCounts")}
             </div>
             {incompatibleDecks.map((deck) => (
               <SelectItem key={deck.id} value={deck.id} disabled className="text-gray-500 hover:bg-gray-800 opacity-50">
@@ -169,7 +175,7 @@ export function DeckSelector({ selectedDeckId, onDeckChange, cardCount, classNam
 
         {compatibleDecks.length === 0 && favoriteDecks.length === 0 && (
           <SelectItem value="no-compatible-decks" disabled className="text-gray-500">
-            No decks available for {cardCount} cards
+            {t("noDecksAvailable", { count: cardCount })}
           </SelectItem>
         )}
       </SelectContent>

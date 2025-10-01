@@ -440,7 +440,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
       } else if (player2Moves < player1Moves) {
         return `${stats[1]?.name} ${t("winner")}!`
       } else {
-        return "It's a Draw!"
+        return t("draw")
       }
     }
   }
@@ -522,13 +522,13 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
                         <SelectItem value="solo" className="text-white hover:bg-gray-700">
-                          Solo
+                          {t("solo")}
                         </SelectItem>
                         <SelectItem value="two" className="text-white hover:bg-gray-700">
-                          2 {t("players")}
+                          {t("twoPlayers")}
                         </SelectItem>
                         <SelectItem value="bot" className="text-white hover:bg-gray-700">
-                          {t("bot")}
+                          {t("vsBot")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -551,11 +551,11 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
                         <SelectItem value="unlimited" className="text-white hover:bg-gray-700">
-                          Unlimited
+                          {t("unlimited")}
                         </SelectItem>
                         <SelectItem value="custom" className="text-white hover:bg-gray-700">
                           <div className="flex items-center gap-2 w-full">
-                            <span>Custom</span>
+                            <span>{t("custom")}</span>
                             {timer !== "unlimited" && (
                               <div className="flex items-center gap-2 ml-2">
                                 <Slider
@@ -597,11 +597,11 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600/30">
                         <SelectItem value="unlimited" className="text-white hover:bg-gray-700">
-                          Unlimited
+                          {t("unlimited")}
                         </SelectItem>
                         <SelectItem value="custom" className="text-white hover:bg-gray-700">
                           <div className="flex items-center gap-2 w-full">
-                            <span>Custom</span>
+                            <span>{t("custom")}</span>
                             {matches !== "unlimited" && (
                               <div className="flex items-center gap-2 ml-2">
                                 <Slider
@@ -705,7 +705,7 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
                   onClick={handleEndGame}
                   className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg max-lg:w-full"
                 >
-                  End Game
+                  {t("endGame")}
                 </Button>
               )}
             </div>
@@ -767,28 +767,20 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
 
             <div className={`${players !== "solo" ? "grid grid-cols-2 gap-4" : ""}`}>
               <div className="space-y-2">
-                <h3 className="font-semibold">Final Stats:</h3>
+                <h3 className="font-semibold">{t("finalStats")}</h3>
                 <div className="rounded-lg p-4 space-y-2 bg-transparent">
                   <div>
                     {t("cards")}: {cardCount}
                   </div>
-                  <div>
-                    Total {t("matches")}: {matchedCards.length / 2}/{cardCount / 2}
-                  </div>
-                  <div>
-                    Total {t("moves")}: {moves}
-                  </div>
-                  {typeof timer === "number" && (
-                    <div>
-                      {t("time")} Used: {formatTime(timer * 60 - timeLeft)}
-                    </div>
-                  )}
+                  <div>{t("totalMatches", { completed: matchedCards.length / 2, total: cardCount / 2 })}</div>
+                  <div>{t("totalMoves", { moves })}</div>
+                  {typeof timer === "number" && <div>{t("timeUsed", { time: formatTime(timer * 60 - timeLeft) })}</div>}
                 </div>
               </div>
 
               {players !== "solo" && (
                 <div className="space-y-2">
-                  <h3 className="font-semibold">{t("player")} Stats:</h3>
+                  <h3 className="font-semibold">{t("playerStats")}</h3>
                   <div className="space-y-2">
                     {stats.map((playerStat, index) => (
                       <div key={index} className="rounded-lg p-3 bg-transparent">
