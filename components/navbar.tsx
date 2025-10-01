@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { LogOut, Heart, Settings, ChevronDown, Menu, Sparkles, Crown } from "lucide-react"
+import { LogOut, Heart, Settings, ChevronDown, Menu, Sparkles, Crown, FolderOpen } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +21,7 @@ import { LanguageSwitcher } from "@/components/language-switcher"
 import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { UpgradeModal } from "@/components/upgrade-modal"
+import { MyDecksModal } from "@/components/my-decks-modal"
 
 export function Navbar() {
   const { user, loading, signOut } = useAuth()
@@ -30,6 +31,7 @@ export function Navbar() {
   const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [showMyDecksModal, setShowMyDecksModal] = useState(false)
   const [userPlan, setUserPlan] = useState<{
     plan: "free" | "pro"
     monthlyGenerationsUsed: number
@@ -84,6 +86,11 @@ export function Navbar() {
 
   const handleShowUpgrade = () => {
     setShowUpgradeModal(true)
+    setShowMobileMenu(false)
+  }
+
+  const handleShowMyDecks = () => {
+    setShowMyDecksModal(true)
     setShowMobileMenu(false)
   }
 
@@ -181,6 +188,14 @@ export function Navbar() {
 
                           <DropdownMenuItem
                             className="cursor-pointer hover:bg-gray-700/50 hover:text-white focus:bg-gray-700/50 focus:text-white"
+                            onClick={() => setShowMyDecksModal(true)}
+                          >
+                            <FolderOpen className="mr-2 h-4 w-4 text-white" />
+                            My Decks
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem
+                            className="cursor-pointer hover:bg-gray-700/50 hover:text-white focus:bg-gray-700/50 focus:text-white"
                             onClick={() => setShowFavouritesModal(true)}
                           >
                             <Heart className="mr-2 h-4 w-4 text-white" />
@@ -198,7 +213,7 @@ export function Navbar() {
                           <DropdownMenuSeparator className="bg-gray-600/30" />
 
                           <DropdownMenuItem
-                            className="cursor-pointer text-red-400 hover:bg-gray-700/50 hover:text-white focus:bg-gray-700/50 focus:text-white"
+                            className="cursor-pointer text-red-400 hover:bg-gray-700/50 hover:text-red-400 focus:bg-gray-700/50 focus:text-red-400"
                             onClick={signOut}
                           >
                             <LogOut className="mr-2 h-4 w-4 text-white" />
@@ -319,6 +334,15 @@ export function Navbar() {
                               <Button
                                 variant="ghost"
                                 className="justify-start text-white hover:text-white hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
+                                onClick={handleShowMyDecks}
+                              >
+                                <FolderOpen className="mr-3 h-5 w-5" />
+                                <span className="text-base">My Decks</span>
+                              </Button>
+
+                              <Button
+                                variant="ghost"
+                                className="justify-start text-white hover:text-white hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
                                 onClick={handleShowFavourites}
                               >
                                 <Heart className="mr-3 h-5 w-5" />
@@ -338,7 +362,7 @@ export function Navbar() {
 
                               <Button
                                 variant="ghost"
-                                className="justify-start text-red-400 hover:text-white hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
+                                className="justify-start text-red-400 hover:text-red-400 hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
                                 onClick={handleSignOut}
                               >
                                 <LogOut className="mr-3 h-5 w-5" />
@@ -375,6 +399,7 @@ export function Navbar() {
 
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} defaultTab={authModalTab} />
 
+      <MyDecksModal isOpen={showMyDecksModal} onClose={() => setShowMyDecksModal(false)} />
       <FavouritesModal isOpen={showFavouritesModal} onClose={() => setShowFavouritesModal(false)} />
       <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
       <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />

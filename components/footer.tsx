@@ -4,7 +4,6 @@ import { useState } from "react"
 import { PrivacyPolicyModal } from "./privacy-policy-modal"
 import { TermsModal } from "./terms-modal"
 import { useTranslations } from "next-intl"
-import Link from "next/link"
 
 export function Footer() {
   const t = useTranslations("footer")
@@ -20,9 +19,12 @@ export function Footer() {
             <span className="text-black">{t("copyright")}</span>
             <div className="flex items-center gap-4">
               <span className="hidden sm:inline text-muted-foreground/50">|</span>
-              <Link href="/privacy-policy" className="hover:text-gray-800 transition-colors duration-200 text-black">
+              <button
+                onClick={() => setIsPrivacyOpen(true)}
+                className="hover:text-gray-800 transition-colors duration-200 text-black"
+              >
                 {t("privacyPolicy")}
-              </Link>
+              </button>
               <span className="text-muted-foreground/50">|</span>
               <button
                 onClick={() => setIsTermsOpen(true)}
@@ -30,10 +32,6 @@ export function Footer() {
               >
                 {t("termsOfUse")}
               </button>
-              <span className="text-muted-foreground/50">|</span>
-              <Link href="/data-deletion" className="hover:text-gray-800 transition-colors duration-200 text-black">
-                {t("dataDeletion")}
-              </Link>
             </div>
           </div>
         </div>
