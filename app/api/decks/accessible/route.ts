@@ -5,6 +5,11 @@ import { DEFAULT_DECKS } from "@/lib/default-decks"
 export const dynamic = "force-dynamic"
 
 export async function GET() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.warn("Supabase credentials not configured, returning default decks")
+    return NextResponse.json({ decks: DEFAULT_DECKS })
+  }
+
   try {
     const supabase = await createClient()
 
@@ -29,8 +34,8 @@ export async function GET() {
       .order("created_at", { ascending: false })
 
     if (error) {
-      console.error("Database error:", error)
-      return NextResponse.json({ error: "Failed to fetch decks" }, { status: 500 })
+      console.error("Database error, falling back to default decks:", error)
+      return NextResponse.json({ decks: DEFAULT_DECKS })
     }
 
     if (!decks || decks.length === 0) {
@@ -77,7 +82,7 @@ export async function GET() {
 
     return NextResponse.json({ decks: decksWithStats })
   } catch (error) {
-    console.error("Error fetching accessible decks:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Error fetching accessible decks, falling back to default decks:", error)
+    return NextResponse.json({ decks: DEFAULT_DECKS })
   }
 }

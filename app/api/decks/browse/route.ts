@@ -5,11 +5,16 @@ import { DEFAULT_DECKS } from "@/lib/default-decks"
 export const dynamic = "force-dynamic"
 
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url)
-    const sort = searchParams.get("sort") || "recent"
-    const cardCount = searchParams.get("card_count")
+  const { searchParams } = new URL(request.url)
+  const sort = searchParams.get("sort") || "recent"
+  const cardCount = searchParams.get("card_count")
 
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.warn("Supabase credentials not configured, returning filtered default decks")
+    return applyFiltersToDefaultDecks(sort, cardCount)
+  }
+
+  try {
     const supabase = await createClient()
 
     // Get current user (optional - for checking favorites)
@@ -66,49 +71,12 @@ export async function GET(request: NextRequest) {
     const { data: decks, error } = await query
 
     if (error) {
-      console.error("Database error:", error)
-      return NextResponse.json({ error: "Failed to fetch decks" }, { status: 500 })
+      console.error("Database error, falling back to filtered default decks:", error)
+      return applyFiltersToDefaultDecks(sort, cardCount)
     }
 
     if (!decks || decks.length === 0) {
-      let filteredDefaultDecks = [...DEFAULT_DECKS]
-
-      // Apply card count filter to default decks
-      if (cardCount && cardCount !== "all") {
-        filteredDefaultDecks = filteredDefaultDecks.filter((deck) => deck.cards_count === Number.parseInt(cardCount))
-      }
-
-      // Apply sorting to default decks
-      switch (sort) {
-        case "oldest":
-          // Default decks don't have created_at, so we keep the original order
-          break
-        case "favorites_desc":
-          filteredDefaultDecks.sort((a, b) => b.likes - a.likes)
-          break
-        case "favorites_asc":
-          filteredDefaultDecks.sort((a, b) => a.likes - b.likes)
-          break
-        case "plays_desc":
-          filteredDefaultDecks.sort((a, b) => b.plays - a.plays)
-          break
-        case "plays_asc":
-          filteredDefaultDecks.sort((a, b) => a.plays - b.plays)
-          break
-        case "popular":
-          filteredDefaultDecks.sort((a, b) => {
-            const aScore = a.likes * 2 + a.plays
-            const bScore = b.likes * 2 + b.plays
-            return bScore - aScore
-          })
-          break
-        case "recent":
-        default:
-          // Keep original order for default decks
-          break
-      }
-
-      return NextResponse.json({ decks: filteredDefaultDecks })
+      return applyFiltersToDefaultDecks(sort, cardCount)
     }
 
     const decksWithStats = await Promise.all(
@@ -167,7 +135,48 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ decks: sortedDecks })
   } catch (error) {
-    console.error("Error fetching decks:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Error fetching decks, falling back to filtered default decks:", error)
+    return applyFiltersToDefaultDecks(sort, cardCount)
   }
+}
+
+function applyFiltersToDefaultDecks(sort: string, cardCount: string | null) {
+  let filteredDefaultDecks = [...DEFAULT_DECKS]
+
+  // Apply card count filter to default decks
+  if (cardCount && cardCount !== "all") {
+    filteredDefaultDecks = filteredDefaultDecks.filter((deck) => deck.cards_count === Number.parseInt(cardCount))
+  }
+
+  // Apply sorting to default decks
+  switch (sort) {
+    case "oldest":
+      filteredDefaultDecks.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      break
+    case "favorites_desc":
+      filteredDefaultDecks.sort((a, b) => b.likes - a.likes)
+      break
+    case "favorites_asc":
+      filteredDefaultDecks.sort((a, b) => a.likes - b.likes)
+      break
+    case "plays_desc":
+      filteredDefaultDecks.sort((a, b) => b.plays - a.plays)
+      break
+    case "plays_asc":
+      filteredDefaultDecks.sort((a, b) => a.plays - b.plays)
+      break
+    case "popular":
+      filteredDefaultDecks.sort((a, b) => {
+        const aScore = a.likes * 2 + a.plays
+        const bScore = b.likes * 2 + b.plays
+        return bScore - aScore
+      })
+      break
+    case "recent":
+    default:
+      filteredDefaultDecks.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      break
+  }
+
+  return NextResponse.json({ decks: filteredDefaultDecks })
 }
