@@ -183,10 +183,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Account Settings">
-      <div className="space-y-6">
+    <Modal isOpen={isOpen} onClose={onClose} title="Account Settings" size="large">
+      <div className="space-y-8">
         {/* Profile Settings */}
-        <form onSubmit={handleUpdateProfile} className="space-y-4">
+        <form onSubmit={handleUpdateProfile} className="space-y-5">
           <h3 className="text-lg font-semibold text-white">Profile Information</h3>
 
           <div className="space-y-2">
@@ -227,7 +227,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </form>
 
         {/* Password Settings */}
-        <form onSubmit={handleUpdatePassword} className="space-y-4">
+        <form onSubmit={handleUpdatePassword} className="space-y-5">
           <h3 className="text-lg font-semibold text-white">Change Password</h3>
 
           <div className="space-y-2">
@@ -282,7 +282,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </form>
 
         {/* Danger Zone */}
-        <div className="border-t border-gray-600/30 pt-6">
+        <div className="border-t border-gray-600/30 pt-8">
           <h3 className="text-lg font-semibold text-red-400 mb-4 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5" />
             Danger Zone

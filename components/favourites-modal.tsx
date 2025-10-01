@@ -138,8 +138,8 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Your Favourite Decks">
-      <div className="space-y-4">
+    <Modal isOpen={isOpen} onClose={onClose} title="Your Favourite Decks" size="large">
+      <div className="space-y-6">
         {!isLoading && favouriteDecks.length > 0 && (
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm text-gray-300">Filter by cards:</span>
@@ -182,17 +182,17 @@ export function FavouritesModal({ isOpen, onClose }: FavouritesModalProps) {
             </p>
           </div>
         ) : (
-          <div className="grid gap-4 max-h-96 overflow-y-auto pr-2">
+          <div className="grid gap-5 max-h-[600px] overflow-y-auto pr-2">
             {filteredDecks.map((deck) => (
               <Card
                 key={deck.id}
                 className="group hover:shadow-lg transition-all duration-200 cursor-pointer bg-gray-800/50 border-gray-600/30 hover:bg-gray-700/50"
                 onClick={() => handleSelectDeck(deck)}
               >
-                <CardContent className="p-4">
+                <CardContent className="p-5">
                   <div className="flex gap-4">
                     {/* Deck Preview */}
-                    <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg p-2 flex-shrink-0">
+                    <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg p-2 flex-shrink-0">
                       <div className="grid grid-cols-2 gap-1 h-full">
                         {deck.images.slice(0, 4).map((image, index) => (
                           <div key={index} className="relative bg-white rounded-sm overflow-hidden">
