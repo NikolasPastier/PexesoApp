@@ -205,9 +205,10 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
     <>
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Button className="bg-primary hover:bg-primary/90 text-white">
-            <Plus className="w-4 h-4 mr-2" />
-            {t("title")}
+          <Button className="bg-primary hover:bg-primary/90 text-white rounded-lg whitespace-nowrap">
+            <Plus className="w-4 h-4 sm:mr-2" />
+            <span className="hidden sm:inline">{t("title")}</span>
+            <span className="sm:hidden">{t("uploadShort")}</span>
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-gray-800/95 border-gray-600/30 backdrop-blur-sm">

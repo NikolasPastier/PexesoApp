@@ -207,8 +207,14 @@ export function DeckGallery() {
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-purple-900/30 rounded-3xl backdrop-blur-sm border border-gray-700/30 shadow-2xl"></div>
         <div className="relative w-full max-w-7xl mx-auto p-4 sm:p-8">
-          <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
-            <h2 className="text-3xl font-bold text-white">{t("title")}</h2>
+          <div className="mb-8">
+            {/* Title and Upload Button Row - Always together on mobile */}
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <h2 className="text-3xl font-bold text-white">{t("title")}</h2>
+              <UploadDeckModal onDeckUploaded={handleDeckUploaded} />
+            </div>
+
+            {/* Sort and Filter Controls */}
             <div className="flex items-center gap-3 flex-wrap">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-300 max-sm:hidden">{t("sortBy")}:</span>
@@ -263,7 +269,6 @@ export function DeckGallery() {
                   </SelectContent>
                 </Select>
               </div>
-              <UploadDeckModal onDeckUploaded={handleDeckUploaded} />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

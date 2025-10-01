@@ -126,6 +126,7 @@
   },
   "uploadDeck": {
     "title": "Upload Your Deck",
+    "uploadShort": "Upload",
     "deckName": "Deck Name",
     "deckNamePlaceholder": "Enter deck name...",
     "description": "Description (optional)",
