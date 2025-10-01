@@ -5,7 +5,7 @@ import "../globals.css"
 import { AuthProvider } from "@/contexts/auth-context"
 import { I18nProvider } from "@/contexts/i18n-context"
 import { NextIntlClientProvider } from "next-intl"
-import { getMessages, unstable_setRequestLocale } from "next-intl/server"
+import { getMessages } from "next-intl/server"
 import { notFound } from "next/navigation"
 import { locales } from "@/lib/i18n/config"
 import { CookieConsent } from "@/components/cookie-consent"
@@ -30,8 +30,6 @@ export default async function LocaleLayout({
   if (!locales.includes(locale as any)) {
     notFound()
   }
-
-  unstable_setRequestLocale(locale)
 
   const messages = await getMessages({ locale })
 

@@ -1,4 +1,4 @@
-# Memory Games
+# Memory Games (Pexeso)
 
 *Automatically synced with your [v0.app](https://v0.app) deployments*
 
@@ -7,8 +7,7 @@
 
 ## Overview
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+A multilingual memory card game (Pexeso) with AI-generated images, user authentication, and subscription plans. Built with Next.js 14, Supabase, and Stripe.
 
 ## Deployment
 
@@ -28,3 +27,25 @@ Continue building your app on:
 2. Deploy your chats from the v0 interface
 3. Changes are automatically pushed to this repository
 4. Vercel deploys the latest version from this repository
+
+## Features
+
+- 🎮 Classic memory card game with multiple difficulty levels
+- 🎨 AI-generated card images using Stability AI
+- 🌍 Multi-language support (English, Czech, Slovak, Spanish, Portuguese, Italian)
+- 👤 User authentication with Supabase (Email, Google, Facebook, Apple)
+- 💳 Subscription plans with Stripe integration
+- 📊 User statistics and leaderboards
+- 🎯 Daily challenges and achievements
+- 📱 Fully responsive design
+
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS v4
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Payments**: Stripe
+- **AI Images**: Stability AI via fal.ai
+- **Internationalization**: next-intl
+- **Deployment**: Vercel

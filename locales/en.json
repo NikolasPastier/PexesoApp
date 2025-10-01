@@ -175,7 +175,8 @@
   "footer": {
     "copyright": "© 2025 Pexeso.app All rights reserved",
     "privacyPolicy": "Privacy Policy",
-    "termsOfUse": "Terms of Use"
+    "termsOfUse": "Terms of Use",
+    "dataDeletion": "Data Deletion"
   },
   "privacy": {
     "title": "Privacy Policy",
@@ -183,6 +184,31 @@
     "paragraph2": "We do not sell or share your personal data with third parties, except as required to provide core functionality (e.g., authentication, storage, hosting).",
     "paragraph3": "All data is stored securely in our database (Supabase) and is only accessible to you and authorized administrators.",
     "paragraph4": "By using this site, you consent to this collection and usage. For questions, please contact support@example.com."
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "close": "Close",
+    "section1Title": "1. Information We Collect",
+    "section1Content": "We collect information you provide directly to us, including your name, email address, profile information, and any content you upload (such as custom deck images). We also collect information about your gameplay activity, preferences, and interactions with our service.",
+    "section2Title": "2. Data Storage",
+    "section2Content": "All user data is stored securely using Supabase, a trusted cloud database provider. Your data is encrypted in transit and at rest. We implement industry-standard security measures to protect your information from unauthorized access, disclosure, alteration, or destruction.",
+    "section3Title": "3. AI-Generated Content",
+    "section3Content": "When you use our AI deck generation feature, your prompts are processed by OpenAI and Stability AI services to generate custom images. These prompts are not stored permanently and are only used to fulfill your generation request. The generated images are stored in our database and associated with your account.",
+    "section4Title": "4. Authentication & Third-Party Login",
+    "section4Content": "We offer authentication through Google, Facebook, and Apple Sign-In. When you use these services, we receive basic profile information (name, email, profile picture) as permitted by your privacy settings with those providers. We do not have access to your passwords for these third-party services.",
+    "section5Title": "5. Cookies & Tracking",
+    "section5Content": "We use cookies and similar tracking technologies to maintain your session, remember your preferences, and analyze site usage. You can control cookie preferences through your browser settings. We may also use cookies for advertising purposes through Google AdSense and other advertising partners.",
+    "section6Title": "6. Advertising",
+    "section6Content": "We display advertisements through Google AdSense and other advertising networks. These services may use cookies and similar technologies to show you relevant ads based on your browsing activity. You can opt out of personalized advertising by visiting your ad settings with these providers.",
+    "section7Title": "7. Data Deletion & Your Rights",
+    "section7Content": "You have the right to access, correct, or delete your personal data at any time. To delete your account and all associated data, go to Account Settings → Delete Account. You can also email us at support@pexeso.app to request data deletion. Upon deletion, all your personal information, uploaded decks, and gameplay history will be permanently removed from our systems within 30 days.",
+    "section8Title": "8. Contact Us",
+    "section8Content": "If you have any questions about this Privacy Policy or our data practices, please contact us at support@pexeso.app. We are committed to addressing your concerns and protecting your privacy."
+  },
+  "dataDeletion": {
+    "title": "User Data Deletion",
+    "close": "Close",
+    "content": "You can delete your account and all personal data at any time. Go to Account Settings → Delete Account to permanently remove your profile, uploaded decks, and gameplay history. All data will be permanently deleted from our systems within 30 days. Alternatively, you can email us at support@pexeso.app to request deletion, and we will process your request promptly."
   },
   "terms": {
     "title": "Terms of Use",
