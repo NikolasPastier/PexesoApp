@@ -11,6 +11,8 @@ import { ChevronDown } from "lucide-react"
 import { DeckSelector } from "./deck-selector"
 import { useTranslations } from "next-intl"
 import { AdBanner } from "@/components/ad-banner"
+import { useAuth } from "@/contexts/auth-context"
+import { createClient } from "@/lib/supabase/client"
 
 interface GameCard {
   id: string
@@ -92,6 +94,8 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
 
   const t = useTranslations("game")
   const tCommon = useTranslations("common")
+
+  const { user } = useAuth()
 
   useEffect(() => {
     const loadDefaultDecks = async () => {
@@ -331,6 +335,43 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
     setGameComplete(true)
     setGameStatus("idle")
     setShowEndModal(true)
+
+    saveScore()
+  }
+
+  const saveScore = async () => {
+    if (!user || moves === 0 || matchedCards.length === 0) {
+      return
+    }
+
+    try {
+      const supabase = createClient()
+
+      const timeTaken =
+        typeof timer === "number" ? timer * 60 - timeLeft : Math.floor((Date.now() - gameStartTime) / 1000)
+
+      const pairsMatched = matchedCards.length / 2
+      const mistakesMade = moves - pairsMatched
+      const timeBonus = typeof timer === "number" ? Math.max(0, timeLeft * 10) : 0
+      const finalScore = Math.floor(pairsMatched * 100 - mistakesMade * 10 + timeBonus)
+
+      const { error } = await supabase.from("scores").insert({
+        user_id: user.id,
+        final_score: finalScore,
+        time_taken: timeTaken,
+        pairs_matched: pairsMatched,
+        mistakes: mistakesMade,
+        game_id: null, // Optional: link to games table if needed
+      })
+
+      if (error) {
+        console.error("Error saving score:", error)
+      } else {
+        console.log("[v0] Score saved successfully")
+      }
+    } catch (error) {
+      console.error("Error saving score:", error)
+    }
   }
 
   const formatTime = (seconds: number) => {
@@ -446,7 +487,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
   }
 
   const getResponsiveGridCols = () => {
-    // This ensures cards stay close together regardless of count
     return "grid-cols-4 sm:grid-cols-6 md:grid-cols-8"
   }
 
@@ -477,7 +517,6 @@ export function GameBoard({ onRestart, onExit, gameConfig }: GameBoardProps) {
       setSelectedDeck(systemDeck)
       setDeckImages(systemDeck.images)
     } else {
-      // Fallback: clear deck selection if no system deck found
       setSelectedDeckId("")
       setSelectedDeck(null)
       setDeckImages([])

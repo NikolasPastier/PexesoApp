@@ -1,0 +1,55 @@
+{
+  "navbar": {
+    "title": "Pexeso",
+    "login": "Přihlásit se",
+    "signup": "Registrovat se",
+    "logout": "Odhlásit se",
+    "favourites": "Oblíbené",
+    "settings": "Nastavení",
+    "menu": "Menu",
+    "language": "Jazyk",
+    "upgradeToPro": "Upgradovat na Pro",
+    "freePlan": "Bezplatný plán",
+    "proPlan": "Pro plán",
+    "dailyGenerations": "{used}/{limit} denních generací",
+    "monthlyGenerations": "{used}/{limit} měsíčních generací",
+    "myDecks": "Moje balíčky",
+    "leaderboard": "Žebříček"
+  },
+  "leaderboard": {
+    "title": "Žebříček",
+    "topScores": "Nejlepší skóre",
+    "fastestTimes": "Nejrychlejší časy",
+    "mostPairs": "Nejvíce párů",
+    "noData": "Zatím nejsou k dispozici žádná data. Zahrajte si nějaké hry, abyste viděli žebříček!",
+    "points": "bodů",
+    "pairs": "párů"
+  },
+  "game": {
+    "player": "Hráč",
+    "bot": "Bot",
+    "solo": "Sólo",
+    "twoPlayers": "2 hráči",
+    "vsBot": "vs Bot",
+    "timer": "Časovač",
+    "unlimited": "Neomezený",
+    "custom": "Vlastní",
+    "moves": "Tahy",
+    "cards": "Karty",
+    "startGame": "Začít hru",
+    "endGame": "Ukončit hru",
+    "matches": "Shody",
+    "time": "Čas",
+    "winner": "Vítěz",
+    "gameOver": "Konec hry",
+    "draw": "Remíza",
+    "finalStats": "Konečné statistiky",
+    "playerStats": "Statistiky hráče",
+    "totalMatches": "{completed}/{total} shod",
+    "totalMoves": "{moves} tahů",
+    "timeUsed": "Čas: {time}"
+  },
+  "common": {
+    "close": "Zavřít"
+  }
+}
