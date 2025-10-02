@@ -196,6 +196,7 @@
     "sortBy": "Řadit podle",
     "filterBy": "Filtrovat podle",
     "cardCount": "Počet karet",
+    "cards": "Karty",
     "recentlyAdded": "Nedávno přidané",
     "mostPopular": "Nejpopulárnější",
     "mostFavorited": "Nejoblíbenější",
@@ -204,57 +205,145 @@
     "leastPlayed": "Nejméně hrané",
     "newestFirst": "Nejnovější první",
     "oldestFirst": "Nejstarší první",
-    "noDecksFound": "Nenalezeny žádné balíčky odpovídající vašim kritériím"
+    "noDecksFound": "Nenalezeny žádné balíčky odpovídající vašim kritériím",
+    "description": "Prozkoumejte balíčky vytvořené komunitou a vyberte si svůj oblíbený.",
+    "uploadDeck": "Nahrát balíček",
+    "preview": "Náhled",
+    "playNow": "Hrát nyní",
+    "playWithDeck": "Hrát s tímto balíčkem",
+    "official": "Oficiální",
+    "anonymous": "Anonymní",
+    "unknownUser": "Neznámý uživatel",
+    "deckSelected": "Vybrán balíček \"{title}\" pro vaši další hru!",
+    "addedToFavorites": "\"{title}\" přidán do oblíbených!",
+    "removedFromFavorites": "\"{title}\" odebrán z oblíbených!",
+    "favoriteError": "Nepodařilo se aktualizovat oblíbené. Zkuste to prosím znovu.",
+    "loadingDecks": "Načítání balíčků...",
+    "noDecks": "Nenalezeny žádné balíčky",
+    "adjustFilters": "Zkuste upravit své filtry",
+    "allCards": "Všechny karty",
+    "createdBy": "Vytvořil",
+    "created": "Vytvořeno",
+    "likes": "Oblíbení",
+    "plays": "Hraní",
+    "showAllDecks": "Zobrazit všechny balíčky",
+    "showMore": "Zobrazit více"
+  },
+  "deckGenerator": {
+    "placeholder": "Generovat vlastní balíčky",
+    "invalidCardCount": "Neplatný počet karet",
+    "invalidCardCountDesc": "Vyberte prosím platnou možnost počtu karet.",
+    "generationSuccess": "Obrázky úspěšně vygenerovány!",
+    "generationSuccessDesc": "Vygenerováno {count} jedinečných obrázků pro váš balíček.",
+    "generationFailed": "Generování selhalo",
+    "generationFailedDesc": "Generování obrázků selhalo. Zkuste to prosím znovu.",
+    "dailyLimitReached": "Denní limit dosažen",
+    "dailyLimitReachedDesc": "Můžete generovat 1 AI balíček denně. Zkuste to znovu za {hours} hodin.",
+    "deckSaved": "Balíček úspěšně uložen!",
+    "deckSavedDesc": "Váš balíček \"{title}\" byl uložen s {count} kartami.",
+    "saveFailed": "Uložení selhalo",
+    "saveFailedDesc": "Nepodařilo se uložit balíček. Zkuste to prosím znovu.",
+    "realistic": "Realistický",
+    "cartoon": "Kreslený",
+    "style": "Styl"
+  },
+  "uploadDeck": {
+    "title": "Nahrajte svůj balíček",
+    "uploadShort": "Nahrát",
+    "deckName": "Název balíčku",
+    "deckNamePlaceholder": "Zadejte název balíčku...",
+    "description": "Popis (volitelné)",
+    "descriptionPlaceholder": "Popište svůj balíček...",
+    "cardCount": "Počet hracích karet",
+    "selectCardCount": "Vyberte počet karet...",
+    "16cards": "16 karet (nahrajte 8 obrázků)",
+    "24cards": "24 karet (nahrajte 12 obrázků)",
+    "32cards": "32 karet (nahrajte 16 obrázků)",
+    "uploadInfo": "Musíte nahrát přesně {count} obrázků pro {total} karet.",
+    "images": "Obrázky",
+    "dragDrop": "Přetáhněte obrázky sem nebo klikněte pro výběr",
+    "acceptedFormats": "Přijímá: JPG, PNG, WebP",
+    "uploadCount": "Nahrajte {count} obrázků pro {total} karet",
+    "selectImages": "Vybrat obrázky",
+    "imagesSelected": "{count} obrázek(ů) vybráno",
+    "imagesRequired": "({required} požadováno)",
+    "cancel": "Zrušit",
+    "saveDeck": "Uložit balíček",
+    "uploading": "Nahrávání...",
+    "deckNameRequired": "Název balíčku je povinný",
+    "selectCardCountFirst": "Nejprve vyberte počet hracích karet",
+    "onlyImages": "Jsou povoleny pouze obrázkové soubory (jpg, png, webp)",
+    "maxImagesExceeded": "Můžete nahrát pouze {max} obrázků pro {total} karet.",
+    "atLeastOneImage": "Je vyžadován alespoň jeden obrázek",
+    "exactImagesRequired": "Potřebujete přesně {required} obrázků pro {total} karet",
+    "uploadSuccess": "Balíček úspěšně nahrán!",
+    "loginRequired": "Pro nahrání balíčků musíte být přihlášeni",
+    "deckCount": "Nahráno balíčků",
+    "freePlan": "Bezplatný plán (max 5 balíčků)",
+    "proPlan": "Pro plán (max 25 balíčků)",
+    "upgradeToPro": "Upgradovat na Pro",
+    "freeLimitReached": "Dosažen limit bezplatného plánu",
+    "freeLimitMessage": "Dosáhli jste maxima 5 balíčků. Upgradujte na Pro pro nahrání až 25 balíčků.",
+    "proLimitReached": "Dosažen limit Pro plánu",
+    "proLimitMessage": "Dosáhli jste maxima 25 balíčků. Smažte balíček pro nahrání nového."
+  },
+  "footer": {
+    "copyright": "© 2025 Pexeso.app Všechna práva vyhrazena",
+    "privacyPolicy": "Zásady ochrany osobních údajů",
+    "termsOfUse": "Podmínky použití",
+    "dataDeletion": "Smazání dat"
+  },
+  "privacy": {
+    "title": "Zásady ochrany osobních údajů",
+    "paragraph1": "Respektujeme vaše soukromí. Tato stránka shromažďuje pouze data nezbytná pro provoz hry Pexeso, jako je ověření uživatele, herní pokrok a nahrané obrázky karet.",
+    "paragraph2": "Neprodáváme ani nesdílíme vaše osobní údaje s třetími stranami, kromě případů nutných pro poskytování základní funkčnosti (např. ověření, úložiště, hosting).",
+    "paragraph3": "Všechna data jsou bezpečně uložena v naší databázi (Supabase) a jsou přístupná pouze vám a oprávněným správcům.",
+    "paragraph4": "Používáním této stránky souhlasíte s tímto shromažďováním a používáním. Pro dotazy nás kontaktujte na support@example.com."
+  },
+  "privacyPolicy": {
+    "title": "Zásady ochrany osobních údajů",
+    "close": "Zavřít",
+    "section1Title": "1. Informace, které shromažďujeme",
+    "section1Content": "Shromažďujeme informace, které nám přímo poskytnete, včetně vašeho jména, e-mailové adresy, informací o profilu a jakéhokoli obsahu, který nahrajete (jako jsou vlastní obrázky balíčků). Shromažďujeme také informace o vaší herní aktivitě, preferencích a interakcích s naší službou.",
+    "section2Title": "2. Ukládání dat",
+    "section2Content": "Všechna uživatelská data jsou bezpečně uložena pomocí Supabase, důvěryhodného poskytovatele cloudové databáze. Vaše data jsou šifrována při přenosu i v klidu. Implementujeme standardní bezpečnostní opatření k ochraně vašich informací před neoprávněným přístupem, zveřejněním, změnou nebo zničením.",
+    "section3Title": "3. Obsah generovaný AI",
+    "section3Content": "Když používáte naši funkci generování AI balíčků, vaše výzvy jsou zpracovány službami OpenAI a Stability AI pro generování vlastních obrázků. Tyto výzvy nejsou trvale uloženy a jsou použity pouze k splnění vaší žádosti o generování. Vygenerované obrázky jsou uloženy v naší databázi a spojeny s vaším účtem.",
+    "section4Title": "4. Ověření a přihlášení třetích stran",
+    "section4Content": "Nabízíme ověření prostřednictvím Google, Facebook a Apple Sign-In. Když používáte tyto služby, obdržíme základní informace o profilu (jméno, e-mail, profilový obrázek) podle vašich nastavení soukromí u těchto poskytovatelů. Nemáme přístup k vašim heslům pro tyto služby třetích stran.",
+    "section5Title": "5. Cookies a sledování",
+    "section5Content": "Používáme cookies a podobné sledovací technologie k udržení vaší relace, zapamatování vašich preferencí a analýze používání stránky. Můžete ovládat preference cookies prostřednictvím nastavení prohlížeče. Můžeme také používat cookies pro reklamní účely prostřednictvím Google AdSense a dalších reklamních partnerů.",
+    "section6Title": "6. Reklama",
+    "section6Content": "Zobrazujeme reklamy prostřednictvím Google AdSense a dalších reklamních sítí. Tyto služby mohou používat cookies a podobné technologie k zobrazení relevantních reklam na základě vaší aktivity při procházení. Můžete se odhlásit z personalizované reklamy návštěvou nastavení reklam u těchto poskytovatelů.",
+    "section7Title": "7. Smazání dat a vaše práva",
+    "section7Content": "Máte právo kdykoli přistupovat, opravovat nebo mazat své osobní údaje. Chcete-li smazat svůj účet a všechna související data, přejděte do Nastavení účtu → Smazat účet. Můžete nám také napsat na support@pexeso.app a požádat o smazání dat. Po smazání budou všechny vaše osobní informace, nahrané balíčky a herní historie trvale odstraněny z našich systémů do 30 dnů.",
+    "section8Title": "8. Kontaktujte nás",
+    "section8Content": "Pokud máte jakékoli otázky ohledně těchto Zásad ochrany osobních údajů nebo našich postupů s daty, kontaktujte nás prosím na support@pexeso.app. Jsme odhodláni řešit vaše obavy a chránit vaše soukromí."
+  },
+  "dataDeletion": {
+    "title": "Smazání uživatelských dat",
+    "close": "Zavřít",
+    "content": "Svůj účet a všechna osobní data můžete kdykoli smazat. Přejděte do Nastavení účtu → Smazat účet pro trvalé odstranění vašeho profilu, nahraných balíčků a herní historie. Všechna data budou trvale smazána z našich systémů do 30 dnů. Alternativně nám můžete napsat na support@pexeso.app a požádat o smazání, vaši žádost zpracujeme okamžitě."
+  },
+  "terms": {
+    "title": "Podmínky použití",
+    "intro": "Přístupem a používáním této stránky souhlasíte s dodržováním těchto podmínek:",
+    "term1": "Můžete hrát hru Pexeso a používat všechny poskytované funkce pro osobní, nekomerční použití.",
+    "term2": "Jste odpovědní za obsah, který nahrajete (např. obrázky karet) a souhlasíte s tím, že nebudete nahrávat škodlivý, urážlivý nebo chráněný materiál bez povolení.",
+    "term3": "Můžeme kdykoli aktualizovat nebo změnit herní funkce bez předchozího upozornění.",
+    "term4": "Nejsme odpovědní za žádné škody způsobené používáním stránky.",
+    "term5": "Tyto podmínky se řídí zákony [Vaše země].",
+    "outro": "Pokud s těmito podmínkami nesouhlasíte, přestaňte prosím stránku používat."
+  },
+  "cookies": {
+    "message": "Používáme cookies k personalizaci obsahu a reklam, poskytování funkcí sociálních médií a analýze našeho provozu. Můžete cookies přijmout nebo odmítnout.",
+    "accept": "Přijmout",
+    "reject": "Odmítnout",
+    "privacyPolicy": "Zásady ochrany osobních údajů"
   },
   "language": {
     "switchLanguage": "Přepnout jazyk",
     "currentLanguage": "Aktuální jazyk"
-  },
-  "home": {
-    "hero": {
-      "title": "Pexeso",
-      "subtitle": "Trénujte svou paměť s klasickou hrou pexeso",
-      "playNow": "Hrát nyní",
-      "browseDeck": "Procházet balíčky"
-    },
-    "features": {
-      "title": "Proč si vybrat naše pexeso?",
-      "subtitle": "Objevte funkce, které dělají naši hru jedinečnou",
-      "multipleDecks": {
-        "title": "Více balíčků",
-        "description": "Vyberte si z různých témat a obtížností"
-      },
-      "aiOpponent": {
-        "title": "AI protivník",
-        "description": "Hrajte proti inteligentnímu botovi"
-      },
-      "progress": {
-        "title": "Sledování pokroku",
-        "description": "Sledujte své výkony a zlepšení"
-      },
-      "multiplayer": {
-        "title": "Hra pro více hráčů",
-        "description": "Hrajte s přáteli online"
-      }
-    },
-    "popularDecks": {
-      "title": "Populární balíčky",
-      "subtitle": "Nejhranější balíčky našimi uživateli",
-      "viewAll": "Zobrazit vše"
-    },
-    "cta": {
-      "title": "Připraveni začít?",
-      "subtitle": "Připojte se k tisícům hráčů a začněte trénovat svou paměť ještě dnes",
-      "getStarted": "Začít zdarma"
-    }
-  },
-  "deckCard": {
-    "cards": "karty",
-    "plays": "hraní",
-    "favorites": "oblíbené",
-    "playNow": "Hrát nyní",
-    "addToFavorites": "Přidat do oblíbených",
-    "removeFromFavorites": "Odebrat z oblíbených"
   },
   "favouritesModal": {
     "title": "Vaše oblíbené balíčky",

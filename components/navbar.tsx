@@ -207,10 +207,10 @@ export function Navbar() {
                           <DropdownMenuSeparator className="bg-gray-600/30" />
 
                           <DropdownMenuItem
-                            className="cursor-pointer text-red-400 hover:bg-gray-700/50 hover:text-red-400 focus:bg-gray-700/50 focus:text-red-400"
+                            className="cursor-pointer text-red-500 hover:bg-red-50 hover:text-red-500 focus:bg-red-50 focus:text-red-500"
                             onClick={signOut}
                           >
-                            <LogOut className="mr-2 h-4 w-4 text-red-400" />
+                            <LogOut className="mr-2 h-4 w-4 text-red-500" />
                             {t("logout")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -351,10 +351,10 @@ export function Navbar() {
 
                               <Button
                                 variant="ghost"
-                                className="justify-start text-red-400 hover:text-red-400 hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
+                                className="justify-start text-red-500 hover:text-red-500 hover:bg-red-50 rounded-lg px-4 py-3 h-auto"
                                 onClick={handleSignOut}
                               >
-                                <LogOut className="mr-3 h-5 w-5 text-red-400" />
+                                <LogOut className="mr-3 h-5 w-5 text-red-500" />
                                 <span className="text-base">{t("logout")}</span>
                               </Button>
                             </>

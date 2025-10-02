@@ -25,7 +25,15 @@
     "signup": "Registrovať sa",
     "logout": "Odhlásiť sa",
     "favourites": "Obľúbené",
-    "settings": "Nastavenia"
+    "settings": "Nastavenia",
+    "freePlan": "Bezplatný plán",
+    "proPlan": "Pro plán",
+    "dailyGenerations": "Denne: {used}/{limit} generovaní",
+    "monthlyGenerations": "Mesačne: {used}/{limit} generovaní",
+    "upgradeToPro": "Upgradovať na Pro",
+    "myDecks": "Moje balíčky",
+    "menu": "Menu",
+    "language": "Jazyk"
   },
   "auth": {
     "login": "Prihlásiť sa",
@@ -167,7 +175,19 @@
     "difficulty": "Obtiažnosť",
     "easy": "Ľahká",
     "medium": "Stredná",
-    "hard": "Ťažká"
+    "hard": "Ťažká",
+    "solo": "Sólo",
+    "twoPlayers": "2 hráči",
+    "vsBot": "vs Bot",
+    "endGame": "Ukončiť hru",
+    "draw": "Remíza!",
+    "finalStats": "Konečné štatistiky:",
+    "playerStats": "Štatistiky hráčov:",
+    "totalMatches": "Celkom párov: {completed}/{total}",
+    "totalMoves": "Celkom ťahov: {moves}",
+    "timeUsed": "Použitý čas: {time}",
+    "unlimited": "Neobmedzené",
+    "custom": "Vlastné"
   },
   "deckGallery": {
     "title": "Galéria balíčkov",
@@ -176,6 +196,7 @@
     "sortBy": "Zoradiť podľa",
     "filterBy": "Filtrovať podľa",
     "cardCount": "Počet kariet",
+    "cards": "Karty",
     "recentlyAdded": "Nedávno pridané",
     "mostPopular": "Najpopulárnejšie",
     "mostFavorited": "Najobľúbenejšie",
@@ -184,56 +205,171 @@
     "leastPlayed": "Najmenej hrané",
     "newestFirst": "Najnovšie prvé",
     "oldestFirst": "Najstaršie prvé",
-    "noDecksFound": "Nenašli sa žiadne balíčky zodpovedajúce vašim kritériám"
+    "noDecksFound": "Nenašli sa žiadne balíčky zodpovedajúce vašim kritériám",
+    "description": "Preskúmajte balíčky vytvorené komunitou a vyberte si svoj obľúbený.",
+    "uploadDeck": "Nahrať balíček",
+    "preview": "Náhľad",
+    "playNow": "Hrať teraz",
+    "playWithDeck": "Hrať s týmto balíčkom",
+    "official": "Oficiálny",
+    "anonymous": "Anonymný",
+    "unknownUser": "Neznámy používateľ",
+    "deckSelected": "Vybraný balíček \"{title}\" pre vašu ďalšiu hru!",
+    "addedToFavorites": "\"{title}\" pridaný do obľúbených!",
+    "removedFromFavorites": "\"{title}\" odstránený z obľúbených!",
+    "favoriteError": "Nepodarilo sa aktualizovať obľúbené. Skúste to prosím znova.",
+    "loadingDecks": "Načítavanie balíčkov...",
+    "noDecks": "Nenašli sa žiadne balíčky",
+    "adjustFilters": "Skúste upraviť svoje filtre",
+    "allCards": "Všetky karty",
+    "createdBy": "Vytvoril",
+    "created": "Vytvorené",
+    "likes": "Obľúbení",
+    "plays": "Hrania",
+    "showAllDecks": "Zobraziť všetky balíčky",
+    "showMore": "Zobraziť viac"
+  },
+  "deckGenerator": {
+    "placeholder": "Generovať vlastné balíčky",
+    "invalidCardCount": "Neplatný počet kariet",
+    "invalidCardCountDesc": "Vyberte prosím platnú možnosť počtu kariet.",
+    "generationSuccess": "Obrázky úspešne vygenerované!",
+    "generationSuccessDesc": "Vygenerovaných {count} jedinečných obrázkov pre váš balíček.",
+    "generationFailed": "Generovanie zlyhalo",
+    "generationFailedDesc": "Generovanie obrázkov zlyhalo. Skúste to prosím znova.",
+    "dailyLimitReached": "Denný limit dosiahnutý",
+    "dailyLimitReachedDesc": "Môžete generovať 1 AI balíček denne. Skúste to znova za {hours} hodín.",
+    "deckSaved": "Balíček úspešne uložený!",
+    "deckSavedDesc": "Váš balíček \"{title}\" bol uložený s {count} kartami.",
+    "saveFailed": "Uloženie zlyhalo",
+    "saveFailedDesc": "Nepodarilo sa uložiť balíček. Skúste to prosím znova.",
+    "realistic": "Realistický",
+    "cartoon": "Kreslený",
+    "style": "Štýl"
+  },
+  "uploadDeck": {
+    "title": "Nahrajte svoj balíček",
+    "uploadShort": "Nahrať",
+    "deckName": "Názov balíčka",
+    "deckNamePlaceholder": "Zadajte názov balíčka...",
+    "description": "Popis (voliteľné)",
+    "descriptionPlaceholder": "Popíšte svoj balíček...",
+    "cardCount": "Počet hracích kariet",
+    "selectCardCount": "Vyberte počet kariet...",
+    "16cards": "16 kariet (nahrajte 8 obrázkov)",
+    "24cards": "24 kariet (nahrajte 12 obrázkov)",
+    "32cards": "32 kariet (nahrajte 16 obrázkov)",
+    "uploadInfo": "Musíte nahrať presne {count} obrázkov pre {total} kariet.",
+    "images": "Obrázky",
+    "dragDrop": "Pretiahnite obrázky sem alebo kliknite pre výber",
+    "acceptedFormats": "Prijíma: JPG, PNG, WebP",
+    "uploadCount": "Nahrajte {count} obrázkov pre {total} kariet",
+    "selectImages": "Vybrať obrázky",
+    "imagesSelected": "{count} obrázok(ov) vybraných",
+    "imagesRequired": "({required} požadované)",
+    "cancel": "Zrušiť",
+    "saveDeck": "Uložiť balíček",
+    "uploading": "Nahrávanie...",
+    "deckNameRequired": "Názov balíčka je povinný",
+    "selectCardCountFirst": "Najprv vyberte počet hracích kariet",
+    "onlyImages": "Sú povolené iba obrázkové súbory (jpg, png, webp)",
+    "maxImagesExceeded": "Môžete nahrať iba {max} obrázkov pre {total} kariet.",
+    "atLeastOneImage": "Je vyžadovaný aspoň jeden obrázok",
+    "exactImagesRequired": "Potrebujete presne {required} obrázkov pre {total} kariet",
+    "uploadSuccess": "Balíček úspešne nahraný!",
+    "loginRequired": "Pre nahranie balíčkov musíte byť prihlásení",
+    "deckCount": "Nahraných balíčkov",
+    "freePlan": "Bezplatný plán (max 5 balíčkov)",
+    "proPlan": "Pro plán (max 25 balíčkov)",
+    "upgradeToPro": "Upgradovať na Pro",
+    "freeLimitReached": "Dosiahnutý limit bezplatného plánu",
+    "freeLimitMessage": "Dosiahli ste maximum 5 balíčkov. Upgradujte na Pro pre nahranie až 25 balíčkov.",
+    "proLimitReached": "Dosiahnutý limit Pro plánu",
+    "proLimitMessage": "Dosiahli ste maximum 25 balíčkov. Zmažte balíček pre nahranie nového."
+  },
+  "footer": {
+    "copyright": "© 2025 Pexeso.app Všetky práva vyhradené",
+    "privacyPolicy": "Zásady ochrany osobných údajov",
+    "termsOfUse": "Podmienky použitia",
+    "dataDeletion": "Zmazanie údajov"
+  },
+  "privacy": {
+    "title": "Zásady ochrany osobných údajov",
+    "paragraph1": "Rešpektujeme vaše súkromie. Táto stránka zhromažďuje iba údaje potrebné na prevádzku hry Pexeso, ako je overenie používateľa, herný pokrok a nahrané obrázky kariet.",
+    "paragraph2": "Nepredávame ani nezdieľame vaše osobné údaje s tretími stranami, okrem prípadov potrebných na poskytovanie základnej funkčnosti (napr. overenie, úložisko, hosting).",
+    "paragraph3": "Všetky údaje sú bezpečne uložené v našej databáze (Supabase) a sú prístupné iba vám a oprávneným správcom.",
+    "paragraph4": "Používaním tejto stránky súhlasíte s týmto zhromažďovaním a používaním. Pre otázky nás kontaktujte na support@example.com."
+  },
+  "privacyPolicy": {
+    "title": "Zásady ochrany osobných údajov",
+    "close": "Zavrieť",
+    "section1Title": "1. Informácie, ktoré zhromažďujeme",
+    "section1Content": "Zhromažďujeme informácie, ktoré nám priamo poskytnete, vrátane vášho mena, e-mailovej adresy, informácií o profile a akéhokoľvek obsahu, ktorý nahráte (ako sú vlastné obrázky balíčkov). Zhromažďujeme tiež informácie o vašej hernej aktivite, preferenciách a interakciách s našou službou.",
+    "section2Title": "2. Ukladanie údajov",
+    "section2Content": "Všetky používateľské údaje sú bezpečne uložené pomocou Supabase, dôveryhodného poskytovateľa cloudovej databázy. Vaše údaje sú šifrované pri prenose aj v pokoji. Implementujeme štandardné bezpečnostné opatrenia na ochranu vašich informácií pred neoprávneným prístupom, zverejnením, zmenou alebo zničením.",
+    "section3Title": "3. Obsah generovaný AI",
+    "section3Content": "Keď používate našu funkciu generovania AI balíčkov, vaše výzvy sú spracované službami OpenAI a Stability AI na generovanie vlastných obrázkov. Tieto výzvy nie sú trvalo uložené a sú použité iba na splnenie vašej žiadosti o generovanie. Vygenerované obrázky sú uložené v našej databáze a spojené s vaším účtom.",
+    "section4Title": "4. Overenie a prihlásenie tretích strán",
+    "section4Content": "Ponúkame overenie prostredníctvom Google, Facebook a Apple Sign-In. Keď používate tieto služby, obdržíme základné informácie o profile (meno, e-mail, profilový obrázok) podľa vašich nastavení súkromia u týchto poskytovateľov. Nemáme prístup k vašim heslám pre tieto služby tretích strán.",
+    "section5Title": "5. Cookies a sledovanie",
+    "section5Content": "Používame cookies a podobné sledovacie technológie na udržanie vašej relácie, zapamätanie vašich preferencií a analýzu používania stránky. Môžete ovládať preferencie cookies prostredníctvom nastavení prehliadača. Môžeme tiež používať cookies na reklamné účely prostredníctvom Google AdSense a ďalších reklamných partnerov.",
+    "section6Title": "6. Reklama",
+    "section6Content": "Zobrazujeme reklamy prostredníctvom Google AdSense a ďalších reklamných sietí. Tieto služby môžu používať cookies a podobné technológie na zobrazenie relevantných reklám na základe vašej aktivity pri prehliadaní. Môžete sa odhlásiť z personalizovanej reklamy návštevou nastavení reklám u týchto poskytovateľov.",
+    "section7Title": "7. Zmazanie údajov a vaše práva",
+    "section7Content": "Máte právo kedykoľvek pristupovať, opravovať alebo mazať svoje osobné údaje. Ak chcete zmazať svoj účet a všetky súvisiace údaje, prejdite do Nastavenia účtu → Zmazať účet. Môžete nám tiež napísať na support@pexeso.app a požiadať o zmazanie údajov. Po zmazaní budú všetky vaše osobné informácie, nahrané balíčky a herná história trvalo odstránené z našich systémov do 30 dní.",
+    "section8Title": "8. Kontaktujte nás",
+    "section8Content": "Ak máte akékoľvek otázky ohľadom týchto Zásad ochrany osobných údajov alebo našich postupov s údajmi, kontaktujte nás prosím na support@pexeso.app. Sme odhodlaní riešiť vaše obavy a chrániť vaše súkromie."
+  },
+  "dataDeletion": {
+    "title": "Zmazanie používateľských údajov",
+    "close": "Zavrieť",
+    "content": "Svoj účet a všetky osobné údaje môžete kedykoľvek zmazať. Prejdite do Nastavenia účtu → Zmazať účet pre trvalé odstránenie vášho profilu, nahraných balíčkov a hernej histórie. Všetky údaje budú trvalo zmazané z našich systémov do 30 dní. Alternatívne nám môžete napísať na support@pexeso.app a požiadať o zmazanie, vašu žiadosť spracujeme okamžite."
+  },
+  "terms": {
+    "title": "Podmienky použitia",
+    "intro": "Prístupom a používaním tejto stránky súhlasíte s dodržiavaním týchto podmienok:",
+    "term1": "Môžete hrať hru Pexeso a používať všetky poskytované funkcie pre osobné, nekomerčné použitie.",
+    "term2": "Ste zodpovední za obsah, ktorý nahráte (napr. obrázky kariet) a súhlasíte s tým, že nebudete nahrávať škodlivý, urážlivý alebo chránený materiál bez povolenia.",
+    "term3": "Môžeme kedykoľvek aktualizovať alebo zmeniť herné funkcie bez predchádzajúceho upozornenia.",
+    "term4": "Nie sme zodpovední za žiadne škody spôsobené používaním stránky.",
+    "term5": "Tieto podmienky sa riadia zákonmi [Vaša krajina].",
+    "outro": "Ak s týmito podmienkami nesúhlasíte, prestaňte prosím stránku používať."
+  },
+  "cookies": {
+    "message": "Používame cookies na personalizáciu obsahu a reklám, poskytovanie funkcií sociálnych médií a analýzu nášho prenosu. Môžete cookies prijať alebo odmietnuť.",
+    "accept": "Prijať",
+    "reject": "Odmietnuť",
+    "privacyPolicy": "Zásady ochrany osobných údajov"
   },
   "language": {
     "switchLanguage": "Prepnúť jazyk",
     "currentLanguage": "Aktuálny jazyk"
   },
-  "home": {
-    "hero": {
-      "title": "Pexeso",
-      "subtitle": "Trénujte svoju pamäť s klasickou hrou pexeso",
-      "playNow": "Hrať teraz",
-      "browseDeck": "Prehliadať balíčky"
-    },
-    "features": {
-      "title": "Prečo si vybrať naše pexeso?",
-      "subtitle": "Objavte funkcie, ktoré robia našu hru jedinečnou",
-      "multipleDecks": {
-        "title": "Viacero balíčkov",
-        "description": "Vyberte si z rôznych tém a obtiažností"
-      },
-      "aiOpponent": {
-        "title": "AI protivník",
-        "description": "Hrajte proti inteligentnému botovi"
-      },
-      "progress": {
-        "title": "Sledovanie pokroku",
-        "description": "Sledujte svoje výkony a zlepšenia"
-      },
-      "multiplayer": {
-        "title": "Hra pre viacerých hráčov",
-        "description": "Hrajte s priateľmi online"
-      }
-    },
-    "popularDecks": {
-      "title": "Populárne balíčky",
-      "subtitle": "Najhranejšie balíčky našimi používateľmi",
-      "viewAll": "Zobraziť všetko"
-    },
-    "cta": {
-      "title": "Pripravení začať?",
-      "subtitle": "Pripojte sa k tisíckam hráčov a začnite trénovať svoju pamäť ešte dnes",
-      "getStarted": "Začať zadarmo"
-    }
-  },
-  "deckCard": {
-    "cards": "karty",
-    "plays": "hrania",
-    "favorites": "obľúbené",
+  "favouritesModal": {
+    "title": "Vaše obľúbené balíčky",
+    "filterLabel": "Filtrovať podľa kariet:",
+    "all": "Všetko",
+    "cards": "{count} kariet",
+    "noFavourites": "Zatiaľ žiadne obľúbené balíčky",
+    "noFavouritesDesc": "Prehliadajte galériu balíčkov a označte si balíčky, ktoré máte radi!",
+    "noMatchingCards": "Žiadne obľúbené balíčky s {count} kartami",
+    "noMatchingCardsDesc": "Skúste vybrať iný počet kariet alebo prehliadajte galériu pre viac balíčkov!",
+    "selectedDeck": "Vybraný balíček \"{title}\" pre vašu ďalšiu hru!",
+    "removedFromFavourites": "Odstránený \"{title}\" z obľúbených!",
+    "failedToRemove": "Nepodarilo sa odobrať obľúbený. Skúste to prosím znova.",
     "playNow": "Hrať teraz",
-    "addToFavorites": "Pridať do obľúbených",
-    "removeFromFavorites": "Odstrániť z obľúbených"
+    "official": "Oficiálny",
+    "imageAlt": "{deckName} karta {index}"
+  },
+  "deckSelector": {
+    "deckStyle": "Štýl balíčka",
+    "loading": "Načítavanie...",
+    "favorites": "Obľúbené",
+    "noFavoritedDecks": "Žiadne obľúbené balíčky s {count} kartami",
+    "loginToSaveFavorites": "Prihláste sa pre uloženie a hranie s obľúbenými balíčkami",
+    "otherCardCounts": "Iné počty kariet",
+    "noDecksAvailable": "Žiadne balíčky dostupné pre {count} kariet",
+    "myPrefix": "Môj: ",
+    "privateSuffix": " (Súkromný)"
   }
 }
