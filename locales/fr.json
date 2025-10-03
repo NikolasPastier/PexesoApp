@@ -378,5 +378,12 @@
     "decksUploaded": "Jeux téléchargés",
     "upgradeToPro": "Passer à Pro",
     "close": "Fermer"
+  },
+  "generationLimit": {
+    "title": "Limite quotidienne de génération atteinte",
+    "description": "Vous avez atteint la limite quotidienne gratuite de génération d'IA. Passez à Pro pour continuer à créer de nouveaux jeux.",
+    "generationsUsed": "Vous avez utilisé {used} de {limit} générations quotidiennes.",
+    "upgradeButton": "Passer à Pro pour plus de générations",
+    "closeButton": "Peut-être plus tard"
   }
 }

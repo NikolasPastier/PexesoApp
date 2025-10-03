@@ -367,5 +367,12 @@
     "decksUploaded": "Mazzi caricati",
     "upgradeToPro": "Passa a Pro",
     "close": "Chiudi"
+  },
+  "generationLimit": {
+    "title": "Limite di generazione giornaliero raggiunto",
+    "description": "Hai raggiunto il limite di generazione AI gratuita per oggi. Passa a Pro per continuare a creare nuovi mazzi.",
+    "generationsUsed": "Hai utilizzato {used} di {limit} generazioni giornaliere.",
+    "upgradeButton": "Passa a Pro per più generazioni",
+    "closeButton": "Forse più tardi"
   }
 }

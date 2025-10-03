@@ -322,5 +322,12 @@
     "decksUploaded": "Baralhos enviados",
     "upgradeToPro": "Atualizar para Pro",
     "close": "Fechar"
+  },
+  "generationLimit": {
+    "title": "Daily generation limit reached",
+    "description": "You've hit today's free AI generation limit. Upgrade to keep creating new decks.",
+    "generationsUsed": "You've used {used} of {limit} daily generations.",
+    "upgradeButton": "Upgrade for more generations",
+    "closeButton": "Maybe later"
   }
 }

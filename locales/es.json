@@ -339,5 +339,12 @@
     "decksUploaded": "Mazos subidos",
     "upgradeToPro": "Actualizar a Pro",
     "close": "Cerrar"
+  },
+  "generationLimit": {
+    "title": "Límite de generación diaria alcanzado",
+    "description": "Has alcanzado el límite de generación gratuita de hoy. Actualiza a Pro para seguir creando nuevos mazos.",
+    "generationsUsed": "Has usado {used} de {limit} generaciones diarias.",
+    "upgradeButton": "Actualizar para más generaciones",
+    "closeButton": "Quizás más tarde"
   }
 }

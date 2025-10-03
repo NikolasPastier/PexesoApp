@@ -378,5 +378,12 @@
     "decksUploaded": "Hochgeladene Decks",
     "upgradeToPro": "Auf Pro upgraden",
     "close": "Schließen"
+  },
+  "generationLimit": {
+    "title": "Täglicher Generierungs-Limit erreicht",
+    "description": "Sie haben das tägliche Limit für die kostenlose KI-Generierung erreicht. Upgrade auf Pro, um mehr Decks zu erstellen.",
+    "generationsUsed": "Sie haben {used} von {limit} täglichen Generierungen verwendet.",
+    "upgradeButton": "Upgrade für mehr Generierungen",
+    "closeButton": "Später"
   }
 }

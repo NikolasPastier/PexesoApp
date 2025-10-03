@@ -378,5 +378,12 @@
     "decksUploaded": "Nahráno balíčků",
     "upgradeToPro": "Upgradovat na Pro",
     "close": "Zavřít"
+  },
+  "generationLimit": {
+    "title": "Denní limit generování dosažen",
+    "description": "Dostáhli jste svůj denní limit bezplatného generování AI balíčků. Upgradujte na Pro pro odemknutí neomezeného generování.",
+    "generationsUsed": "Použili jste {used} z {limit} denních generací.",
+    "upgradeButton": "Upgradovat na Pro",
+    "closeButton": "Zavřít"
   }
 }

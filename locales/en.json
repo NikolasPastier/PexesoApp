@@ -378,5 +378,12 @@
     "decksUploaded": "Decks uploaded",
     "upgradeToPro": "Upgrade to Pro",
     "close": "Close"
+  },
+  "generationLimit": {
+    "title": "Daily generation limit reached",
+    "description": "You've hit today's free AI generation limit. Upgrade to keep creating new decks.",
+    "generationsUsed": "You've used {used} of {limit} daily generations.",
+    "upgradeButton": "Upgrade for more generations",
+    "closeButton": "Maybe later"
   }
 }
