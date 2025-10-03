@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { LogOut, Heart, Settings, ChevronDown, Menu, Sparkles, Crown, FolderOpen, Trophy } from "lucide-react"
+import { LogOut, Heart, Settings, ChevronDown, Menu, Sparkles, Crown, FolderOpen } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +22,6 @@ import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { UpgradeModal } from "@/components/upgrade-modal"
 import { MyDecksModal } from "@/components/my-decks-modal"
-import { LeaderboardModal } from "@/components/leaderboard-modal"
 
 export function Navbar() {
   const { user, loading, signOut } = useAuth()
@@ -33,7 +32,6 @@ export function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [showMyDecksModal, setShowMyDecksModal] = useState(false)
-  const [showLeaderboardModal, setShowLeaderboardModal] = useState(false)
   const [userPlan, setUserPlan] = useState<{
     plan: "free" | "pro"
     monthlyGenerationsUsed: number
@@ -96,11 +94,6 @@ export function Navbar() {
     setShowMobileMenu(false)
   }
 
-  const handleShowLeaderboard = () => {
-    setShowLeaderboardModal(true)
-    setShowMobileMenu(false)
-  }
-
   const getUserDisplayName = () => {
     if (user?.user_metadata?.username) return user.user_metadata.username
     if (user?.user_metadata?.full_name) return user.user_metadata.full_name
@@ -126,15 +119,6 @@ export function Navbar() {
 
               <div className="hidden md:flex items-center space-x-2">
                 <LanguageSwitcher />
-
-                <Button
-                  variant="ghost"
-                  onClick={handleShowLeaderboard}
-                  className="text-white hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-600/30 rounded-lg px-3 py-2 h-10 transition-all duration-200"
-                >
-                  <Trophy className="h-4 w-4 mr-2" />
-                  {t("leaderboard")}
-                </Button>
 
                 {!loading && (
                   <>
@@ -280,17 +264,6 @@ export function Navbar() {
 
                       <div className="h-px bg-gray-700/50" />
 
-                      <Button
-                        variant="ghost"
-                        className="justify-start text-white hover:text-white hover:bg-gray-700/50 rounded-lg px-4 py-3 h-auto"
-                        onClick={handleShowLeaderboard}
-                      >
-                        <Trophy className="mr-3 h-5 w-5" />
-                        <span className="text-base">{t("leaderboard")}</span>
-                      </Button>
-
-                      <div className="h-px bg-gray-700/50" />
-
                       {!loading && (
                         <>
                           {user ? (
@@ -419,7 +392,6 @@ export function Navbar() {
       <FavouritesModal isOpen={showFavouritesModal} onClose={() => setShowFavouritesModal(false)} />
       <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
       <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
-      <LeaderboardModal isOpen={showLeaderboardModal} onClose={() => setShowLeaderboardModal(false)} />
     </>
   )
 }

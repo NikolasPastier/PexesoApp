@@ -13,17 +13,7 @@
     "proPlan": "Pro Plan",
     "dailyGenerations": "{used}/{limit} daily generations",
     "monthlyGenerations": "{used}/{limit} monthly generations",
-    "myDecks": "My Decks",
-    "leaderboard": "Leaderboard"
-  },
-  "leaderboard": {
-    "title": "Leaderboard",
-    "topScores": "Top Scores",
-    "fastestTimes": "Fastest Times",
-    "mostPairs": "Most Pairs",
-    "noData": "No data available yet. Play some games to see the leaderboard!",
-    "points": "pts",
-    "pairs": "pairs"
+    "myDecks": "My Decks"
   },
   "game": {
     "player": "Player",

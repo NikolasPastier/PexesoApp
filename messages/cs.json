@@ -13,17 +13,7 @@
     "proPlan": "Pro plán",
     "dailyGenerations": "{used}/{limit} denních generací",
     "monthlyGenerations": "{used}/{limit} měsíčních generací",
-    "myDecks": "Moje balíčky",
-    "leaderboard": "Žebříček"
-  },
-  "leaderboard": {
-    "title": "Žebříček",
-    "topScores": "Nejlepší skóre",
-    "fastestTimes": "Nejrychlejší časy",
-    "mostPairs": "Nejvíce párů",
-    "noData": "Zatím nejsou k dispozici žádná data. Zahrajte si nějaké hry, abyste viděli žebříček!",
-    "points": "bodů",
-    "pairs": "párů"
+    "myDecks": "Moje balíčky"
   },
   "game": {
     "player": "Hráč",
