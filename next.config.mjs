@@ -12,6 +12,18 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'fal.media',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fal.run',
+        pathname: '/**',
+      },
+    ],
   },
 }
 

@@ -315,5 +315,12 @@
     "noDecksAvailable": "Nenhum baralho disponível para {count} cartas",
     "myPrefix": "Meu: ",
     "privateSuffix": " (Privado)"
+  },
+  "deckUploadLimit": {
+    "title": "Limite de envio atingido",
+    "description": "Você enviou o número máximo de baralhos gratuitos para a galeria. Atualize para Pro para desbloquear envios de baralhos personalizados ilimitados.",
+    "decksUploaded": "Baralhos enviados",
+    "upgradeToPro": "Atualizar para Pro",
+    "close": "Fechar"
   }
 }

@@ -371,5 +371,12 @@
     "noDecksAvailable": "No decks available for {count} cards",
     "myPrefix": "My: ",
     "privateSuffix": " (Private)"
+  },
+  "deckUploadLimit": {
+    "title": "Upload limit reached",
+    "description": "You've uploaded the maximum number of free decks to the gallery. Upgrade to Pro to unlock unlimited custom deck uploads.",
+    "decksUploaded": "Decks uploaded",
+    "upgradeToPro": "Upgrade to Pro",
+    "close": "Close"
   }
 }

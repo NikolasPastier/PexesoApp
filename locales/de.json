@@ -371,5 +371,12 @@
     "noDecksAvailable": "Keine Decks verfügbar für {count} Karten",
     "myPrefix": "Mein: ",
     "privateSuffix": " (Privat)"
+  },
+  "deckUploadLimit": {
+    "title": "Upload-Limit erreicht",
+    "description": "Sie haben die maximale Anzahl kostenloser Decks in die Galerie hochgeladen. Upgraden Sie auf Pro, um unbegrenzte benutzerdefinierte Deck-Uploads freizuschalten.",
+    "decksUploaded": "Hochgeladene Decks",
+    "upgradeToPro": "Auf Pro upgraden",
+    "close": "Schließen"
   }
 }

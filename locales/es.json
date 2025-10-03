@@ -332,5 +332,12 @@
     "noDecksAvailable": "No hay mazos disponibles para {count} cartas",
     "myPrefix": "Mi: ",
     "privateSuffix": " (Privado)"
+  },
+  "deckUploadLimit": {
+    "title": "Límite de carga alcanzado",
+    "description": "Has subido el número máximo de mazos gratuitos a la galería. Actualiza a Pro para desbloquear cargas de mazos personalizados ilimitadas.",
+    "decksUploaded": "Mazos subidos",
+    "upgradeToPro": "Actualizar a Pro",
+    "close": "Cerrar"
   }
 }

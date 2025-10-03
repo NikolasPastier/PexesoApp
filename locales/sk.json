@@ -371,5 +371,12 @@
     "noDecksAvailable": "Žiadne balíčky dostupné pre {count} kariet",
     "myPrefix": "Môj: ",
     "privateSuffix": " (Súkromný)"
+  },
+  "deckUploadLimit": {
+    "title": "Dosiahnutý limit nahrávania",
+    "description": "Nahrali ste maximálny počet bezplatných balíčkov do galérie. Upgradujte na Pro pre odomknutie neobmedzených vlastných balíčkov.",
+    "decksUploaded": "Nahraných balíčkov",
+    "upgradeToPro": "Upgradovať na Pro",
+    "close": "Zavrieť"
   }
 }

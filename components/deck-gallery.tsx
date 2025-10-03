@@ -290,8 +290,8 @@ export function DeckGallery() {
                         ))}
                       </div>
                     </div>
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
+                    <div className="absolute inset-0 bg-black/20 hover:bg-black/40 transition-colors duration-300 flex items-center justify-center z-10">
+                      <div className="flex flex-col xs:flex-row gap-2 px-2">
                         <Dialog open={showPreviewModal} onOpenChange={setShowPreviewModal}>
                           <DialogTrigger asChild>
                             <Button
@@ -301,7 +301,7 @@ export function DeckGallery() {
                                 setSelectedDeck(deck)
                                 setShowPreviewModal(true)
                               }}
-                              className="bg-gray-700/80 hover:bg-gray-600/80 text-white border-gray-500/50"
+                              className="bg-gray-700/90 hover:bg-gray-600/90 text-white border-gray-500/50 text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 shadow-lg"
                             >
                               <EyeIcon />
                               <span className="ml-1">{t("preview")}</span>
@@ -395,7 +395,7 @@ export function DeckGallery() {
                         <Button
                           size="sm"
                           onClick={() => handleSelectDeckInline(deck)}
-                          className="bg-primary hover:bg-primary/90"
+                          className="bg-primary/90 hover:bg-primary text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 shadow-lg"
                         >
                           {t("playNow")}
                         </Button>

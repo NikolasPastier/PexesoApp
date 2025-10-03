@@ -14,6 +14,8 @@ import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/contexts/auth-context"
 import { AuthModal } from "@/components/auth-modal"
+import { DeckUploadLimitModal } from "@/components/deck-upload-limit-modal"
+import { UpgradeModal } from "@/components/upgrade-modal"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
 
@@ -36,6 +38,8 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [showUploadLimitModal, setShowUploadLimitModal] = useState(false)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const { user } = useAuth()
   const [deckCount, setDeckCount] = useState<number>(0)
   const [userPlan, setUserPlan] = useState<"free" | "pro">("free")
@@ -46,6 +50,12 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
       setShowAuthModal(true)
       return
     }
+
+    if (open && user && hasReachedLimit && userPlan === "free") {
+      setShowUploadLimitModal(true)
+      return
+    }
+
     setIsOpen(open)
   }
 
@@ -415,6 +425,19 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
       </Dialog>
 
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} defaultTab="signup" />
+
+      <DeckUploadLimitModal
+        isOpen={showUploadLimitModal}
+        onClose={() => setShowUploadLimitModal(false)}
+        onUpgrade={() => {
+          setShowUploadLimitModal(false)
+          setShowUpgradeModal(true)
+        }}
+        decksUploaded={deckCount}
+        deckLimit={deckLimit}
+      />
+
+      <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
     </>
   )
 }

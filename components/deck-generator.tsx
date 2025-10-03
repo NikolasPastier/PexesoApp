@@ -9,6 +9,8 @@ import { useToast } from "@/hooks/use-toast"
 import { GeneratedImagesModal } from "@/components/generated-images-modal"
 import { useAuth } from "@/contexts/auth-context"
 import { AuthModal } from "@/components/auth-modal"
+import { GenerationLimitModal } from "@/components/generation-limit-modal"
+import { UpgradeModal } from "@/components/upgrade-modal"
 import { useTranslations } from "next-intl"
 
 interface GeneratedImage {
@@ -27,6 +29,9 @@ export function DeckGenerator() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [pendingAction, setPendingAction] = useState<"generate" | null>(null)
+  const [showGenerationLimitModal, setShowGenerationLimitModal] = useState(false)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [limitInfo, setLimitInfo] = useState<{ used: number; limit: number }>({ used: 0, limit: 1 })
   const { toast } = useToast()
   const { user } = useAuth()
 
@@ -77,11 +82,19 @@ export function DeckGenerator() {
 
       if (response.status === 429) {
         const data = await response.json()
-        toast({
-          title: t("dailyLimitReached"),
-          description: t("dailyLimitReachedDesc", { hours: data.hoursRemaining || 24 }),
-          variant: "destructive",
-        })
+
+        if (data.upgradeAvailable) {
+          // Free user hit daily limit - show upgrade modal
+          setLimitInfo({ used: 1, limit: 1 })
+          setShowGenerationLimitModal(true)
+        } else {
+          // Pro user hit monthly limit - show toast
+          toast({
+            title: t("dailyLimitReached"),
+            description: t("dailyLimitReachedDesc", { hours: data.hoursRemaining || 24 }),
+            variant: "destructive",
+          })
+        }
         return
       }
 
@@ -171,6 +184,11 @@ export function DeckGenerator() {
     }
   }
 
+  const handleUpgradeFromLimit = () => {
+    setShowGenerationLimitModal(false)
+    setShowUpgradeModal(true)
+  }
+
   return (
     <>
       <div className="w-full max-w-4xl mx-auto space-y-8">
@@ -247,6 +265,16 @@ export function DeckGenerator() {
       />
 
       <AuthModal isOpen={showAuthModal} onClose={handleAuthModalClose} defaultTab="login" />
+
+      <GenerationLimitModal
+        isOpen={showGenerationLimitModal}
+        onClose={() => setShowGenerationLimitModal(false)}
+        onUpgrade={handleUpgradeFromLimit}
+        generationsUsed={limitInfo.used}
+        generationsLimit={limitInfo.limit}
+      />
+
+      <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
     </>
   )
 }

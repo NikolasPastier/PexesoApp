@@ -371,5 +371,12 @@
     "noDecksAvailable": "Aucun jeu disponible pour {count} cartes",
     "myPrefix": "Mon: ",
     "privateSuffix": " (Privé)"
+  },
+  "deckUploadLimit": {
+    "title": "Limite de téléchargement atteinte",
+    "description": "Vous avez téléchargé le nombre maximum de jeux gratuits dans la galerie. Passez à Pro pour débloquer des téléchargements de jeux personnalisés illimités.",
+    "decksUploaded": "Jeux téléchargés",
+    "upgradeToPro": "Passer à Pro",
+    "close": "Fermer"
   }
 }
