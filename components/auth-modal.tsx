@@ -298,29 +298,6 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
               </TabsContent>
             </Tabs>
 
-            <div className="mt-6 pt-4 border-t border-gray-600/30">
-              <p className="text-xs text-gray-400 text-center">
-                {t("legalConsent", {
-                  terms: (
-                    <button
-                      onClick={() => setShowTermsModal(true)}
-                      className="text-primary hover:text-primary/80 underline"
-                    >
-                      {t("termsOfService")}
-                    </button>
-                  ),
-                  privacy: (
-                    <button
-                      onClick={() => setShowPrivacyModal(true)}
-                      className="text-primary hover:text-primary/80 underline"
-                    >
-                      {t("privacyPolicy")}
-                    </button>
-                  ),
-                })}
-              </p>
-            </div>
-
             <div className="mt-4">
               <AdBanner
                 adSlot="1234567890"
