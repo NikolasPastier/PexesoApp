@@ -103,7 +103,8 @@
     "created": "Creado",
     "likes": "Me gusta",
     "plays": "Jugadas",
-    "showAllDecks": "Mostrar Todos los Mazos"
+    "showAllDecks": "Mostrar Todos los Mazos",
+    "showMore": "Mostrar Más"
   },
   "deckGenerator": {
     "placeholder": "Pide a PexesoAI que cree un mazo sobre...",
@@ -125,6 +126,7 @@
   },
   "uploadDeck": {
     "title": "Sube tu Mazo",
+    "uploadShort": "Subir",
     "deckName": "Nombre del Mazo",
     "deckNamePlaceholder": "Ingresa el nombre del mazo...",
     "description": "Descripción (opcional)",
@@ -152,7 +154,15 @@
     "atLeastOneImage": "Se requiere al menos una imagen",
     "exactImagesRequired": "Necesitas exactamente {required} imágenes para {total} cartas",
     "uploadSuccess": "¡Mazo subido con éxito!",
-    "loginRequired": "Debes iniciar sesión para subir mazos"
+    "loginRequired": "Debes iniciar sesión para subir mazos",
+    "deckCount": "Mazos subidos",
+    "freePlan": "Plan Gratuito (5 mazos máx)",
+    "proPlan": "Plan Pro (25 mazos máx)",
+    "upgradeToPro": "Actualizar a Pro",
+    "freeLimitReached": "Límite del plan gratuito alcanzado",
+    "freeLimitMessage": "Has alcanzado el máximo de 5 mazos. Actualiza a Pro para subir hasta 25 mazos.",
+    "proLimitReached": "Límite del plan Pro alcanzado",
+    "proLimitMessage": "Has alcanzado el máximo de 25 mazos. Elimina un mazo para subir uno nuevo."
   },
   "generatedImages": {
     "title": "Imágenes Generadas",
@@ -161,12 +171,19 @@
     "regenerate": "Regenerar",
     "regenerating": "Regenerando...",
     "saveToGallery": "Guardar en Galería",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "cardCount": {
+      "8": "8 Cartas",
+      "12": "12 Cartas",
+      "16": "16 Cartas"
+    },
+    "alt": "Imagen generada {index}"
   },
   "footer": {
     "copyright": "© 2025 Pexeso.app Todos los derechos reservados",
     "privacyPolicy": "Política de Privacidad",
-    "termsOfUse": "Términos de Uso"
+    "termsOfUse": "Términos de Uso",
+    "dataDeletion": "Eliminación de Datos"
   },
   "privacy": {
     "title": "Política de Privacidad",
@@ -188,5 +205,132 @@
   "language": {
     "switchLanguage": "Cambiar Idioma",
     "currentLanguage": "Idioma Actual"
+  },
+  "settings": {
+    "title": "Configuración de la Cuenta",
+    "profileSection": "Información del Perfil",
+    "passwordSection": "Cambiar Contraseña",
+    "dangerZone": "Zona Peligrosa",
+    "username": "Nombre de Usuario",
+    "usernamePlaceholder": "Ingresa tu nombre de usuario",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "currentPassword": "Contraseña Actual",
+    "currentPasswordPlaceholder": "Ingresa la contraseña actual",
+    "newPassword": "Nueva Contraseña",
+    "newPasswordPlaceholder": "Ingresa la nueva contraseña",
+    "confirmPassword": "Confirmar Nueva Contraseña",
+    "confirmPasswordPlaceholder": "Confirma la nueva contraseña",
+    "updateProfile": "Actualizar Perfil",
+    "updatePassword": "Actualizar Contraseña",
+    "updating": "Actualizando...",
+    "deleteAccount": "Eliminar Cuenta",
+    "deleting": "Eliminando...",
+    "deleteConfirmTitle": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.",
+    "deleteOptionTitle": "¿Qué debería pasar con tus mazos?",
+    "keepDecks": "Mantener mis mazos en la galería",
+    "keepDecksDesc": "Tus mazos permanecerán disponibles para otros",
+    "deleteDecks": "Eliminar también mis mazos",
+    "deleteDecksDesc": "Todos tus mazos creados serán eliminados permanentemente",
+    "profileUpdated": "¡Perfil actualizado con éxito!",
+    "passwordUpdated": "¡Contraseña actualizada con éxito!",
+    "accountDeleted": "Tu cuenta ha sido eliminada",
+    "usernameRequired": "El nombre de usuario no puede estar vacío",
+    "invalidEmail": "Por favor ingresa una dirección de correo electrónico válida",
+    "allPasswordFieldsRequired": "Todos los campos de contraseña son obligatorios",
+    "passwordsDoNotMatch": "Las nuevas contraseñas no coinciden",
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+    "updateProfileError": "No se pudo actualizar el perfil, por favor intenta de nuevo",
+    "updatePasswordError": "No se pudo actualizar la contraseña, por favor intenta de nuevo",
+    "deleteAccountError": "Error al eliminar la cuenta"
+  },
+  "plans": {
+    "free": {
+      "name": "Gratuito",
+      "description": "Perfecto para usuarios ocasionales",
+      "foreverFree": "Gratis para siempre",
+      "feature1": "1 generación de mazo IA por día",
+      "feature2": "Sube hasta 5 mazos personalizados",
+      "feature3": "Juega todos los modos de juego",
+      "feature4": "Rastrea tus puntuaciones"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Para usuarios avanzados que aman crear",
+      "perMonth": "por mes",
+      "badge": "RECOMENDADO",
+      "feature1": "100 generaciones de mazos IA por mes",
+      "feature2": "1 generación por día incluida",
+      "feature3": "Sube hasta 25 mazos personalizados",
+      "feature4": "Juega todos los modos de juego",
+      "feature5": "Rastrea tus puntuaciones",
+      "feature6": "Experiencia sin anuncios",
+      "feature7": "Soporte prioritario"
+    },
+    "upgradeTitle": "Actualizar a Pro",
+    "upgradeHero": "Desbloquea Creatividad Ilimitada",
+    "upgradeSubtitle": "Genera hasta 100 mazos IA por mes y disfruta de una experiencia sin anuncios",
+    "upgradeButton": "Actualizar a Pro - ${price}/mes",
+    "redirecting": "Redirigiendo al pago...",
+    "upgradeFooter": "Cancela en cualquier momento. Sin preguntas. Pago seguro con Stripe.",
+    "checkoutError": "Error al iniciar el pago. Por favor intenta de nuevo."
+  },
+  "privacyPolicy": {
+    "title": "Política de Privacidad",
+    "close": "Cerrar",
+    "section1Title": "1. Información que Recopilamos",
+    "section1Content": "Recopilamos información que nos proporcionas directamente, incluyendo tu nombre, dirección de correo electrónico, información de perfil y cualquier contenido que subas (como imágenes de mazos personalizados). También recopilamos información sobre tu actividad de juego, preferencias e interacciones con nuestro servicio.",
+    "section2Title": "2. Almacenamiento de Datos",
+    "section2Content": "Todos los datos de usuario se almacenan de forma segura utilizando Supabase, un proveedor de base de datos en la nube confiable. Tus datos están encriptados en tránsito y en reposo. Implementamos medidas de seguridad estándar de la industria para proteger tu información contra acceso, divulgación, alteración o destrucción no autorizados.",
+    "section3Title": "3. Contenido Generado por IA",
+    "section3Content": "Cuando usas nuestra función de generación de mazos IA, tus prompts son procesados por los servicios de OpenAI y Stability AI para generar imágenes personalizadas. Estos prompts no se almacenan permanentemente y solo se usan para cumplir con tu solicitud de generación. Las imágenes generadas se almacenan en nuestra base de datos y se asocian con tu cuenta.",
+    "section4Title": "4. Autenticación e Inicio de Sesión de Terceros",
+    "section4Content": "Ofrecemos autenticación a través de Google, Facebook y Apple Sign-In. Cuando usas estos servicios, recibimos información básica de perfil (nombre, correo electrónico, foto de perfil) según lo permitido por tu configuración de privacidad con esos proveedores. No tenemos acceso a tus contraseñas para estos servicios de terceros.",
+    "section5Title": "5. Cookies y Rastreo",
+    "section5Content": "Usamos cookies y tecnologías de rastreo similares para mantener tu sesión, recordar tus preferencias y analizar el uso del sitio. Puedes controlar las preferencias de cookies a través de la configuración de tu navegador. También podemos usar cookies con fines publicitarios a través de Google AdSense y otros socios publicitarios.",
+    "section6Title": "6. Publicidad",
+    "section6Content": "Mostramos anuncios a través de Google AdSense y otras redes publicitarias. Estos servicios pueden usar cookies y tecnologías similares para mostrarte anuncios relevantes según tu actividad de navegación. Puedes optar por no recibir publicidad personalizada visitando tu configuración de anuncios con estos proveedores.",
+    "section7Title": "7. Eliminación de Datos y Tus Derechos",
+    "section7Content": "Tienes derecho a acceder, corregir o eliminar tus datos personales en cualquier momento. Para eliminar tu cuenta y todos los datos asociados, ve a Configuración de Cuenta → Eliminar Cuenta. También puedes enviarnos un correo electrónico a support@pexeso.app para solicitar la eliminación de datos. Tras la eliminación, toda tu información personal, mazos subidos e historial de juego se eliminarán permanentemente de nuestros sistemas en un plazo de 30 días.",
+    "section8Title": "8. Contáctanos",
+    "section8Content": "Si tienes alguna pregunta sobre esta Política de Privacidad o nuestras prácticas de datos, contáctanos en support@pexeso.app. Estamos comprometidos a abordar tus preocupaciones y proteger tu privacidad."
+  },
+  "dataDeletion": {
+    "title": "Eliminación de Datos de Usuario",
+    "close": "Cerrar",
+    "content": "Puedes eliminar tu cuenta y todos los datos personales en cualquier momento. Ve a Configuración de Cuenta → Eliminar Cuenta para eliminar permanentemente tu perfil, mazos subidos e historial de juego. Todos los datos se eliminarán permanentemente de nuestros sistemas en un plazo de 30 días. Alternativamente, puedes enviarnos un correo electrónico a support@pexeso.app para solicitar la eliminación, y procesaremos tu solicitud de inmediato."
+  },
+  "cookies": {
+    "message": "Usamos cookies para personalizar contenido y anuncios, proporcionar funciones de redes sociales y analizar nuestro tráfico. Puedes aceptar o rechazar las cookies.",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "privacyPolicy": "Política de Privacidad"
+  },
+  "favouritesModal": {
+    "title": "Tus Mazos Favoritos",
+    "filterLabel": "Filtrar por cartas:",
+    "all": "Todos",
+    "cards": "{count} cartas",
+    "noFavourites": "Aún no hay mazos favoritos",
+    "noFavouritesDesc": "¡Explora la galería de mazos y marca los mazos que te encantan!",
+    "noMatchingCards": "No hay mazos favoritos con {count} cartas",
+    "noMatchingCardsDesc": "¡Intenta seleccionar un número diferente de cartas o explora la galería para más mazos!",
+    "selectedDeck": "¡Mazo \"{title}\" seleccionado para tu próximo juego!",
+    "removedFromFavourites": "¡\"{title}\" eliminado de favoritos!",
+    "failedToRemove": "Error al eliminar favorito. Por favor intenta de nuevo.",
+    "playNow": "Jugar Ahora",
+    "official": "Oficial",
+    "imageAlt": "{deckName} carta {index}"
+  },
+  "deckSelector": {
+    "deckStyle": "Estilo de Mazo",
+    "loading": "Cargando...",
+    "favorites": "Favoritos",
+    "noFavoritedDecks": "No hay mazos favoritos con {count} cartas",
+    "loginToSaveFavorites": "Inicia sesión para guardar y jugar con mazos favoritos",
+    "otherCardCounts": "Otros Números de Cartas",
+    "noDecksAvailable": "No hay mazos disponibles para {count} cartas",
+    "myPrefix": "Mi: ",
+    "privateSuffix": " (Privado)"
   }
 }

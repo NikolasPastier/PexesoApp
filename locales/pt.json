@@ -103,7 +103,8 @@
     "created": "Criado",
     "likes": "Curtidas",
     "plays": "Jogadas",
-    "showAllDecks": "Mostrar Todos os Baralhos"
+    "showAllDecks": "Mostrar Todos os Baralhos",
+    "showMore": "Mostrar Mais"
   },
   "deckGenerator": {
     "placeholder": "Peça ao PexesoAI para criar um baralho sobre...",
@@ -125,6 +126,7 @@
   },
   "uploadDeck": {
     "title": "Envie seu Baralho",
+    "uploadShort": "Enviar",
     "deckName": "Nome do Baralho",
     "deckNamePlaceholder": "Digite o nome do baralho...",
     "description": "Descrição (opcional)",
@@ -152,7 +154,15 @@
     "atLeastOneImage": "Pelo menos uma imagem é necessária",
     "exactImagesRequired": "Você precisa de exatamente {required} imagens para {total} cartas",
     "uploadSuccess": "Baralho enviado com sucesso!",
-    "loginRequired": "Você deve estar logado para enviar baralhos"
+    "loginRequired": "Você deve estar logado para enviar baralhos",
+    "deckCount": "Baralhos enviados",
+    "freePlan": "Plano Gratuito (5 baralhos máx)",
+    "proPlan": "Plano Pro (25 baralhos máx)",
+    "upgradeToPro": "Atualizar para Pro",
+    "freeLimitReached": "Limite do plano gratuito atingido",
+    "freeLimitMessage": "Você atingiu o máximo de 5 baralhos. Atualize para Pro para enviar até 25 baralhos.",
+    "proLimitReached": "Limite do plano Pro atingido",
+    "proLimitMessage": "Você atingiu o máximo de 25 baralhos. Exclua um baralho para enviar um novo."
   },
   "generatedImages": {
     "title": "Imagens Geradas",
@@ -161,32 +171,149 @@
     "regenerate": "Regenerar",
     "regenerating": "Regenerando...",
     "saveToGallery": "Salvar na Galeria",
-    "saving": "Salvando..."
+    "saving": "Salvando...",
+    "cardCount": {
+      "8": "8 Cartas",
+      "12": "12 Cartas",
+      "16": "16 Cartas"
+    },
+    "alt": "Imagem gerada {index}"
   },
   "footer": {
     "copyright": "© 2025 Pexeso.app Todos os direitos reservados",
     "privacyPolicy": "Política de Privacidade",
-    "termsOfUse": "Termos de Uso"
-  },
-  "privacy": {
-    "title": "Política de Privacidade",
-    "paragraph1": "Respeitamos sua privacidade. Este site coleta apenas os dados necessários para operar o jogo Pexeso, como autenticação de usuário, progresso do jogo e imagens de cartas enviadas.",
-    "paragraph2": "Não vendemos ou compartilhamos seus dados pessoais com terceiros, exceto conforme necessário para fornecer funcionalidade básica (por exemplo, autenticação, armazenamento, hospedagem).",
-    "paragraph3": "Todos os dados são armazenados com segurança em nosso banco de dados (Supabase) e são acessíveis apenas para você e administradores autorizados.",
-    "paragraph4": "Ao usar este site, você consente com esta coleta e uso. Para perguntas, entre em contato com support@example.com."
-  },
-  "terms": {
-    "title": "Termos de Uso",
-    "intro": "Ao acessar e usar este site, você concorda em seguir estes termos:",
-    "term1": "Você pode jogar o jogo Pexeso e usar todos os recursos fornecidos para uso pessoal e não comercial.",
-    "term2": "Você é responsável pelo conteúdo que envia (por exemplo, imagens de cartas) e concorda em não enviar material prejudicial, ofensivo ou protegido por direitos autorais sem permissão.",
-    "term3": "Podemos atualizar ou alterar os recursos do jogo a qualquer momento sem aviso prévio.",
-    "term4": "Não somos responsáveis por quaisquer danos causados pelo uso do site.",
-    "term5": "Estes termos são regidos pelas leis de [Seu País].",
-    "outro": "Se você não concordar com estes termos, por favor, pare de usar o site."
+    "termsOfUse": "Termos de Uso",
+    "dataDeletion": "Exclusão de Dados"
   },
   "language": {
     "switchLanguage": "Trocar Idioma",
     "currentLanguage": "Idioma Atual"
+  },
+  "settings": {
+    "title": "Configurações da Conta",
+    "profileSection": "Informações do Perfil",
+    "passwordSection": "Alterar Senha",
+    "dangerZone": "Zona Perigosa",
+    "username": "Nome de Usuário",
+    "usernamePlaceholder": "Digite seu nome de usuário",
+    "email": "E-mail",
+    "emailPlaceholder": "Digite seu e-mail",
+    "currentPassword": "Senha Atual",
+    "currentPasswordPlaceholder": "Digite a senha atual",
+    "newPassword": "Nova Senha",
+    "newPasswordPlaceholder": "Digite a nova senha",
+    "confirmPassword": "Confirmar Nova Senha",
+    "confirmPasswordPlaceholder": "Confirme a nova senha",
+    "updateProfile": "Atualizar Perfil",
+    "updatePassword": "Atualizar Senha",
+    "updating": "Atualizando...",
+    "deleteAccount": "Excluir Conta",
+    "deleting": "Excluindo...",
+    "deleteConfirmTitle": "Tem certeza de que deseja excluir sua conta? Esta ação não pode ser desfeita.",
+    "deleteOptionTitle": "O que deve acontecer com seus baralhos?",
+    "keepDecks": "Manter meus baralhos na galeria",
+    "keepDecksDesc": "Seus baralhos permanecerão disponíveis para outros",
+    "deleteDecks": "Excluir também meus baralhos",
+    "deleteDecksDesc": "Todos os seus baralhos criados serão removidos permanentemente",
+    "profileUpdated": "Perfil atualizado com sucesso!",
+    "passwordUpdated": "Senha atualizada com sucesso!",
+    "accountDeleted": "Sua conta foi excluída",
+    "usernameRequired": "O nome de usuário não pode estar vazio",
+    "invalidEmail": "Por favor, digite um endereço de e-mail válido",
+    "allPasswordFieldsRequired": "Todos os campos de senha são obrigatórios",
+    "passwordsDoNotMatch": "As novas senhas não correspondem",
+    "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
+    "updateProfileError": "Não foi possível atualizar o perfil, por favor tente novamente",
+    "updatePasswordError": "Não foi possível atualizar a senha, por favor tente novamente",
+    "deleteAccountError": "Falha ao excluir a conta"
+  },
+  "plans": {
+    "free": {
+      "name": "Gratuito",
+      "description": "Perfeito para usuários casuais",
+      "foreverFree": "Grátis para sempre",
+      "feature1": "1 geração de baralho IA por dia",
+      "feature2": "Envie até 5 baralhos personalizados",
+      "feature3": "Jogue todos os modos de jogo",
+      "feature4": "Acompanhe suas pontuações"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Para usuários avançados que adoram criar",
+      "perMonth": "por mês",
+      "badge": "RECOMENDADO",
+      "feature1": "100 gerações de baralhos IA por mês",
+      "feature2": "1 geração por dia incluída",
+      "feature3": "Envie até 25 baralhos personalizados",
+      "feature4": "Jogue todos os modos de jogo",
+      "feature5": "Acompanhe suas pontuações",
+      "feature6": "Experiência sem anúncios",
+      "feature7": "Suporte prioritário"
+    },
+    "upgradeTitle": "Atualizar para Pro",
+    "upgradeHero": "Desbloqueie Criatividade Ilimitada",
+    "upgradeSubtitle": "Gere até 100 baralhos IA por mês e desfrute de uma experiência sem anúncios",
+    "upgradeButton": "Atualizar para Pro - ${price}/mês",
+    "redirecting": "Redirecionando para o pagamento...",
+    "upgradeFooter": "Cancele a qualquer momento. Sem perguntas. Pagamento seguro com Stripe.",
+    "checkoutError": "Falha ao iniciar o pagamento. Por favor, tente novamente."
+  },
+  "privacyPolicy": {
+    "title": "Política de Privacidade",
+    "close": "Fechar",
+    "section1Title": "1. Informações que Coletamos",
+    "section1Content": "Coletamos informações que você nos fornece diretamente, incluindo seu nome, endereço de e-mail, informações de perfil e qualquer conteúdo que você envie (como imagens de baralhos personalizados). Também coletamos informações sobre sua atividade de jogo, preferências e interações com nosso serviço.",
+    "section2Title": "2. Armazenamento de Dados",
+    "section2Content": "Todos os dados do usuário são armazenados com segurança usando Supabase, um provedor de banco de dados em nuvem confiável. Seus dados são criptografados em trânsito e em repouso. Implementamos medidas de segurança padrão do setor para proteger suas informações contra acesso, divulgação, alteração ou destruição não autorizados.",
+    "section3Title": "3. Conteúdo Gerado por IA",
+    "section3Content": "Quando você usa nosso recurso de geração de baralhos IA, seus prompts são processados pelos serviços OpenAI e Stability AI para gerar imagens personalizadas. Esses prompts não são armazenados permanentemente e são usados apenas para atender à sua solicitação de geração. As imagens geradas são armazenadas em nosso banco de dados e associadas à sua conta.",
+    "section4Title": "4. Autenticação e Login de Terceiros",
+    "section4Content": "Oferecemos autenticação através do Google, Facebook e Apple Sign-In. Quando você usa esses serviços, recebemos informações básicas de perfil (nome, e-mail, foto de perfil) conforme permitido por suas configurações de privacidade com esses provedores. Não temos acesso às suas senhas para esses serviços de terceiros.",
+    "section5Title": "5. Cookies e Rastreamento",
+    "section5Content": "Usamos cookies e tecnologias de rastreamento semelhantes para manter sua sessão, lembrar suas preferências e analisar o uso do site. Você pode controlar as preferências de cookies através das configurações do seu navegador. Também podemos usar cookies para fins publicitários através do Google AdSense e outros parceiros de publicidade.",
+    "section6Title": "6. Publicidade",
+    "section6Content": "Exibimos anúncios através do Google AdSense e outras redes de publicidade. Esses serviços podem usar cookies e tecnologias semelhantes para mostrar anúncios relevantes com base em sua atividade de navegação. Você pode optar por não receber publicidade personalizada visitando suas configurações de anúncios com esses provedores.",
+    "section7Title": "7. Exclusão de Dados e Seus Direitos",
+    "section7Content": "Você tem o direito de acessar, corrigir ou excluir seus dados pessoais a qualquer momento. Para excluir sua conta e todos os dados associados, vá para Configurações da Conta → Excluir Conta. Você também pode nos enviar um e-mail para support@pexeso.app para solicitar a exclusão de dados. Após a exclusão, todas as suas informações pessoais, baralhos enviados e histórico de jogo serão removidos permanentemente de nossos sistemas em até 30 dias.",
+    "section8Title": "8. Entre em Contato",
+    "section8Content": "Se você tiver alguma dúvida sobre esta Política de Privacidade ou nossas práticas de dados, entre em contato conosco em support@pexeso.app. Estamos comprometidos em abordar suas preocupações e proteger sua privacidade."
+  },
+  "dataDeletion": {
+    "title": "Exclusão de Dados do Usuário",
+    "close": "Fechar",
+    "content": "Você pode excluir sua conta e todos os dados pessoais a qualquer momento. Vá para Configurações da Conta → Excluir Conta para remover permanentemente seu perfil, baralhos enviados e histórico de jogo. Todos os dados serão excluídos permanentemente de nossos sistemas em até 30 dias. Alternativamente, você pode nos enviar um e-mail para support@pexeso.app para solicitar a exclusão, e processaremos sua solicitação prontamente."
+  },
+  "cookies": {
+    "message": "Usamos cookies para personalizar conteúdo e anúncios, fornecer recursos de mídia social e analisar nosso tráfego. Você pode aceitar ou rejeitar cookies.",
+    "accept": "Aceitar",
+    "reject": "Rejeitar",
+    "privacyPolicy": "Política de Privacidade"
+  },
+  "favouritesModal": {
+    "title": "Seus Baralhos Favoritos",
+    "filterLabel": "Filtrar por cartas:",
+    "all": "Todos",
+    "cards": "{count} cartas",
+    "noFavourites": "Ainda não há baralhos favoritos",
+    "noFavouritesDesc": "Navegue pela galeria de baralhos e marque os baralhos que você adora!",
+    "noMatchingCards": "Nenhum baralho favorito com {count} cartas",
+    "noMatchingCardsDesc": "Tente selecionar um número diferente de cartas ou navegue pela galeria para mais baralhos!",
+    "selectedDeck": "Baralho \"{title}\" selecionado para seu próximo jogo!",
+    "removedFromFavourites": "\"{title}\" removido dos favoritos!",
+    "failedToRemove": "Falha ao remover favorito. Por favor, tente novamente.",
+    "playNow": "Jogar Agora",
+    "official": "Oficial",
+    "imageAlt": "{deckName} carta {index}"
+  },
+  "deckSelector": {
+    "deckStyle": "Estilo de Baralho",
+    "loading": "Carregando...",
+    "favorites": "Favoritos",
+    "noFavoritedDecks": "Nenhum baralho favorito com {count} cartas",
+    "loginToSaveFavorites": "Faça login para salvar e jogar com baralhos favoritos",
+    "otherCardCounts": "Outros Números de Cartas",
+    "noDecksAvailable": "Nenhum baralho disponível para {count} cartas",
+    "myPrefix": "Meu: ",
+    "privateSuffix": " (Privado)"
   }
 }

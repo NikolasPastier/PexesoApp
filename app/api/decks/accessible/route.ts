@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-import { DEFAULT_DECKS } from "@/lib/default-decks"
+import { mergeAndFilterDecks } from "@/lib/deck-utils"
 
 export const dynamic = "force-dynamic"
 
 export async function GET() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     console.warn("Supabase credentials not configured, returning default decks")
-    return NextResponse.json({ decks: DEFAULT_DECKS })
+    const decks = mergeAndFilterDecks({
+      supabaseDecks: [],
+      cardCount: null,
+      sort: "recent",
+    })
+    return NextResponse.json({ decks })
   }
 
   try {
@@ -35,15 +40,16 @@ export async function GET() {
 
     if (error) {
       console.error("Database error, falling back to default decks:", error)
-      return NextResponse.json({ decks: DEFAULT_DECKS })
-    }
-
-    if (!decks || decks.length === 0) {
-      return NextResponse.json({ decks: DEFAULT_DECKS })
+      const fallbackDecks = mergeAndFilterDecks({
+        supabaseDecks: [],
+        cardCount: null,
+        sort: "recent",
+      })
+      return NextResponse.json({ decks: fallbackDecks })
     }
 
     const decksWithStats = await Promise.all(
-      decks.map(async (deck) => {
+      (decks || []).map(async (deck) => {
         // Get favorite count for this deck
         const { count: favoritesCount } = await supabase
           .from("favorites")
@@ -80,9 +86,20 @@ export async function GET() {
       }),
     )
 
-    return NextResponse.json({ decks: decksWithStats })
+    const mergedDecks = mergeAndFilterDecks({
+      supabaseDecks: decksWithStats,
+      cardCount: null,
+      sort: "recent",
+    })
+
+    return NextResponse.json({ decks: mergedDecks })
   } catch (error) {
     console.error("Error fetching accessible decks, falling back to default decks:", error)
-    return NextResponse.json({ decks: DEFAULT_DECKS })
+    const fallbackDecks = mergeAndFilterDecks({
+      supabaseDecks: [],
+      cardCount: null,
+      sort: "recent",
+    })
+    return NextResponse.json({ decks: fallbackDecks })
   }
 }

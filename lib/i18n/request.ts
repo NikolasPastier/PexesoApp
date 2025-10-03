@@ -5,7 +5,11 @@ export default getRequestConfig(async ({ locale }) => {
   const validLocale = locale && locales.includes(locale as Locale) ? (locale as Locale) : defaultLocale
 
   return {
-    locale: validLocale, // Added required locale property
+    locale: validLocale,
     messages: (await import(`../../locales/${validLocale}.json`)).default,
+    defaultTranslationValues: {
+      // Fallback to English if translation is missing
+      fallbackLocale: defaultLocale,
+    },
   }
 })
