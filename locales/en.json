@@ -374,14 +374,14 @@
   },
   "deckUploadLimit": {
     "title": "Upload limit reached",
-    "description": "You've uploaded the maximum number of free decks to the gallery. Upgrade to Pro to unlock unlimited custom deck uploads.",
-    "decksUploaded": "Decks uploaded",
-    "upgradeToPro": "Upgrade to Pro",
-    "close": "Close"
+    "description": "You've uploaded the maximum number of free decks. Upgrade to Pro to upload up to {proLimit} custom decks.",
+    "uploadsUsed": "You've uploaded {used} of {limit} free decks.",
+    "upgradeButton": "Upgrade for unlimited uploads",
+    "closeButton": "Maybe later"
   },
   "generationLimit": {
     "title": "Daily generation limit reached",
-    "description": "You've hit today's free AI generation limit. Upgrade to keep creating new decks.",
+    "description": "You've hit today's free AI generation limit. Upgrade to Pro to keep creating new decks.",
     "generationsUsed": "You've used {used} of {limit} daily generations.",
     "upgradeButton": "Upgrade for more generations",
     "closeButton": "Maybe later"

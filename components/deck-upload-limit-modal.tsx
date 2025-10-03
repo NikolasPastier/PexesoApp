@@ -11,6 +11,7 @@ interface DeckUploadLimitModalProps {
   onUpgrade: () => void
   decksUploaded: number
   deckLimit: number
+  proLimit: number
 }
 
 export function DeckUploadLimitModal({
@@ -19,6 +20,7 @@ export function DeckUploadLimitModal({
   onUpgrade,
   decksUploaded,
   deckLimit,
+  proLimit,
 }: DeckUploadLimitModalProps) {
   const t = useTranslations("deckUploadLimit")
 
@@ -38,15 +40,10 @@ export function DeckUploadLimitModal({
           </DialogHeader>
 
           <div className="space-y-6 mt-6">
-            <p className="text-gray-300 leading-relaxed">{t("description")}</p>
+            <p className="text-gray-300 leading-relaxed">{t("description", { proLimit })}</p>
 
             <div className="p-4 bg-gray-700/30 border border-gray-600/30 rounded-lg">
-              <p className="text-sm text-gray-400">
-                {t("decksUploaded")}:{" "}
-                <span className="font-semibold text-white">
-                  {decksUploaded} / {deckLimit}
-                </span>
-              </p>
+              <p className="text-sm text-gray-400">{t("uploadsUsed", { used: decksUploaded, limit: deckLimit })}</p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
@@ -54,14 +51,14 @@ export function DeckUploadLimitModal({
                 onClick={onUpgrade}
                 className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-6 rounded-xl shadow-lg transition-all duration-200"
               >
-                {t("upgradeToPro")}
+                {t("upgradeButton")}
               </Button>
               <Button
                 onClick={onClose}
                 variant="ghost"
                 className="flex-1 text-gray-400 hover:text-white hover:bg-gray-700/50"
               >
-                {t("close")}
+                {t("closeButton")}
               </Button>
             </div>
           </div>

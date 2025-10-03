@@ -374,10 +374,10 @@
   },
   "deckUploadLimit": {
     "title": "Limite de téléchargement atteinte",
-    "description": "Vous avez téléchargé le nombre maximum de jeux gratuits dans la galerie. Passez à Pro pour débloquer des téléchargements de jeux personnalisés illimités.",
-    "decksUploaded": "Jeux téléchargés",
-    "upgradeToPro": "Passer à Pro",
-    "close": "Fermer"
+    "description": "Vous avez téléchargé le nombre maximum de jeux gratuits. Passez à Pro pour télécharger jusqu'à {proLimit} jeux personnalisés.",
+    "uploadsUsed": "Vous avez téléchargé {used} de {limit} jeux gratuits.",
+    "upgradeButton": "Passer à Pro pour des téléchargements illimités",
+    "closeButton": "Peut-être plus tard"
   },
   "generationLimit": {
     "title": "Limite quotidienne de génération atteinte",

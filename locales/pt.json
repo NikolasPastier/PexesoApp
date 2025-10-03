@@ -318,16 +318,16 @@
   },
   "deckUploadLimit": {
     "title": "Limite de envio atingido",
-    "description": "Você enviou o número máximo de baralhos gratuitos para a galeria. Atualize para Pro para desbloquear envios de baralhos personalizados ilimitados.",
-    "decksUploaded": "Baralhos enviados",
-    "upgradeToPro": "Atualizar para Pro",
-    "close": "Fechar"
+    "description": "Você enviou o número máximo de baralhos gratuitos. Atualize para Pro para enviar até {proLimit} baralhos personalizados.",
+    "uploadsUsed": "Você enviou {used} de {limit} baralhos gratuitos.",
+    "upgradeButton": "Atualizar para envios ilimitados",
+    "closeButton": "Talvez mais tarde"
   },
   "generationLimit": {
-    "title": "Daily generation limit reached",
-    "description": "You've hit today's free AI generation limit. Upgrade to keep creating new decks.",
-    "generationsUsed": "You've used {used} of {limit} daily generations.",
-    "upgradeButton": "Upgrade for more generations",
-    "closeButton": "Maybe later"
+    "title": "Limite diário de geração atingido",
+    "description": "Você atingiu o limite diário gratuito de geração de baralhos IA. Atualize para Pro para ter acesso a mais gerações.",
+    "generationsUsed": "Você usou {used} de {limit} gerações diárias gratuitas.",
+    "upgradeButton": "Atualizar para mais gerações",
+    "closeButton": "Talvez mais tarde"
   }
 }

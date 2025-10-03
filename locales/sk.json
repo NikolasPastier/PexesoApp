@@ -374,10 +374,10 @@
   },
   "deckUploadLimit": {
     "title": "Dosiahnutý limit nahrávania",
-    "description": "Nahrali ste maximálny počet bezplatných balíčkov do galérie. Upgradujte na Pro pre odomknutie neobmedzených vlastných balíčkov.",
-    "decksUploaded": "Nahraných balíčkov",
-    "upgradeToPro": "Upgradovať na Pro",
-    "close": "Zavrieť"
+    "description": "Nahrali ste maximálny počet bezplatných balíčkov. Upgradujte na Pro pre nahranie až {proLimit} vlastných balíčkov.",
+    "uploadsUsed": "Nahrali ste {used} z {limit} bezplatných balíčkov.",
+    "upgradeButton": "Upgradovať pre neobmedzené nahrávanie",
+    "closeButton": "Možno neskôr"
   },
   "generationLimit": {
     "title": "Denný limit generovania dosiahnutý",

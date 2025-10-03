@@ -335,10 +335,10 @@
   },
   "deckUploadLimit": {
     "title": "Límite de carga alcanzado",
-    "description": "Has subido el número máximo de mazos gratuitos a la galería. Actualiza a Pro para desbloquear cargas de mazos personalizados ilimitadas.",
-    "decksUploaded": "Mazos subidos",
-    "upgradeToPro": "Actualizar a Pro",
-    "close": "Cerrar"
+    "description": "Has subido el número máximo de mazos gratuitos. Actualiza a Pro para subir hasta {proLimit} mazos personalizados.",
+    "uploadsUsed": "Has subido {used} de {limit} mazos gratuitos.",
+    "upgradeButton": "Actualizar para cargas ilimitadas",
+    "closeButton": "Quizás más tarde"
   },
   "generationLimit": {
     "title": "Límite de generación diaria alcanzado",

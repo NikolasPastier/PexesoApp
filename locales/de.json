@@ -374,10 +374,10 @@
   },
   "deckUploadLimit": {
     "title": "Upload-Limit erreicht",
-    "description": "Sie haben die maximale Anzahl kostenloser Decks in die Galerie hochgeladen. Upgraden Sie auf Pro, um unbegrenzte benutzerdefinierte Deck-Uploads freizuschalten.",
-    "decksUploaded": "Hochgeladene Decks",
-    "upgradeToPro": "Auf Pro upgraden",
-    "close": "Schließen"
+    "description": "Sie haben die maximale Anzahl kostenloser Decks hochgeladen. Upgraden Sie auf Pro, um bis zu {proLimit} benutzerdefinierte Decks hochzuladen.",
+    "uploadsUsed": "Sie haben {used} von {limit} kostenlosen Decks hochgeladen.",
+    "upgradeButton": "Upgrade für unbegrenzte Uploads",
+    "closeButton": "Vielleicht später"
   },
   "generationLimit": {
     "title": "Täglicher Generierungs-Limit erreicht",

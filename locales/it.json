@@ -363,10 +363,10 @@
   },
   "deckUploadLimit": {
     "title": "Limite di caricamento raggiunto",
-    "description": "Hai caricato il numero massimo di mazzi gratuiti nella galleria. Passa a Pro per sbloccare caricamenti di mazzi personalizzati illimitati.",
-    "decksUploaded": "Mazzi caricati",
-    "upgradeToPro": "Passa a Pro",
-    "close": "Chiudi"
+    "description": "Hai caricato il numero massimo di mazzi gratuiti. Passa a Pro per caricare fino a {proLimit} mazzi personalizzati.",
+    "uploadsUsed": "Hai caricato {used} di {limit} mazzi gratuiti.",
+    "upgradeButton": "Passa a Pro per caricamenti illimitati",
+    "closeButton": "Forse più tardi"
   },
   "generationLimit": {
     "title": "Limite di generazione giornaliero raggiunto",

@@ -435,6 +435,7 @@ export function UploadDeckModal({ onDeckUploaded }: UploadDeckModalProps) {
         }}
         decksUploaded={deckCount}
         deckLimit={deckLimit}
+        proLimit={DECK_LIMITS.pro}
       />
 
       <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />

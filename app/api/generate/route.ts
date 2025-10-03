@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
           negativePrompt: finalNegativePrompt,
         })
 
-        const result = await fal.subscribe("fal-ai/flux/schnell", {
+        const { data: result } = await fal.subscribe("fal-ai/flux/schnell", {
           input: {
             prompt: finalPrompt,
             image_size: "square_hd",
