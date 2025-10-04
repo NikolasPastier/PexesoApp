@@ -169,7 +169,9 @@ export async function POST(request: NextRequest) {
 
     const backgroundSuffix = backgroundStyle ? `, ${backgroundStyle}` : ""
 
-    const imagePromises = Array.from({ length: imageCount }, async (_, i) => {
+    const images: { id: string; url: string }[] = []
+
+    for (let i = 0; i < imageCount; i++) {
       try {
         const finalPrompt = `${styleTemplate} ${prompt}${backgroundSuffix}, unique variation ${i + 1}`
 
@@ -195,21 +197,24 @@ export async function POST(request: NextRequest) {
           throw new Error("No image generated")
         }
 
-        return {
+        images.push({
           id: `img-${Date.now()}-${i}`,
           url: imageUrl,
-        }
+        })
       } catch (error) {
         console.error(`Error generating image ${i + 1}:`, error)
-        // Fallback to placeholder if individual image fails
-        return {
-          id: `img-${Date.now()}-${i}`,
-          url: `/placeholder.svg?height=300&width=300&query=${encodeURIComponent(prompt)}-${i + 1}`,
-        }
-      }
-    })
+        const errorMessage = error instanceof Error ? error.message : "Unknown error"
 
-    const images = await Promise.all(imagePromises)
+        return NextResponse.json(
+          {
+            error: "Fal rejected the image generation request",
+            message: errorMessage,
+            failedImageIndex: i,
+          },
+          { status: 502 },
+        )
+      }
+    }
 
     const { error: logError } = await supabase.from("deck_generations").insert({
       user_id: user.id,
