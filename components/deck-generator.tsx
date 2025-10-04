@@ -80,6 +80,20 @@ export function DeckGenerator() {
         body: JSON.stringify({ prompt, cardCount: Number.parseInt(cardCount), style }),
       })
 
+      if (response.status === 500) {
+        const data = await response.json()
+        if (data.missingApiKey) {
+          toast({
+            title: "Configuration Required",
+            description:
+              "AI image generation is not configured. Please add the FAL_KEY environment variable to enable deck generation.",
+            variant: "destructive",
+            duration: 8000,
+          })
+          return
+        }
+      }
+
       if (response.status === 429) {
         const data = await response.json()
 

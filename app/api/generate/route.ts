@@ -25,6 +25,18 @@ const DEFAULT_NEGATIVE_PROMPT =
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.FAL_KEY) {
+      console.error("[v0] FAL_KEY environment variable is not configured")
+      return NextResponse.json(
+        {
+          error: "AI image generation is not configured",
+          missingApiKey: true,
+          message: "The Fal API key is missing. Please configure FAL_KEY in your environment variables.",
+        },
+        { status: 500 },
+      )
+    }
+
     const supabase = await createClient()
     const {
       data: { user },
