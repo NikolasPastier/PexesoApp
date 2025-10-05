@@ -7,6 +7,11 @@ fal.config({
   credentials: process.env.FAL_KEY,
 })
 
+type FalFluxResponse = {
+  images?: { url?: string }[]
+  data?: { images?: { url?: string }[] }
+}
+
 const STYLE_TEMPLATES = {
   realistic:
     "High-quality, photorealistic illustration, single subject, full body, centered, sharp focus, professional photography style, consistent style across all images, no text, no numbers, no multiple characters, no collage.",
@@ -179,7 +184,7 @@ export async function POST(request: NextRequest) {
           negativePrompt: finalNegativePrompt,
         })
 
-        const { data: result } = await fal.subscribe("fal-ai/flux/schnell", {
+        const response = await fal.subscribe("fal-ai/flux/schnell", {
           input: {
             prompt: finalPrompt,
             image_size: "square_hd",
@@ -190,7 +195,9 @@ export async function POST(request: NextRequest) {
           },
         })
 
-        const imageUrl = result.images?.[0]?.url
+        const result = response.data as FalFluxResponse
+        const imageUrl = result.images?.[0]?.url || result.data?.images?.[0]?.url
+
         if (!imageUrl) {
           throw new Error("No image generated")
         }
