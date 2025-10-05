@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { type NextRequest, NextResponse } from "next/server"
 
 export const dynamic = "force-dynamic"
@@ -29,18 +30,24 @@ export async function DELETE(request: NextRequest) {
       }
     }
 
-    // Delete user account (this will cascade delete related data due to RLS policies)
-    const { error: deleteError } = await supabase.rpc("delete_user")
+    // The admin client has service role privileges and can delete users
+    try {
+      const adminSupabase = createAdminClient()
+      const { error: deleteError } = await adminSupabase.auth.admin.deleteUser(user.id)
 
-    if (deleteError) {
-      // If RPC doesn't exist, try direct auth deletion
-      const { error: authDeleteError } = await supabase.auth.admin.deleteUser(user.id)
-      if (authDeleteError) {
+      if (deleteError) {
+        console.error("Error deleting user with admin client:", deleteError)
         return NextResponse.json({ error: "Failed to delete account" }, { status: 400 })
       }
-    }
 
-    return NextResponse.json({ success: true })
+      return NextResponse.json({ success: true })
+    } catch (adminError) {
+      console.error("Error creating admin client or deleting user:", adminError)
+      return NextResponse.json(
+        { error: "Failed to delete account. Please ensure SUPABASE_SERVICE_ROLE_KEY is configured." },
+        { status: 500 },
+      )
+    }
   } catch (error) {
     console.error("Error deleting account:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
