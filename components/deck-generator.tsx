@@ -80,24 +80,22 @@ export function DeckGenerator() {
         body: JSON.stringify({ prompt, cardCount: Number.parseInt(cardCount), style }),
       })
 
-      if (response.status === 500) {
-        const data = await response.json()
-        if (data.missingApiKey) {
-          toast({
-            title: "Configuration Required",
-            description:
-              "AI image generation is not configured. Please add the FAL_KEY environment variable to enable deck generation.",
-            variant: "destructive",
-            duration: 8000,
-          })
-          return
-        }
+      const contentType = response.headers.get("content-type") || ""
+      const data = contentType.includes("application/json") ? await response.json() : null
+
+      if (response.status === 500 && data?.missingApiKey) {
+        toast({
+          title: "Configuration Required",
+          description:
+            "AI image generation is not configured. Please add the FAL_KEY environment variable to enable deck generation.",
+          variant: "destructive",
+          duration: 8000,
+        })
+        return
       }
 
       if (response.status === 429) {
-        const data = await response.json()
-
-        if (data.upgradeAvailable) {
+        if (data?.upgradeAvailable) {
           // Free user hit daily limit - show upgrade modal
           setLimitInfo({ used: 1, limit: 1 })
           setShowGenerationLimitModal(true)
@@ -105,25 +103,36 @@ export function DeckGenerator() {
           // Pro user hit monthly limit - show toast
           toast({
             title: t("dailyLimitReached"),
-            description: t("dailyLimitReachedDesc", { hours: data.hoursRemaining || 24 }),
+            description: t("dailyLimitReachedDesc", { hours: data?.hoursRemaining || 24 }),
             variant: "destructive",
           })
         }
         return
       }
 
-      if (!response.ok) {
-        throw new Error("Failed to generate images")
+      if (response.status === 502) {
+        const message = data?.message || "Fal rejected the request. Please review the prompt and settings."
+        toast({
+          title: "Fal rejected the generation request",
+          description: message,
+          variant: "destructive",
+          duration: 8000,
+        })
+        return
       }
 
-      const data = await response.json()
-      setGeneratedImages(data.images || [])
+      if (!response.ok) {
+        throw new Error(data?.error || "Failed to generate images")
+      }
 
-      if (data.images && data.images.length > 0) {
+      const images = Array.isArray(data?.images) ? data.images : []
+      setGeneratedImages(images)
+
+      if (images.length > 0) {
         setIsModalOpen(true)
         toast({
           title: t("generationSuccess"),
-          description: t("generationSuccessDesc", { count: data.images.length }),
+          description: t("generationSuccessDesc", { count: images.length }),
         })
       }
     } catch (error) {
