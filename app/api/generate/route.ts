@@ -29,6 +29,9 @@ const QUALITY_PRESETS = {
   balanced: 12,
   high: 28,
 }
+const MEMORY_CARD_PROMPT_BASE =
+  "Memory card game illustration, subject fills the entire frame, no blank or empty background, rich lighting, high contrast, detailed focal point, consistent art direction across all images."
+
 
 const DEFAULT_NEGATIVE_PROMPT =
   "multiple subjects, duplicate characters, multiple people, multiple animals, text, watermarks, signatures, logos, numbers, letters, collage, split image, border, frame, low quality, blurry, distorted"
@@ -177,11 +180,72 @@ export async function POST(request: NextRequest) {
 
     const styleTemplate = STYLE_TEMPLATES[style as keyof typeof STYLE_TEMPLATES]
 
-    const backgroundSuffix = backgroundStyle ? `, ${backgroundStyle}` : ""
+   
+const trimmedPrompt = prompt.trim()
+    const themeDescription = trimmedPrompt ? `Theme: ${trimmedPrompt}.` : "Theme: Single memorable subject."
 
+    type FalFluxImage = {
+      url?: string | null
+      signed_url?: string | null
+    }
+
+    type FalFluxResponse = {
+      images?: FalFluxImage[]
+      data?: unknown
+      result?: unknown
+      output?: unknown
+      payload?: unknown
+      [key: string]: unknown
+    }
+
+    const extractFalImageUrls = (payload: unknown): string[] => {
+      if (!payload || typeof payload !== "object") {
+        return []
+      }
+
+      if (Array.isArray(payload)) {
+        return (payload as unknown[]).flatMap((item) => extractFalImageUrls(item))
+      }
+
+      const container = payload as FalFluxResponse
+      const urls: string[] = []
+
+      if (Array.isArray(container.images)) {
+        for (const image of container.images) {
+          if (!image) continue
+          const directUrl = typeof image.url === "string" && image.url.length > 0 ? image.url : undefined
+          const signedUrl =
+            typeof image.signed_url === "string" && image.signed_url.length > 0 ? image.signed_url : undefined
+
+          if (directUrl) {
+            urls.push(directUrl)
+          } else if (signedUrl) {
+            urls.push(signedUrl)
+          }
+        }
+      }
+
+      const nestedKeys: (keyof FalFluxResponse)[] = ["result", "data", "output", "payload"]
+      for (const key of nestedKeys) {
+        const nestedValue = container[key]
+        if (nestedValue) {
+          urls.push(...extractFalImageUrls(nestedValue))
+        }
+      }
+
+      return urls
+    }
     const imagePromises = Array.from({ length: imageCount }, async (_, i) => {
       try {
-        const finalPrompt = `${styleTemplate} ${prompt}${backgroundSuffix}, unique variation ${i + 1}`
+       const promptParts = [
+          styleTemplate,
+          MEMORY_CARD_PROMPT_BASE,
+          themeDescription,
+          backgroundStyle ? `Background style: ${backgroundStyle}.` : "",
+          `Unique variation ${i + 1}, consistent framing, fully rendered subject, avoid empty space.`,
+        ].filter(Boolean) as string[]
+
+        const finalPrompt = promptParts.join(" ")
 
         console.log("[v0] Generating image with settings:", {
           inferenceSteps,
@@ -189,7 +253,7 @@ export async function POST(request: NextRequest) {
           negativePrompt: finalNegativePrompt,
         })
 
-        const response = await fal.subscribe("fal-ai/flux/schnell", {
+       const result = (await fal.subscribe("fal-ai/flux/schnell", {
           input: {
             prompt: finalPrompt,
             image_size: "square_hd",
@@ -198,7 +262,7 @@ export async function POST(request: NextRequest) {
             negative_prompt: finalNegativePrompt,
             guidance_scale: finalGuidanceScale,
           },
-        })
+           })) as FalFluxResponse
 
         if (i === 0) {
           console.log("[v0] Result sample:", JSON.stringify(response, null, 2))
@@ -206,8 +270,8 @@ export async function POST(request: NextRequest) {
 
         const result = response.data as FalFluxResponse
 
-        const imageUrl =
-          result.images?.[0]?.url || result.data?.images?.[0]?.url || result.data?.output?.images?.[0]?.url
+         const imageUrls = extractFalImageUrls(result)
+        const imageUrl = imageUrls[0]
 
         if (!imageUrl) {
           console.warn(`[v0] No image URL found in response for image ${i + 1}`)
