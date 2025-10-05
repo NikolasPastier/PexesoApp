@@ -23,6 +23,11 @@ const nextConfig = {
         hostname: 'fal.run',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.fal.ai',
+        pathname: '/**',
+      },
     ],
   },
 }

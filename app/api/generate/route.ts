@@ -9,7 +9,12 @@ fal.config({
 
 type FalFluxResponse = {
   images?: { url?: string }[]
-  data?: { images?: { url?: string }[] }
+  data?: {
+    images?: { url?: string }[]
+    output?: {
+      images?: { url?: string }[]
+    }
+  }
 }
 
 const STYLE_TEMPLATES = {
@@ -195,19 +200,28 @@ export async function POST(request: NextRequest) {
           },
         })
 
+        if (i === 0) {
+          console.log("[v0] Result sample:", JSON.stringify(response, null, 2))
+        }
+
         const result = response.data as FalFluxResponse
-        const imageUrl = result.images?.[0]?.url || result.data?.images?.[0]?.url
+
+        const imageUrl =
+          result.images?.[0]?.url || result.data?.images?.[0]?.url || result.data?.output?.images?.[0]?.url
 
         if (!imageUrl) {
+          console.warn(`[v0] No image URL found in response for image ${i + 1}`)
           throw new Error("No image generated")
         }
+
+        console.log(`[v0] Successfully generated image ${i + 1}:`, imageUrl)
 
         return {
           id: `img-${Date.now()}-${i}`,
           url: imageUrl,
         }
       } catch (error) {
-        console.error(`Error generating image ${i + 1}:`, error)
+        console.error(`[v0] Error generating image ${i + 1}:`, error)
         // Fallback to placeholder if individual image fails
         return {
           id: `img-${Date.now()}-${i}`,

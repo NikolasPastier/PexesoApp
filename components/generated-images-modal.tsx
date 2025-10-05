@@ -5,6 +5,7 @@ import { Loader2, Sparkles, Save, X } from "lucide-react"
 import Image from "next/image"
 import { useToast } from "@/hooks/use-toast"
 import { useTranslations } from "next-intl"
+import { useEffect } from "react"
 
 interface GeneratedImage {
   url: string
@@ -39,6 +40,19 @@ export function GeneratedImagesModal({
   const { toast } = useToast()
   const t = useTranslations("generatedImages")
   const tDeckGen = useTranslations("deckGenerator")
+
+  useEffect(() => {
+    if (images.length > 0) {
+      console.log(
+        "[v0] Generated images received in modal:",
+        images.map((img) => ({
+          id: img.id,
+          url: img.url,
+          isValid: img.url && img.url.startsWith("http"),
+        })),
+      )
+    }
+  }, [images])
 
   const cardCountOptions = [
     { value: "8", label: t("cardCount.8"), cards: 16 },
@@ -92,10 +106,15 @@ export function GeneratedImagesModal({
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <Image
-                    src={image.url || "/placeholder.svg"}
+                    src={image.url && image.url.startsWith("http") ? image.url : "/placeholder.svg"}
                     alt={t("alt", { index: index + 1 })}
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      console.error(`[v0] Failed to load image ${index + 1}:`, image.url)
+                      const target = e.target as HTMLImageElement
+                      target.src = "/placeholder.svg"
+                    }}
                   />
                 </div>
               ))}
