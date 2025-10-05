@@ -7,16 +7,6 @@ fal.config({
   credentials: process.env.FAL_KEY,
 })
 
-type FalFluxResponse = {
-  images?: { url?: string }[]
-  data?: {
-    images?: { url?: string }[]
-    output?: {
-      images?: { url?: string }[]
-    }
-  }
-}
-
 const STYLE_TEMPLATES = {
   realistic:
     "High-quality, photorealistic illustration, single subject, full body, centered, sharp focus, professional photography style, consistent style across all images, no text, no numbers, no multiple characters, no collage.",
@@ -29,9 +19,9 @@ const QUALITY_PRESETS = {
   balanced: 12,
   high: 28,
 }
+
 const MEMORY_CARD_PROMPT_BASE =
   "Memory card game illustration, subject fills the entire frame, no blank or empty background, rich lighting, high contrast, detailed focal point, consistent art direction across all images."
-
 
 const DEFAULT_NEGATIVE_PROMPT =
   "multiple subjects, duplicate characters, multiple people, multiple animals, text, watermarks, signatures, logos, numbers, letters, collage, split image, border, frame, low quality, blurry, distorted"
@@ -82,8 +72,8 @@ export async function POST(request: NextRequest) {
     const lastReset = userData.last_reset ? new Date(userData.last_reset) : null
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
 
+    // Reset monthly counter for pro users
     if (userPlan === "pro" && lastReset && lastReset < thirtyDaysAgo) {
-      // Reset monthly counter
       const { error: resetError } = await supabase
         .from("users")
         .update({
@@ -99,8 +89,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Enforce generation limits
     if (userPlan === "free") {
-      // Free plan: 1 generation per day
       const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
 
       const { data: recentGenerations, error: generationCheckError } = await supabase
@@ -134,7 +124,6 @@ export async function POST(request: NextRequest) {
         )
       }
     } else if (userPlan === "pro") {
-      // Pro plan: 100 generations per month
       const monthlyUsed = userData.monthly_generations_used || 0
 
       if (monthlyUsed >= planConfig.generationsPerMonth) {
@@ -171,17 +160,12 @@ export async function POST(request: NextRequest) {
 
     const validCounts = [8, 12, 16]
     const imageCount = validCounts.includes(cardCount) ? cardCount : 8
-
     const inferenceSteps = QUALITY_PRESETS[quality as keyof typeof QUALITY_PRESETS] || QUALITY_PRESETS.high
-
     const finalNegativePrompt = negativePrompt || DEFAULT_NEGATIVE_PROMPT
-
     const finalGuidanceScale = guidanceScale || 7.5
-
     const styleTemplate = STYLE_TEMPLATES[style as keyof typeof STYLE_TEMPLATES]
 
-   
-const trimmedPrompt = prompt.trim()
+    const trimmedPrompt = prompt.trim()
     const themeDescription = trimmedPrompt ? `Theme: ${trimmedPrompt}.` : "Theme: Single memorable subject."
 
     type FalFluxImage = {
@@ -199,13 +183,8 @@ const trimmedPrompt = prompt.trim()
     }
 
     const extractFalImageUrls = (payload: unknown): string[] => {
-      if (!payload || typeof payload !== "object") {
-        return []
-      }
-
-      if (Array.isArray(payload)) {
-        return (payload as unknown[]).flatMap((item) => extractFalImageUrls(item))
-      }
+      if (!payload || typeof payload !== "object") return []
+      if (Array.isArray(payload)) return payload.flatMap((item) => extractFalImageUrls(item))
 
       const container = payload as FalFluxResponse
       const urls: string[] = []
@@ -214,36 +193,30 @@ const trimmedPrompt = prompt.trim()
         for (const image of container.images) {
           if (!image) continue
           const directUrl = typeof image.url === "string" && image.url.length > 0 ? image.url : undefined
-          const signedUrl =
-            typeof image.signed_url === "string" && image.signed_url.length > 0 ? image.signed_url : undefined
-
-          if (directUrl) {
-            urls.push(directUrl)
-          } else if (signedUrl) {
-            urls.push(signedUrl)
-          }
+          const signedUrl = typeof image.signed_url === "string" && image.signed_url.length > 0 ? image.signed_url : undefined
+          if (directUrl) urls.push(directUrl)
+          else if (signedUrl) urls.push(signedUrl)
         }
       }
 
       const nestedKeys: (keyof FalFluxResponse)[] = ["result", "data", "output", "payload"]
       for (const key of nestedKeys) {
         const nestedValue = container[key]
-        if (nestedValue) {
-          urls.push(...extractFalImageUrls(nestedValue))
-        }
+        if (nestedValue) urls.push(...extractFalImageUrls(nestedValue))
       }
 
       return urls
     }
+
     const imagePromises = Array.from({ length: imageCount }, async (_, i) => {
       try {
-       const promptParts = [
+        const promptParts = [
           styleTemplate,
           MEMORY_CARD_PROMPT_BASE,
           themeDescription,
           backgroundStyle ? `Background style: ${backgroundStyle}.` : "",
           `Unique variation ${i + 1}, consistent framing, fully rendered subject, avoid empty space.`,
-        ].filter(Boolean) as string[]
+        ].filter(Boolean)
 
         const finalPrompt = promptParts.join(" ")
 
@@ -253,7 +226,7 @@ const trimmedPrompt = prompt.trim()
           negativePrompt: finalNegativePrompt,
         })
 
-       const result = (await fal.subscribe("fal-ai/flux/schnell", {
+        const result = (await fal.subscribe("fal-ai/flux/schnell", {
           input: {
             prompt: finalPrompt,
             image_size: "square_hd",
@@ -262,15 +235,13 @@ const trimmedPrompt = prompt.trim()
             negative_prompt: finalNegativePrompt,
             guidance_scale: finalGuidanceScale,
           },
-           })) as FalFluxResponse
+        })) as FalFluxResponse
 
         if (i === 0) {
-          console.log("[v0] Result sample:", JSON.stringify(response, null, 2))
+          console.log("[v0] Result sample:", JSON.stringify(result, null, 2))
         }
 
-        const result = response.data as FalFluxResponse
-
-         const imageUrls = extractFalImageUrls(result)
+        const imageUrls = extractFalImageUrls(result)
         const imageUrl = imageUrls[0]
 
         if (!imageUrl) {
@@ -286,7 +257,6 @@ const trimmedPrompt = prompt.trim()
         }
       } catch (error) {
         console.error(`[v0] Error generating image ${i + 1}:`, error)
-        // Fallback to placeholder if individual image fails
         return {
           id: `img-${Date.now()}-${i}`,
           url: `/placeholder.svg?height=300&width=300&query=${encodeURIComponent(prompt)}-${i + 1}`,
